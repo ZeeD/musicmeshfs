@@ -4513,83 +4513,6 @@ GNU Free Documentation License
 
 \size footnotesize
 \lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-% so hyperref creates bookmarks
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{chapter}{
-\end_layout
-
-\end_inset
-
-GNU Free Documentation License
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-%
-\backslash
-label{label_fdl}
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
 Version 1.2, November 2002
 \end_layout
 
@@ -4599,46 +4522,10 @@ Version 1.2, November 2002
 
 \size footnotesize
 \lang english
-Copyright 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-copyright
+Copyright © 2000,2001,2002 Free Software Foundation, Inc.
 \end_layout
 
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-{}
-\end_layout
-
-\end_inset
-
- 2000,2001,2002 Free Software Foundation, Inc.
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
+\begin_layout Address
 \paragraph_spacing single
 \noindent
 
@@ -4653,24 +4540,12 @@ status collapsed
 
 \size footnotesize
 \lang english
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
 Everyone is permitted to copy and distribute verbatim copies of this license
  document, but changing it is not allowed.
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -4678,8 +4553,6 @@ Everyone is permitted to copy and distribute verbatim copies of this license
 \size footnotesize
 \lang english
 Preamble
-\series default
- 
 \end_layout
 
 \begin_layout Standard
@@ -4741,7 +4614,7 @@ We have designed this License in order to use it for manuals for free software,
  or reference.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -4750,52 +4623,6 @@ We have designed this License in order to use it for manuals for free software,
 \lang english
 1.
  APPLICABILITY AND DEFINITIONS
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-1.
- APPLICABILITY AND DEFINITIONS
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -5155,7 +4982,7 @@ The Document may include Warranty Disclaimers next to the notice which states
  meaning of this License.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -5164,52 +4991,6 @@ The Document may include Warranty Disclaimers next to the notice which states
 \lang english
 2.
  VERBATIM COPYING
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-2.
- VERBATIM COPYING
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -5241,7 +5022,7 @@ You may also lend copies, under the same conditions stated above, and you
  may publicly display copies.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -5250,52 +5031,6 @@ You may also lend copies, under the same conditions stated above, and you
 \lang english
 3.
  COPYING IN QUANTITY
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-3.
- COPYING IN QUANTITY
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -5360,7 +5095,7 @@ It is requested, but not required, that you contact the authors of the Document
  to provide you with an updated version of the Document.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -5369,52 +5104,6 @@ It is requested, but not required, that you contact the authors of the Document
 \lang english
 4.
  MODIFICATIONS
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-4.
- MODIFICATIONS
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -6031,7 +5720,7 @@ The author(s) and publisher(s) of the Document do not by this License give
 nt of any Modified Version.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -6040,52 +5729,6 @@ nt of any Modified Version.
 \lang english
 5.
  COMBINING DOCUMENTS
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-5.
- COMBINING DOCUMENTS
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -6169,7 +5812,7 @@ Endorsements
 .
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -6178,52 +5821,6 @@ Endorsements
 \lang english
 6.
  COLLECTIONS OF DOCUMENTS
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-6.
- COLLECTIONS OF DOCUMENTS
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -6251,7 +5848,7 @@ You may extract a single document from such a collection, and distribute
  respects regarding verbatim copying of that document.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -6260,52 +5857,6 @@ You may extract a single document from such a collection, and distribute
 \lang english
 7.
  AGGREGATION WITH INDEPENDENT WORKS
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-7.
- AGGREGATION WITH INDEPENDENT WORKS
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -6347,7 +5898,7 @@ If the Cover Text requirement of section\InsetSpace ~
  Otherwise they must appear on printed covers that bracket the whole aggregate.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -6356,52 +5907,6 @@ If the Cover Text requirement of section\InsetSpace ~
 \lang english
 8.
  TRANSLATION
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-8.
- TRANSLATION
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -6461,7 +5966,7 @@ History
  require changing the actual title.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -6470,52 +5975,6 @@ History
 \lang english
 9.
  TERMINATION
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-9.
- TERMINATION
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -6533,7 +5992,7 @@ You may not copy, modify, sublicense, or distribute the Document except
  remain in full compliance.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -6542,52 +6001,6 @@ You may not copy, modify, sublicense, or distribute the Document except
 \lang english
 10.
  FUTURE REVISIONS OF THIS LICENSE
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-10.
- FUTURE REVISIONS OF THIS LICENSE
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -6627,7 +6040,7 @@ or any later version
  Foundation.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section*
 \paragraph_spacing single
 \noindent
 
@@ -6635,51 +6048,6 @@ or any later version
 \size small
 \lang english
 ADDENDUM: How to use this License for your documents
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing single
-\noindent
-
-\size footnotesize
-\lang english
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-phantomsection
-\end_layout
-
-\end_inset
-
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-addcontentsline{toc}{section}{
-\end_layout
-
-\end_inset
-
-ADDENDUM: How to use this License for your documents
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -6702,7 +6070,7 @@ To use this License in a document you have written, include a copy of the
 \begin_inset VSpace bigskip
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Quote
@@ -6711,31 +6079,7 @@ To use this License in a document you have written, include a copy of the
 
 \size footnotesize
 \lang english
-Copyright 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-
-\backslash
-copyright
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Standard
-
-{}
-\end_layout
-
-\end_inset
-
- YEAR YOUR NAME.
+Copyright © YEAR YOUR NAME.
  Permission is granted to copy, distribute and/or modify this document under
  the terms of the GNU Free Documentation License, Version 1.2 or any later
  version published by the Free Software Foundation; with no Invariant Sections,
@@ -6805,7 +6149,7 @@ Texts.
 \begin_inset VSpace bigskip
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Quote
