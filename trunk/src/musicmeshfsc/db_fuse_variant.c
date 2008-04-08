@@ -1,4 +1,6 @@
 /*
+    Copyright © 2008 Vito De Tullio
+
     This file is part of MusicMeshFSc.
 
     MusicMeshFSc is free software: you can redistribute it and/or modify
