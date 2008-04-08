@@ -1,0 +1,567 @@
+#include "fuse_utils.h"
+#include "sqlite.h"
+#include "constants.h"
+
+sqlite3* DB;
+dynamic_str_t PATTERN_DIR_NAME;
+
+int piglia_stringa(void*, int, char**, char**);
+
+/**
+    \todo: cambiare nome alla funzione!!! (e togliere questo obbrobrio di
+            variabili globali)
+*/
+void fuse_init_vars(sqlite3* db, char* basename, char* patterndirname) {
+//     printf("[loop]\tdb = %p, basename = `%s', patterndirname = `%s'\n", (void*)
+//             db, basename, patterndirname);
+    DB = db;
+    basename = basename;
+    PATTERN_DIR_NAME = split(patterndirname, '/');
+}
+
+/**
+    ritorna la dimensione (in byte) del file originario
+    \attention utilizza COLUMNS_MISC definita in constants.c
+*/
+int get_size(dynamic_str_t schema, dynamic_str_t virtual_path) {
+    char* host = virtual_path_to_host(schema, virtual_path);
+    char* path = virtual_path_to_real_path(schema, virtual_path);
+    char* query = malloc(1);
+    query[0] = '\0';
+    query = strmalloccat(query, "SELECT ");
+    query = strmalloccat(query, COLUMNS_MISC[2]);
+    query = strmalloccat(query, " FROM ");
+    query = strmalloccat(query, TABLE);
+    // TODO: rimuovere i letterali host e path!
+    query = strmalloccat(query, " WHERE (host = %Q) and (path = %Q)");
+    dynamic_str_t ret;
+    init_str(&ret);
+    esegui_query_callback(DB, piglia_stringa, &ret, query, host, path);
+    return atoi(ret.buf[0]);
+}
+
+
+void splitta(dynamic_str_t schema, dynamic_str_t realpath, dynamic_str_t*
+        where_fissi, dynamic_str_t* where_dinamici) {
+
+}
+
+
+/**
+    sapendo che in DB ci sono 2 album di De André trasforma
+    `%artist/%year - %album/%track - %title.%type' e `/De André' in
+    [ `1970 - La buona novella', `1973 - Storia di un impiegato' ]
+
+    Genera la query
+    `SELECT DISTINCT
+    REPLACE(anno, "/", "_") || " - " || REPLACE(album, "/", "_")
+    FROM ...
+    WHERE ...
+        AND (REPLACE(artist, "/", "_") == "De André")`
+
+
+    Oppure
+
+    schema = `%artist/%year - %album/%track - %title.%type'
+    dir_di_cui_si_vuole_il_contenuto = `/De André/1973 - Storia di un impiegato'
+    --
+    output = [ `03 - La bomba in testa.mp3', `07 - Il bombarolo.mp3' ]
+
+    Genera la query
+    `SELECT DISTINCT
+    REPLACE(traccia, "/", "_") || " - " || REPLACE(titolo, "/", "_") || "." || REPLACE(tipo, "/", "_")
+    FROM ...
+    WHERE
+        ...
+        AND (REPLACE(artist, "/", "_") || "/" || REPLACE(anno,
+                "/", "_") || " - " || REPLACE(album, "/", "_") ==
+                "/De André/1973 - Storia di un impiegato")`
+
+// versione naïve
+
+SELECT DISTINCT (
+    traccia || " - " || titolo || "." || file.formato
+) FROM
+    musica, file
+WHERE
+    (musica_titolo = musica.titolo) AND
+    (musica_nome_album = musica.nome_album) AND
+    (musica_traccia = musica.traccia) AND
+    (
+        (artista_nome_artista || "/" || lavoro_anno || " - " || nome_album )
+        ==
+        "Suemitsu & the suemith/2007 - Sagittarius"
+    );
+
+
+
+// versione overload
+
+SELECT DISTINCT (
+    REPLACE(
+        REPLACE(traccia, "/", "_")
+    , " - ", "_")
+    || " - " ||
+    REPLACE(
+        REPLACE(titolo, "/", "_")
+    , ".", "_")
+    || "." ||
+    REPLACE(file.formato, "/", "_")
+) FROM
+    musica, file
+WHERE
+    (musica_titolo = musica.titolo) AND
+    (musica_nome_album = musica.nome_album) AND
+    (musica_traccia = musica.traccia) AND
+    (
+        (
+            REPLACE(artista_nome_artista, "/", "_")
+            || "/" ||
+            REPLACE(
+                REPLACE(lavoro_anno, "/", "_")
+            , " - ", "_")
+            || " - " ||
+            REPLACE(nome_album, "/", "_")
+        )
+        ==
+        "Suemitsu & the suemith/2007 - Sagittarius"
+    );
+
+// versione semplificata -> assumo che nell'inserimento faccio REPLACE(..., '/', '_')
+
+SELECT DISTINCT (
+    REPLACE(traccia,' - ','_')||' - '||REPLACE(titolo,'.','_')||'.'||file.formato
+) FROM
+    musica, file
+WHERE
+    (musica_titolo = musica.titolo) AND
+    (musica_nome_album = musica.nome_album) AND
+    (musica_traccia = musica.traccia) AND
+    (
+        (artista_nome_artista||'/'||REPLACE(lavoro_anno,' - ','_') ||' - '||nome_album)
+        ==
+        "Suemitsu & the suemith/2007 - Sagittarius"
+    );
+
+// variante -> lavoro con i frammenti
+
+SELECT DISTINCT (
+    REPLACE(traccia,' - ','_')||' - '||REPLACE(titolo,'.','_')||'.'||file.formato
+) FROM
+    musica, file
+WHERE
+    (musica_titolo = musica.titolo) AND
+    (musica_nome_album = musica.nome_album) AND
+    (musica_traccia = musica.traccia) AND
+    (artista_nome_artista == "Suemitsu & the suemith") AND
+    ((REPLACE(lavoro_anno,' - ','_') ||' - '||nome_album) == "2007 - Sagittarius")
+
+
+
+    \attention: guarda che le tracce sono tutte a 2+ cifre, gli anni di 4 cifre
+*/
+dynamic_str_t schema_to_dirs(dynamic_str_t schema, dynamic_str_t realpath) {
+    dynamic_str_t fissi, dinamici;
+    init_str(&fissi);
+    init_str(&dinamici);
+    // devo prima capire di quale directory elencare i file
+    int is_root = !realpath.size || (realpath.size == 1 && !realpath.buf[0][0]);
+    if (is_root)   // == ls ROOT
+        calcola_elementi(schema.buf[0], &fissi, &dinamici);
+    else
+        calcola_elementi(schema.buf[realpath.size], &fissi, &dinamici);
+
+//     dbgprint_str(fissi, "schema_to_dirs->fissi");
+//     dbgprint_str(dinamici, "schema_to_dirs->dinamici");
+
+/*
+SELECT DISTINCT (
+    REPLACE(traccia, ' - ', '_') || ' - ' || REPLACE(titolo, '.', '_') || '.' || formato
+) FROM vw_all_in_one WHERE
+    ((REPLACE('artista', ' + ', '_') || ' + ' || REPLACE('anno', ' - ', '_') || ' - ' || 'album') == ) AND
+    ( == 'Crystal Kay + 2007 - こんなに近くで...')
+*/
+
+
+    char* query = strmalloccat(calloc(1, 1), "SELECT DISTINCT (");
+
+    for (int i=0; i<dinamici.size; i++) {
+        if (i) {
+            char* tmp = sqlite3_mprintf(" || %Q || ", fissi.buf[i]);
+            query = strmalloccat(query, tmp);
+            sqlite3_free(tmp);
+        }
+        if (fissi.buf[i+1][0])              // se c'è un elemento fisso
+            query = strmalloccat(query, "REPLACE(");
+        query = strmalloccat(query, dinamici.buf[i]);
+        if (fissi.buf[i+1][0]) {            // se c'è un elemento fisso
+            char* tmp = sqlite3_mprintf(", %Q, '_')", fissi.buf[i+1]);
+            query = strmalloccat(query, tmp);
+            sqlite3_free(tmp);
+        }
+    }
+
+    // ...
+    query = strmalloccat(query, ") FROM ");
+    query = strmalloccat(query, TABLE); // ... TODO: backporting gestione JOIN
+/*
+SELECT DISTINCT (
+    REPLACE(traccia,' - ','_')||' - '||REPLACE(titolo,'.','_')||'.'||file.formato
+) FROM
+    musica, file
+WHERE
+    (musica_titolo = musica.titolo) AND
+    (musica_nome_album = musica.nome_album) AND
+    (musica_traccia = musica.traccia) AND
+    (artista_nome_artista == "Suemitsu & the suemith") AND
+    ((REPLACE(lavoro_anno,' - ','_') ||' - '||nome_album) == "2007 - Sagittarius")
+*/
+/*
+SELECT DISTINCT (
+    REPLACE(traccia, ' - ', '_') || ' - ' || REPLACE(titolo, '.', '_') || '.' || formato
+) FROM vw_all_in_one WHERE
+    ((REPLACE('artista', ' + ', '_') || ' + ' || REPLACE('anno', ' - ', '_') || ' - ' || 'album') == 'Suemitsu & the suemith + 2007 - Sagittarius')
+*/
+
+    if (!is_root) {
+        query = strmalloccat(query, " WHERE ");
+        // ... TODO: backporting gestione WHERE (la parte dei join)
+
+        for (int ii=0; ii<realpath.size; ii++) {
+            query = strmalloccat(query, "((");
+            dynamic_str_t where_fissi, where_dinamici;
+            init_str(&where_fissi);
+            init_str(&where_dinamici);
+            calcola_elementi(schema.buf[ii], &where_fissi, &where_dinamici);
+            for (int i=0; i<where_dinamici.size; i++) {
+                if (i) {
+                    char* tmp = sqlite3_mprintf(" || %Q || ", where_fissi.buf[i]);
+                    query = strmalloccat(query, tmp);
+                    sqlite3_free(tmp);
+                }
+                if (fissi.buf[i+1][0])              // se c'è un elemento fisso
+                    query = strmalloccat(query, "REPLACE(");
+                query = strmalloccat(query, where_dinamici.buf[i]);
+                if (fissi.buf[i+1][0]) {            // se c'è un elemento fisso
+                    char* tmp = sqlite3_mprintf(", %Q, '_')", where_fissi.buf[i+1]);
+                    query = strmalloccat(query, tmp);
+                    sqlite3_free(tmp);
+                }
+            }
+            free_str(&where_fissi);
+            free_str(&where_dinamici);
+            dynamic_str_t slice = slice_str(realpath, ii, ii+1);
+            char* tmp = sqlite3_mprintf(") == %Q)", join(slice, '/'));
+            query = strmalloccat(query, tmp);
+            sqlite3_free(tmp);
+            free_str(&slice);
+        }
+    }
+    free_str(&fissi);
+    free_str(&dinamici);
+    dynamic_str_t ret;
+    init_str(&ret);
+    errprintf("schema_to_dirs->query = `%s'\n", query);
+    esegui_query_callback(DB, piglia_stringa, &ret, query);
+    free(query);
+    return ret;
+}
+//     dynamic_str_t ret;
+//     init_str(&ret);
+//     dynamic_str_t fissi, dinamici;
+//     char* query = malloc(1);
+//     query[0] = '\0';
+//     query = strmalloccat(query, "SELECT DISTINCT ");
+//     int is_root = !realpath.size || (realpath.size == 1 && !realpath.buf[0][0]);
+//     // devo prima capire di quale directory elencare i file
+//     if (is_root)   // == ls ROOT
+//         calcola_elementi(schema.buf[0], &fissi, &dinamici);
+//     else
+//         calcola_elementi(schema.buf[realpath.size], &fissi, &dinamici);
+// //     dbgprint_str(fissi, "schema_to_dirs->fissi");
+// //     dbgprint_str(dinamici, "schema_to_dirs->dinamici");
+//     if (dinamici.size)
+//         query = strmalloccat(query, dinamici.buf[0]);
+//     for (int i=1; i<dinamici.size; i++) {
+//         query = strmalloccat(query, ", ");
+//         query = strmalloccat(query, dinamici.buf[i]);
+//     }
+//     query = strmalloccat(query, " FROM ");
+//     query = strmalloccat(query, TABLE);
+//     dynamic_str_t all_dinamici;
+//     init_str(&all_dinamici);
+//     if (!is_root) { // aggiungi clausola where
+//         dynamic_str_t valori_where;
+//         calcola_where(schema, realpath, &valori_where);
+//         // dbgprint_str(valori_where, "schema_to_dirs->valori_where");
+//         int indice_where = 0;
+//         query = strmalloccat(query, " WHERE ");
+//         dynamic_str_t tmp_fissi, tmp_dinamici;
+//         if (realpath.size) {
+//             calcola_elementi(schema.buf[0], &tmp_fissi, &tmp_dinamici);
+//             extend_str(&all_dinamici, tmp_dinamici);
+//             if (tmp_dinamici.size) {
+//                 query = strmalloccat(query, "(");
+//                 query = strmalloccat(query, tmp_dinamici.buf[0]);
+//                 char* quoted = sqlite3_mprintf(" = %Q)", valori_where.buf[indice_where++]);
+//                 query = strmalloccat(query, quoted);
+//                 sqlite3_free(quoted);
+//             }
+//             for (int j=1; j<tmp_dinamici.size; j++) {
+//                 query = strmalloccat(query, " and (");
+//                 query = strmalloccat(query, tmp_dinamici.buf[j]);
+//                 char* quoted = sqlite3_mprintf(" = %Q)", valori_where.buf[indice_where++]);
+//                 query = strmalloccat(query, quoted);
+//                 sqlite3_free(quoted);
+//             }
+//         }
+//         for (int i=1; i<realpath.size; i++) {
+//             calcola_elementi(schema.buf[i], &tmp_fissi, &tmp_dinamici);
+//             extend_str(&all_dinamici, tmp_dinamici);
+//             for (int j=0; j<tmp_dinamici.size; j++) {
+//                 query = strmalloccat(query, " and (");
+//                 query = strmalloccat(query, tmp_dinamici.buf[j]);
+//                 char* quoted = sqlite3_mprintf(" = %Q)", valori_where.buf[indice_where++]);
+//                 query = strmalloccat(query, quoted);
+//                 sqlite3_free(quoted);
+//             }
+//         }
+//     }
+//     query = strmalloccat(query, ";");
+//     dynamic_str_t* buf[2];
+//     buf[0] = &fissi;
+//     buf[1] = &ret;
+//     errprintf("query = `%s'\n", query);
+//     esegui_query_callback(DB, piglia_da_db, buf, query);
+//     free(query);
+//     free_str(&fissi);
+//     free_str(&dinamici);
+//     return ret;
+// }
+
+/**
+    \todo: trovare altro nome!!!
+ */
+int piglia_da_db(void* buf, int n_colonne, char** value, char** header) {
+    (void) header;
+    dynamic_str_t* fissi = ((dynamic_str_t**) buf)[0];
+    dynamic_str_t* ret = ((dynamic_str_t**) buf)[1];
+    char* tmp = malloc(1);
+    tmp[0] = '\0';
+    for (int i=0; i<n_colonne; i++)
+        tmp = strmalloccat(strmalloccat(tmp, fissi->buf[i]), value[i]);
+    tmp = strmalloccat(tmp, fissi->buf[n_colonne]);
+    append_str(ret, tmp);
+//     dbgprint_str(*ret, "(DELME) ret");
+    free(tmp);
+    return 0;
+}
+
+/**
+    schema è un frammento (solo una dir) dello schema originario
+    assunto: len(fissi) == len(dinamici) + 1
+    ("grammatica" ==  {fisso, dinamico}*, fisso  )
+ */
+void calcola_elementi(char* schema, dynamic_str_t* fissi,
+        dynamic_str_t* dinamici) {
+    init_str(fissi);
+    init_str(dinamici);
+    int i=0, j=0, turno_fissi=1;
+    for (; schema[i] != '\0'; i++) {
+        if (turno_fissi && schema[i] == '%') {
+            if (schema[i+1] == '%')
+                continue;   // ignora
+            if (i > j) {
+                char* tmp = calloc(i-j+1, 1); // sizeof(char) == 1
+                strncpy(tmp, schema+j, i-j);
+                tmp[i-j] = '\0';
+                append_str(fissi, tmp);
+                free(tmp);
+            }
+            else
+                append_str(fissi, "");
+            j = i;
+            i--;    // non devo perdermi il '%'
+            turno_fissi = !turno_fissi;
+        }
+        else if (!turno_fissi && schema[i] == '%') {
+            for (int k=0; k<SIZE; k++) {
+                int l = strlen(KEYWORDS[k]);
+                if (!strncmp(schema+i, KEYWORDS[k], l)) {
+                    append_str(dinamici, COLUMNS[k]);
+                    i += l - 1; // non voglio perdermi il '%'
+                    j = i + 1;
+                    turno_fissi = !turno_fissi;
+                    break;
+                }
+            }
+        }
+    }
+    if (turno_fissi) {
+        char* tmp = calloc(i-j+1, 1); // sizeof(char) == 1
+        strncpy(tmp, schema+j, i-j);
+        tmp[i-j] = '\0';
+        append_str(fissi, tmp);
+        free(tmp);
+    }
+}
+
+/**
+    Calcola i valori (ordinati) della clausola WHERE di schema_to_dirs()
+    \param schema schema da usare
+    \param realpath path reale
+    \param valori_where valori da usare nella clausola WHERE (modificato in-place)
+ */
+void calcola_where(dynamic_str_t schema, dynamic_str_t realpath, dynamic_str_t*
+        valori_where) {
+    init_str(valori_where);
+    for (int i=0; i<realpath.size; i++) {
+        dynamic_str_t fissi, variabili;
+        calcola_elementi(schema.buf[i], &fissi, &variabili);
+        // so che devo avere (%FISSO%VARIABILE)*%FISSO, ne approfitto spudoratamente!
+        for (int j=0, k=0, lunghezza_variabile=0; j<fissi.size-1; lunghezza_variabile=0, j++) {
+            k += strlen(fissi.buf[j]); // ignoro i caratteri dell'elemento fisso precedente
+            int lunghezza_fisso = strlen(fissi.buf[j+1]);
+
+//             dynamic_str_t possibili_valori_di_variabile;
+//             init_str(&possibili_valori_di_variabile);
+//             char* a = malloc(1); a[0] = '\0';
+//             // TODO: mettere where?
+//             a = strmalloccat(strmalloccat(strmalloccat(strmalloccat(strmalloccat
+//                     (a, "SELECT DISTINCT "), variabili.buf[j]), " FROM "),
+//                     TABLE), ";");
+//             esegui_query_callback(DB, piglia_stringa,
+//                     &possibili_valori_di_variabile, a);
+//             free(a);
+
+            // finchè non trovo l'elemento variabile tra i possibi... passa avanti
+            for (; 1; lunghezza_variabile++) {
+                if (!lunghezza_fisso && j == fissi.size - 2) {
+                    if (!realpath.buf[i][k+lunghezza_variabile])
+                        break;
+                }
+                else {
+                    if (!strncmp(realpath.buf[i]+k+lunghezza_variabile, fissi.buf[j+1], lunghezza_fisso)) {
+                        char foo[lunghezza_variabile+1];
+                        foo[0] = '\0';
+                        strncpy(foo, realpath.buf[i]+k, lunghezza_variabile);
+                        foo[lunghezza_variabile] = '\0';
+//                         if (contains_str(possibili_valori_di_variabile, foo))
+                            break;
+                    }
+                }
+            }
+            char tmp[lunghezza_variabile+1];
+            tmp[0] = '\0';
+            strncpy(tmp, realpath.buf[i]+k, lunghezza_variabile);
+            tmp[lunghezza_variabile] = '\0';
+            append_str(valori_where, tmp);
+            k += lunghezza_variabile;
+        }
+        free_str(&fissi);
+        free_str(&variabili);
+    }
+}
+
+/**
+    funzione booleana che riconosce se il path richiesto è una directory
+    \param schema array di stringhe dello schema di presentazione
+    \param virtual_path percorso del fs virtuale
+    \sa is_a_file()
+    \return 1 se è una dir, 0 altrimenti
+ */
+int is_a_dir(dynamic_str_t schema, dynamic_str_t virtual_path) {
+    return virtual_path.size < schema.size;
+}
+
+/**
+    funzione booleana che riconosce se il path richiesto è una directory
+    al momento è solo un !is_a_dir()
+    \param virtual_path percorso del fs virtuale
+    \param schema array di stringhe dello schema di presentazione
+    \sa is_a_dir()
+    \return 1 se è un file, 0 altrimenti
+ */
+int is_a_file(dynamic_str_t schema, dynamic_str_t virtual_path) {
+    return ! is_a_dir(schema, virtual_path);
+}
+
+/**
+    Dato un path del mio fs reale (oltre allo schema di generazione) restituisce
+    il path locale del file reale
+    \param schema schema del filesystem con cui vengono mostrati i dati
+    \param virtual_path path richiesto dall'utente nel filesystem virtuale
+    \return path locale del file corrispondente
+    \sa virtual_path_to_host()
+ */
+char* virtual_path_to_real_path(dynamic_str_t schema, dynamic_str_t virtual_path) {
+    char* query = malloc(1); query[0] = '\0';
+    query = strmalloccat(query, "SELECT path FROM ");  // TODO: cacciare fuori il literal "path" dalla query!
+    query = strmalloccat(query, TABLE);
+    query = strmalloccat(query, " WHERE ");
+    dynamic_str_t where;
+    calcola_where(schema, virtual_path, &where);
+    int indice_where = 0;
+    dynamic_str_t tmp_fissi, tmp_dinamici;
+    if (virtual_path.size) {
+        calcola_elementi(schema.buf[0], &tmp_fissi, &tmp_dinamici);
+        free_str(&tmp_fissi);
+        if (tmp_dinamici.size) {
+            query = strmalloccat(query, "(");
+            query = strmalloccat(query, tmp_dinamici.buf[0]);
+            char* quoted = sqlite3_mprintf(" = %Q)", where.buf[indice_where++]);
+            query = strmalloccat(query, quoted);
+            sqlite3_free(quoted);
+        }
+        for (int j=1; j<tmp_dinamici.size; j++) {
+            query = strmalloccat(query, "and (");
+            query = strmalloccat(query, tmp_dinamici.buf[j]);
+            char* quoted = sqlite3_mprintf(" = %Q)", where.buf[indice_where++]);
+            query = strmalloccat(query, quoted);
+            sqlite3_free(quoted);
+        }
+        free_str(&tmp_dinamici);
+    }
+    for (int i=1; i<virtual_path.size; i++) {
+        calcola_elementi(schema.buf[i], &tmp_fissi, &tmp_dinamici);
+        free_str(&tmp_fissi);
+        for (int j=0; j<tmp_dinamici.size; j++) {
+            query = strmalloccat(query, "and (");
+            query = strmalloccat(query, tmp_dinamici.buf[j]);
+            char* quoted = sqlite3_mprintf(" = %Q)", where.buf[indice_where++]);
+            query = strmalloccat(query, quoted);
+            sqlite3_free(quoted);
+        }
+        free_str(&tmp_dinamici);
+    }
+    dynamic_str_t ret;
+    init_str(&ret);
+    esegui_query_callback(DB, piglia_stringa, &ret, query);
+    sqlite3_free(query);
+    if (ret.size)
+        return ret.buf[0];
+    return NULL;
+}
+
+int piglia_stringa(void* buf, int n_colonne, char** value, char** header) {
+    (void) header; // non usato
+    if (n_colonne != 1)
+        return -1;
+    append_str(((dynamic_str_t*)buf), value[0]);
+    return 0;
+}
+
+/**
+    Dato un path del mio fs reale (oltre allo schema di generazione) restituisce
+    l'host in cui risiede il file reale
+    \param schema schema del filesystem con cui vengono mostrati i dati
+    \param virtual_path path richiesto dall'utente nel filesystem virtuale
+    \return host del file corrispondente
+    \sa virtual_path_to_real_path()
+    \attention al momento è fittizio! (ritorna sempre "127.0.0.1")
+ */
+char* virtual_path_to_host(dynamic_str_t schema, dynamic_str_t virtual_path) {
+    (void) schema;
+    (void) virtual_path;
+    return "127.0.0.1"; // TODO: stub!
+}

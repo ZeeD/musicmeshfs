@@ -1,0 +1,293 @@
+#include "parser.h"
+#include "constants.h"   /* KEYWORDS, TABLE, COLUMNS */
+#include "../common/utils.h"       /* dynamic_str_t, init_str, */
+
+const int IS_A_DIR = 1;
+const int IS_A_FILE = 0;
+
+/**
+    Analizza la stringa pattern per la verifica che sia uno schema valido per
+    musicmeshfsc.
+    Come effetto collaterale, riempie due vettori di dynamic_str_t
+
+    SCHEMA = NOME ("/" NOME)*
+    NOME = NOME1 | NOME2
+    NOME1 = FISSO NOME2?
+    NOME2 = KEYWORD NOME1?
+    FISSO = ([^/%] | "%%")+
+    KEYWORD = %artist | %year | %album | ...
+
+    Nota che KEYWORD e dipende dal contenuto di KEYWORDS, definito in
+            constants.c
+
+    Al momento gli unici vincoli sono che
+# non deve né iniziare né terminare per '/'
+# il carattere '%' non è usato liberamente: esso infatti è usato per
+        delimitare i segnaposto da usare; gli unici segnaposto supportati sono:
+        - %artist -> Artista
+        - %year -> Anno
+        - %album -> Album
+        - %track -> Traccia
+        - %title -> Titolo
+        - %genre -> Genere
+        - %host -> Host
+        - %path -> Path originale
+        - %type -> Tipo del file originale
+        - %% -> %
+# gli elementi di tipo FISSO non possono essere stringhe vuote
+
+
+    es:
+        %artist/%year - %album/%track + %title.%type
+    diventa:
+        NOME   "/"       NOME          "/"       NOME
+        NOME2  "/"       NOME2         "/"       NOME2
+        KEYWORD"/"KEYWORD     NOME1    "/"KEYWORD    NOME1
+        KEYWORD"/"KEYWORD FISSO  NOME2 "/"KEYWORD FISSO     NOME2
+        KEYWORD"/"KEYWORD FISSO KEYWORD"/"KEYWORD FISSO KEYWORD NOME1
+        KEYWORD"/"KEYWORD FISSO KEYWORD"/"KEYWORD FISSO KEYWORD FISSO NOME2
+        KEYWORD"/"KEYWORD FISSO KEYWORD"/"KEYWORD FISSO KEYWORD FISSO KEYWORD
+
+        %artist"/" %year  " - " %album "/" %track " + " %title   "."   %type
+
+    \param pattern schema da verificare
+    \return 0 in caso di successo, -1 altrimenti
+*/
+int parse_schema(const char* schema, dynamic_obj_t* fissi, dynamic_obj_t*
+        keywords) {
+    dynamic_str_t* el_fisso = malloc(sizeof(dynamic_str_t));
+    dynamic_str_t* el_keyword = malloc(sizeof(dynamic_str_t));
+    init_str(el_fisso);
+    init_str(el_keyword);
+    int ret = nome(schema, 0, el_fisso, el_keyword);
+    if (ret == -1)
+        return -1;  // non c'è neanche un frammento
+    while (ret != -1) {
+        append_obj(fissi, el_fisso);
+        append_obj(keywords, el_keyword);
+        if (!schema[ret]) {
+            return 0;   // fine stringa
+        }
+        if (schema[ret++] != '/')
+            return -1;
+        el_fisso = malloc(sizeof(dynamic_str_t));
+        el_keyword = malloc(sizeof(dynamic_str_t));
+        init_str(el_fisso);
+        init_str(el_keyword);
+        ret = nome(schema, ret, el_fisso, el_keyword);
+    }
+    return -1;
+}
+
+/**
+    NOME = NOME1 | NOME2
+*/
+int nome(const char* schema, int offset, dynamic_str_t* fissi, dynamic_str_t*
+            keywords) {
+    int ret = nome1(schema, offset, fissi, keywords);
+    if (ret == -1) {
+        // TODO: rimuovere da fissi e da keywords gli ultimi elementi
+        return nome2(schema, offset, fissi, keywords);
+    }
+    return ret;
+}
+
+/**
+    NOME1 = FISSO NOME2?
+*/
+int nome1(const char* schema, int offset, dynamic_str_t* fissi, dynamic_str_t*
+            keywords) {
+    int ret = fisso(schema, offset, fissi);
+    if (ret == -1)
+        return -1;
+    int ret2 = nome2(schema, ret, fissi, keywords);
+    if (ret2 == -1) {
+        // TODO: rimuovere da fissi e da keywords gli ultimi elementi
+        return ret;
+    }
+    return ret2;
+}
+
+/**
+    NOME2 = KEYWORD NOME1?
+*/
+int nome2(const char* schema, int offset, dynamic_str_t* fissi, dynamic_str_t*
+        keywords) {
+    int ret = keyword(schema, offset, keywords);
+    if (ret == -1)
+        return -1;
+    if (!fissi->size)
+        append_str(fissi, "");  // patch per "fake" fisso, per fare iniziare sempre con fissi
+    int ret2 = nome1(schema, ret, fissi, keywords);
+    if (ret2 == -1) {
+        // TODO: rimuovere da fissi e da keywords gli ultimi elementi
+        return ret;
+    }
+    return ret2;
+}
+
+/**
+    FISSO = ([^/%] | "%%")+
+*/
+int fisso(const char* schema, int offset, dynamic_str_t* fissi) {
+    dynamic_str_t componenti_fisso;
+    init_str(&componenti_fisso);
+    if (!schema[offset] || schema[offset] == '/' ||
+            (schema[offset] == '%' && schema[offset+1] != '%'))
+        return -1;  // deve avere lunghezza > 0!
+    int bkp = offset;
+    for (; schema[offset] && schema[offset] != '/'; offset++) {
+        if (schema[offset] == '%') {
+            if (schema[offset+1] == '%') {
+                char tmp[offset-bkp+1];
+                tmp[0] = tmp[offset-bkp] = '\0';
+                strncpy(tmp, schema+bkp, offset-bkp);
+                append_str(&componenti_fisso, tmp);
+                bkp = ++offset + 1;
+            }
+            else    // dev'essere una keyword -> mi fermo
+                break;
+        }
+    }
+    char tmp[offset-bkp+1];
+    tmp[0] = tmp[offset-bkp] = '\0';
+    strncpy(tmp, schema+bkp, offset-bkp);
+    append_str(&componenti_fisso, tmp);
+    append_str(fissi, join(componenti_fisso, '%'));
+    free_str(&componenti_fisso);
+    return offset;
+}
+
+/**
+    KEYWORD = %artist | %year | %album | ...
+*/
+int keyword(const char* schema, int offset, dynamic_str_t* keywords) {
+    if (schema[offset++] != '%')    // le keywords iniziano per '%'
+        return -1;
+    for (int i=0; i<KEYWORDS_SIZE; i++) {
+        int len = strlen(KEYWORDS[i]);
+        if (!strncmp(schema+offset, KEYWORDS[i], len)) {
+            append_str(keywords, KEYWORDS[i]);
+            return offset+len;
+        }
+    }
+    return -1;
+}
+
+// path
+
+/**
+    analizza il generico percorso, e avvalora dinamici
+
+    es:
+        schema = %artist/%year - %album/%track + %title.%type
+    tramite parse_schema() ottengo
+        fissi = [ [""], ["", " - "], ["", " + , "."] ]
+        keywords = [ ["artist"], ["year", "album"], ["track", "title", "type"] ]
+    se ora ho un percorso del tipo
+        path =
+            "/Max Gazzè/2008 - Tra l'aratro e la radio/02 + Il solito sesso.mp3"
+    allora tramite parse_path() == IS_A_FILE ottengo
+        dinamici = [ ["Max Gazzè"], ["2008", "Tra l'aratro e la radio"], ["02",
+            "Il solito sesso", "mp3"] ]
+    se invece ho un percorso tipo
+        path = "/Max Gazzè/2008 - Tra l'aratro e la radio" # NB già normalizzato!
+    allora tramite parse_path() == IS_A_DIR ottengo
+        dinamici = [ ["Max Gazzè"], ["2008", "Tra l'aratro e la radio"] ]
+
+    \param path percorso da analizzare
+    \param fissi elementi fissi *già analizzati* tramite parse_schema()
+    \param keywords keywords *già analizzate* tramite parse_schema()
+    \param dinamici elementi dinamici ottenuti sostituendo le keywords
+            (modificato in-place) NOTA: *deve* essere già inizializzato!
+    \return
+            IS_A_FILE se path è un percorso valido, per un file,
+            IS_A_DIR se path è un percorso valido, per una directory,
+            -1 altrimenti
+ */
+int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
+        dynamic_obj_t* dinamici) {
+    if (!path || !path[0])  // dev'essere almeno una stringa non vuota!
+        return -1;
+    if (path[0] == '/' && !path[1]) // caso particolare: è "/"
+        return IS_A_DIR;
+    dynamic_str_t nomi = split(path+1, '/');
+    for (int i=0; i<nomi.size; i++) {
+        /*
+            directory = ^ el_fisso (el_dinamico el_fisso)* el_dinamico? $
+        quindi avrò
+            0 < el_fissi.size == el_dinamici.size + ( 0 || 1 )
+        */
+        dynamic_str_t el_fissi = *(dynamic_str_t*)fissi.buf[i];
+        if (!el_fissi.size)
+            return -1;
+        dynamic_str_t el_keywords = *(dynamic_str_t*)keywords.buf[i];
+        dynamic_str_t* el_dinamici = malloc(sizeof(dynamic_str_t));
+        init_str(el_dinamici);
+        int offset = startswith(nomi.buf[i], el_fissi.buf[0]);
+        if (offset == -1)
+            return -1;
+        for (int j=1; j<el_fissi.size; j++) {
+            int new_offset = -1, size_dinamico = -1;
+            for (; new_offset == -1; size_dinamico += 1) {
+                new_offset = startswith(nomi.buf[i]+offset+size_dinamico,
+                        el_fissi.buf[j]);
+//                 if (new_offset == -1)
+//                     errprintf("`%s' NON È INIZIATO PER `%s'\n",
+//                             nomi.buf[i]+offset+size_dinamico, el_fissi.buf[j]);
+
+            }
+            char tmp[size_dinamico];
+            tmp[0] = tmp[size_dinamico-1] = '\0';
+            strncpy(tmp, nomi.buf[i]+offset, size_dinamico-1);
+            errprintf("(1) `%s' = `%s'\n", el_keywords.buf[j-1], tmp);
+            append_str(el_dinamici, tmp);
+//             errprintf("offset = %d, new_offset = %d, size_dinamico = %d\n",
+//                     offset, new_offset, size_dinamico);
+            offset += new_offset + size_dinamico - 1;
+        }
+        if (el_fissi.size == el_keywords.size) {
+//             errprintf("con offset = `%s'\n", nomi.buf[i]+offset);
+            if (!(nomi.buf[i]+offset))
+                return -1;
+            int size = 0;
+            while (!(nomi.buf[i]+offset+size))
+                size += 1;
+            char tmp[size+1];
+            tmp[0] = '\0';
+            strcpy(tmp, nomi.buf[i]+offset);
+            errprintf("(2) `%s' = `%s'\n", el_keywords.buf[el_keywords.size-1], tmp);
+            append_str(el_dinamici, tmp);
+        }
+        append_obj(dinamici, el_dinamici);
+    }
+    return keywords.size == dinamici->size ? IS_A_FILE : IS_A_DIR;
+}
+
+int _main() {
+    const char* schema = "%artist/%year - %album/%track + %title.%type";
+    const char* path = "/Max Gazzè/2008 - Tra l'aratro e la radio"
+            ;//"/02 + Il solito sesso.mp3";
+    dynamic_obj_t fissi, keywords;
+    init_obj(&fissi);
+    init_obj(&keywords);
+    errprintf("parse_schema() = %d\n\n", parse_schema(schema, &fissi,
+            &keywords));
+    if (fissi.size == keywords.size)
+        for (int i=0; i<fissi.size; i++) {
+            dbgprint_str(*(dynamic_str_t*)fissi.buf[i], "fissi");
+            dbgprint_str(*(dynamic_str_t*)keywords.buf[i], "keywords");
+            errprintf("\n");
+        }
+    dynamic_obj_t dinamici;
+    init_obj(&dinamici);
+    int ret = parse_path(path, fissi, keywords, &dinamici);
+    errprintf("parse_path() = `%s'\n\n", ret == -1 ? "-1" : ret == IS_A_FILE ?
+            "IS_A_FILE" : "IS_A_DIR" );
+    for (int i=0; i<dinamici.size; i++) {
+//         dbgprint_str(*(dynamic_str_t*)keywords.buf[i], "keywords");
+        dbgprint_str(*(dynamic_str_t*)dinamici.buf[i], "dinamici");
+        errprintf("\n");
+    }
+    return EXIT_SUCCESS;
+}
