@@ -1,0 +1,19 @@
+#include "constants.h"
+
+/**
+    ASSUMO CHE SIZE == len(COLUMNS) == len(FORMATS) == len(KEYWORDS) - 1, poichè
+    c'è anche la finta parola chiave "%%"
+    e che COLUMNS indichi le colonne di TABLE (o almeno quelle che mi servono)
+ */
+
+const char* TABLE = "vw_all_in_one";
+const char* KEYWORDS[] = { "%artist", "%year", "%album", "%track", "%title",
+        "%genre", "%host", "%path", "%type", "%filename", "%%" };
+const char* COLUMNS[] = { "artista", "anno", "album", "traccia", "titolo",
+        "genere", "host", "path", "formato", "basename" };
+const int SIZE = 10;
+
+// non mi piace, ma mi sa che devo farla...
+const char* COLUMNS_MISC[] = { "permessi", "data_ultimo_aggiornamento",
+        "dimensioni" };
+const int SIZE_MISC = 3;

@@ -1,0 +1,28 @@
+#ifndef FUSE_UTIS_H
+#define FUSE_UTIS_H
+
+#include "sqlite.h"
+#include "utils.h"
+
+extern sqlite3* DB;
+extern dynamic_str_t PATTERN_DIR_NAME;
+
+void fuse_init_vars(sqlite3*, char*, char*);
+
+dynamic_str_t schema_to_dirs(dynamic_str_t, dynamic_str_t);
+void calcola_elementi(char*, dynamic_str_t*, dynamic_str_t*);
+void calcola_where(dynamic_str_t, dynamic_str_t, dynamic_str_t*);
+
+int is_a_dir(dynamic_str_t, dynamic_str_t);
+int is_a_file(dynamic_str_t, dynamic_str_t);
+
+int get_size(dynamic_str_t, dynamic_str_t);
+
+char* virtual_path_to_real_path(dynamic_str_t, dynamic_str_t);
+char* virtual_path_to_host(dynamic_str_t, dynamic_str_t);
+
+// TODO: rinominarle (o renderle decenti)
+int piglia_da_db(void*, int, char**, char**);
+int piglia_stringa(void*, int, char**, char**);
+
+#endif

@@ -1,0 +1,160 @@
+#include "sqlite.h"
+// #include "../musicmeshfsd/commons.h"
+#include "utils.h"
+
+/**
+    ha in input un path, e (se non esiste) crea un "database per sqlite3" vuoto.
+
+    \param db_file path dove creare / inizializzare il database
+    \return database sqlite3
+*/
+sqlite3* crea_db_vuoto(char* db_file) {
+    char* schema = "TRANSLATE_ME_PLEASE";   // sostituisci.py (anche "schema"!)
+    sqlite3* db;
+    if (sqlite3_open(db_file, &db) != SQLITE_OK) {
+        errprintf("sqlite3_open: `%s'\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+    }
+    else
+        if (esegui_query(db, schema) != SQLITE_OK)
+            sqlite3_close(db);
+    free(schema);
+    return db;
+}
+
+/**
+    funzione di callback applicata da esegui_query()
+
+    \param non_usato parametro non usato (presente per compatibilità con
+            sqlite3_exec())
+    \param argc numero di colonne di output
+    \param argv risultati della query
+    \param nome_colonne headers dei risultati
+    \return 0   (non è previsto che abbia problemi)
+    \sa esegui_query()
+*/
+int callback_print(void* non_usato, int argc, char** argv, char**
+        nome_colonne) {
+    non_usato = non_usato;  // messo per evitare il warning del compilatore
+    for (int i=0; i<argc; i++)
+        printf("%30s = %30s\n", nome_colonne[i], argv[i]);
+    return 0;
+}
+
+/**
+    wrapper di comodo attorno sqlite3_exec()
+
+    esegue, in modo verboso (stampa a video i risultati della query), una query
+    data su un database
+    \param db database su cui effetturare la query
+    \param query comandi SQL da effetturare (sintassi printf-like + "%q" e "%Q")
+    \return il valore di sqlite3_exec()
+    \sa sqlite3_exec(), callback_print()
+*/
+int esegui_query(sqlite3* db, char* query, ...) {
+    va_list ap;
+    va_start(ap, query);
+    char* quoted_query = sqlite3_vmprintf(query, ap);
+    va_end(ap);
+    char* errmsg = NULL;
+    int r = sqlite3_exec(db, quoted_query, callback_print, NULL, &errmsg);
+    sqlite3_free(quoted_query);
+    if (errmsg) {
+        errprintf("esegui_query: `%s'\n", errmsg);
+        sqlite3_free(errmsg);
+    }
+    return r;
+}
+
+int esegui_query_callback(sqlite3* db, int(*callback)(void*, int, char**,
+            char**), void* callback_par, char* query, ...) {
+    va_list ap;
+    va_start(ap, query);     /* inizializzo ap col primo valore successivo a
+                                query, se ce ne sono */
+    char* quoted_query = sqlite3_vmprintf(query, ap);
+    va_end(ap); // chiudo ap (...)
+    char* errmsg = NULL;
+    int r = sqlite3_exec(db, quoted_query, callback, callback_par, &errmsg);
+    sqlite3_free(quoted_query);
+    if (errmsg) {
+        errprintf("esegui_query_callback: `%s'\n", errmsg);
+        sqlite3_free(errmsg);
+    }
+    return r;
+}
+
+
+/**
+    funzione di callback applicata da init_db() (usabile anche esternamente,
+    ovvio, ma aggiunge al db solo file locali!)
+
+    prende un percorso (si assume che punti ad un file valido). Se questo è un
+    file supportato da taglib, ne analizza i tag e inserisce i dati nel database
+    \attention le query *non* sono generiche, nè usano il file constants.h!
+            inoltre, poiché questi dati saranno usati per generare i percorsi
+            virtuali, non sono ammessi metadati col carattere '/': in tal caso
+            saranno sostituiti col carattere '_'
+
+    \param db database (di tipo sqlite*, ma castato a void* per questioni di
+            compatibilità)
+    \param path percorso del file da analizzare e, se supportato, aggiungere al
+            database
+    \return 0 se non ci sono errori, -1 altrimenti
+    \sa init_db(), esegui_query(), preprocessing()
+*/
+int add_local_file_in_db(void* db, const char* path) {
+    errprintf("[add_file_in_db] path = `%s'\n", path);
+    TagLib_File* tlf = taglib_file_new(path);
+    if (tlf) {
+        TagLib_Tag* tlt = taglib_file_tag(tlf); // automaticamente free`d
+        char* titolo = preprocessing(taglib_tag_title(tlt));
+        char* artista = preprocessing(taglib_tag_artist(tlt));
+        char* album = preprocessing(taglib_tag_album(tlt));
+//         char* commento = taglib_tag_comment(tlt);   // non usato
+        char* genere = preprocessing(taglib_tag_genre(tlt));
+        unsigned int anno = taglib_tag_year(tlt);
+        unsigned int traccia = taglib_tag_track(tlt);
+
+        char* anno_s = calloc(5, 1);    // andrà bene fino all'anno 9999
+        char* traccia_s = calloc(3, 1); // andrà bene fino alla traccia 99
+
+        snprintf(anno_s, 5, "%04d", anno);
+        snprintf(traccia_s, 3, "%02d", traccia);
+
+//         printf("[%c] [%c] [%c] [%c]", titolo[0], artista[0], album[0], genere[0]);
+
+        if (esegui_query(db, "INSERT OR REPLACE INTO artista(nome_artista) valu\
+es (REPLACE(%Q, '/', '_'))", artista) == -1)
+            return -1;
+        if (esegui_query(db, "INSERT OR REPLACE INTO musica(titolo, nome_album,\
+ traccia, genere, artista_nome_artista, lavoro_anno) values (REPLACE(%Q, '/', '\
+_'), REPLACE(%Q, '/', '_'), REPLACE(%Q, '/', '_'), REPLACE(%Q, '/', '_'), REPLA\
+CE(%Q, '/', '_'), REPLACE(%Q, '/', '_'))", titolo, album, traccia_s, genere,
+                artista, anno_s) == -1)
+            return -1;
+        if (esegui_query(db, "INSERT OR REPLACE INTO file(host, path, permessi,\
+ formato, dimensioni, data_ultimo_aggiornamento, musica_titolo, musica_nome_alb\
+um, musica_traccia, basename) values (REPLACE(%Q, '/', '_'), REPLACE(%Q, '/', '\
+_'), %d, REPLACE(%Q, '/', '_'), %d, NULL, REPLACE(%Q, '/', '_'), REPLACE(%Q, '/\
+', '_'), REPLACE(%Q, '/', '_'), REPLACE(%Q, '/', '_'))", "127.0.0.1", path, 6,
+                extract_extension(path), extract_size(path), titolo, album,
+                traccia_s, extract_basename(path)) == -1)
+            return -1;
+        taglib_tag_free_strings();
+    }
+    taglib_file_free(tlf);
+    return 0;
+}
+
+/**
+    rimuove dal database le informazioni sul file
+    \param db database da modificare (sqlite3*, ma castato a void* per
+            compatibilità)
+    \param path percorso del file da rimuovere
+    \return 0 se non ci sono errori, -1 altrimenti
+    \sa add_file_in_db()
+*/
+int del_local_file_from_db(void* db, char* path) {
+    return esegui_query(db, "DELETE FROM file WHERE (host = '127.0.0.1') AND (p\
+ath = REPLACE(%Q, '/', '_'));", path);
+}
