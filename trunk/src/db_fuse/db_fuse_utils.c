@@ -49,11 +49,41 @@ dynamic_obj_t get_keywords_from_context() {
 }
 
 /**
-    \todo stub
+    verifica che sia presente nel database almeno un elemento per cui siano
+    rispettati i vincoli di ogni dizionario rappresentato dagli elementi (a
+    coppie) di chiavi e valori
+
+    \param db database su cui effettuare la ricerca
+    \param fissi vettore di elementi fissi (uno per directory)
+    \param chiavi vettore di chiavi (una per directory)
+    \param valori vettore di valori (una per directory)
+    \return 1 se l'elemento esiste
+            0 altrimenti
+
+    \attention do per scontato valori.size <= chiavi.size e che chiavi[i].size
+            == valori[i].size (valori è stato generato da parser())
+    \sa parser()
 */
-int exist(sqlite3* db, dynamic_obj_t chiavi, dynamic_obj_t valori) {
-    errprintf("[EXIST] Warn, stub\n");
-    return 1;
+int exist(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
+        dynamic_obj_t dinamici, const char* path) {
+    errprintf("[EXIST]\n");
+
+    errprintf("dinamici.size = %d\n", dinamici.size);
+    if (dinamici.size == 0) // mi sto riferendo a "/"... credo
+        return 1;
+
+    dynamic_obj_t dinamici_superiore;
+    init_str(&dinamici_superiore);
+    for (int i=0; i<dinamici.size-1; i++)
+        append_obj(&dinamici_superiore, dinamici.buf[i]);
+    dynamic_str_t contenuto_superiore = sub_dir(db, fissi, keywords,
+            dinamici_superiore);
+
+    dynamic_str_t splitted_path = split(path+1, '/');
+    errprintf("presente = %s\n", splitted_path.buf[splitted_path.size-1]);
+    dbgprint_str(contenuto_superiore, "exist->contenuto_superiore");
+
+    return contains_str(contenuto_superiore, splitted_path.buf[splitted_path.size-1]);
 }
 
 /**
@@ -112,7 +142,7 @@ dynamic_str_t sub_dir(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
 
     // TODO: ulteriori condizioni di where (delle sottodirectories)
 
-    errprintf("sub_dir->query = `%s'\n", query);
+//     errprintf("sub_dir) query = `%s'\n", query);
     esegui_query_callback(get_db_from_context(), get_one_column, &ret, query);
     free(query);
     return ret;
@@ -182,105 +212,6 @@ int get_two_columns(void* buf, int n_colonne, char** value, char** header) {
     append_str(((dynamic_str_t*)((dynamic_obj_t*)buf)->buf[1]), value[1]);
     return 0;
 }
-
-// /**
-//     Assume che chiavi.size == valori.size + 1, e che chiavi indichi le KEYWORDS
-//     dell'utente! (\f$ \forall chiave \in chiavi \to chiave \in KEYWORDS \f$)
-//     \param chiavi keyword \f$ \in \f$ KEYWORDS
-//     \param valori valori presenti nel database nelle colonne nelle colonne
-//             corrispondenti a chiavi
-//     \return query del tipo "SELECT chiavi[-1] ... WHERE (chiavi[:-1] = valori)",
-//             NULL in caso d'errore
-// */
-// char* calcola_query_subdirs(dynamic_str_t chiavi, dynamic_str_t valori) {
-//     if (chiavi.size != valori.size + 1)
-//         return NULL;
-//     dynamic_str_t colonne, tabelle, where;
-//     init_str(&colonne);
-//     init_str(&tabelle);
-//     init_str(&where);
-//     for (int i=0; i<chiavi.size; i++) {
-//         // patch per COUNT(COLONNA)
-//         if (!strncmp(chiavi.buf[i], "COUNT(", 6))
-//             append_str(&colonne, chiavi.buf[i]);
-//         else {
-//             const char* colonna = column_from_keyword(chiavi.buf[i]);
-//             if (!colonna)
-//                 return NULL;
-//             append_str(&colonne, colonna);
-//             char* tabella = split(colonna, '.').buf[0];
-//             if (index_of(TABLES, TABLES_SIZE, tabella) == -1)
-//                 return NULL;
-//             if (!contains_str(tabelle, tabella))
-//                 append_str(&tabelle, tabella);
-//         }
-//     }
-//     if (!tabelle.size)
-//         return NULL;
-//
-//     /* ora in tabelle ho tutte le tabelle necessarie, mi tocca calcolare quali
-//     sono le corrispettive condizioni di where + le ulteriori condizioni di
-//     where! */
-//
-//     char* query = strmalloccat(strmalloccat(strmalloccat(strmalloccat(calloc(1,
-//             1), "SELECT DISTINCT "), colonne.buf[colonne.size-1]), " FROM "),
-//             tabelle.buf[0]);
-//
-// //     errprintf("calcola_query_subdirs->query = `%s'\n", query);
-//
-//     // calcolo condizioni where dei join
-//     for (int i=0; i<tabelle.size; i++)
-//         for (int j=i+1; j<tabelle.size; j++) {
-//             char* titj = strmalloccat(strmalloccat(strmalloccat(calloc(1, 1),
-//                     tabelle.buf[i]), ","), tabelle.buf[j]);
-//             char* tjti = strmalloccat(strmalloccat(strmalloccat(calloc(1, 1),
-//                     tabelle.buf[j]), ","), tabelle.buf[i]);
-//             // se ci sono entrambi in un elemento di JOINS, metticelo e basta
-//             if (index_of(JOINS, JOINS_SIZE, titj) != -1)
-//                 append_str(&where, where_from_join(titj));
-//             else if (index_of(JOINS, JOINS_SIZE, tjti) != -1)
-//                 append_str(&where, where_from_join(tjti));
-//             else
-//                 cercaPercorso(tabelle.buf[i], tabelle.buf[j], &tabelle, &where);
-//             free(titj);
-//             free(tjti);
-//         }
-//
-//     for (int i=1; i<tabelle.size; i++)
-//         query = strmalloccat(strmalloccat(query, ", "), tabelle.buf[i]);
-//
-//     // innesto delle condizioni where dei join nella query
-//
-//     if (where.size || valori.size)
-//         query = strmalloccat(query, " WHERE ");
-//
-//     if (where.size)
-//         query = strmalloccat(query, where.buf[0]);
-//     for (int i=1; i<where.size; i++)
-//         query = strmalloccat(strmalloccat(query, " AND "), where.buf[i]);
-//
-//     // ulteriori condizioni di where (quelle di chiavi[:-1] = valori)
-//     if (!where.size && valori.size) {
-//         char* quoted = sqlite3_mprintf(") GLOB %Q)", valori.buf[0]);
-//         query = strmalloccat(strmalloccat(strmalloccat(query, "(prep("),
-//                 column_from_keyword(chiavi.buf[0])), quoted);
-//         sqlite3_free(quoted);
-//     }
-//     for (int i=(where.size?0:1); i<valori.size; i++) {
-//         char* quoted = sqlite3_mprintf(") GLOB %Q)", valori.buf[i]);
-//         query = strmalloccat(strmalloccat(strmalloccat(query, " AND (prep("),
-//                 column_from_keyword(chiavi.buf[i])), quoted);
-//         sqlite3_free(quoted);
-//     }
-//
-// //     query = strmalloccat(strmalloccat(query, " GROUP BY "),
-// //             colonne.buf[colonne.size-1]);
-// //     errprintf("calcola_query_subdirs) query = `%s'\n", query);
-//     free_str(&colonne);
-//     free_str(&tabelle);
-//     free_str(&where);
-//     return query;
-// }
 
 /**
     Funzione di utilità che, date due tabelle non presenti in JOINS, mi cerca il
