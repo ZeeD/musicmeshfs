@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# -*- encoding: utf-8 -*-
 #   Copyright © 2008 Vito De Tullio
 #
 #   This program is free software: you can redistribute it and/or modify

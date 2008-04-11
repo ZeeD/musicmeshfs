@@ -129,7 +129,6 @@ int add_local_file_in_db(void* db, const char* path) {
         char* titolo = preprocessing(taglib_tag_title(tlt));
         char* artista = preprocessing(taglib_tag_artist(tlt));
         char* album = preprocessing(taglib_tag_album(tlt));
-//         char* commento = taglib_tag_comment(tlt);   // non usato
         char* genere = preprocessing(taglib_tag_genre(tlt));
         unsigned int anno = taglib_tag_year(tlt);
         unsigned int traccia = taglib_tag_track(tlt);
@@ -140,22 +139,18 @@ int add_local_file_in_db(void* db, const char* path) {
         snprintf(anno_s, 5, "%04d", anno);
         snprintf(traccia_s, 3, "%02d", traccia);
 
-//         printf("[%c] [%c] [%c] [%c]", titolo[0], artista[0], album[0], genere[0]);
-
-        if (esegui_query(db, "INSERT OR REPLACE INTO artista(nome_artista) valu\
-es (REPLACE(%Q, '/', '_'))", artista) == -1)
+        if (esegui_query(db, "INSERT OR REPLACE INTO artista(nome_artista) "
+                "values (%Q)", artista) == -1)
             return -1;
-        if (esegui_query(db, "INSERT OR REPLACE INTO musica(titolo, nome_album,\
- traccia, genere, artista_nome_artista, lavoro_anno) values (REPLACE(%Q, '/', '\
-_'), REPLACE(%Q, '/', '_'), REPLACE(%Q, '/', '_'), REPLACE(%Q, '/', '_'), REPLA\
-CE(%Q, '/', '_'), REPLACE(%Q, '/', '_'))", titolo, album, traccia_s, genere,
+        if (esegui_query(db, "INSERT OR REPLACE INTO musica(titolo, nome_album,"
+                " traccia, genere, artista_nome_artista, lavoro_anno) values "
+                "(%Q, %Q, %Q, %Q, %Q, %Q)", titolo, album, traccia_s, genere,
                 artista, anno_s) == -1)
             return -1;
-        if (esegui_query(db, "INSERT OR REPLACE INTO file(host, path, permessi,\
- formato, dimensioni, data_ultimo_aggiornamento, musica_titolo, musica_nome_alb\
-um, musica_traccia, basename) values (REPLACE(%Q, '/', '_'), REPLACE(%Q, '/', '\
-_'), %d, REPLACE(%Q, '/', '_'), %d, NULL, REPLACE(%Q, '/', '_'), REPLACE(%Q, '/\
-', '_'), REPLACE(%Q, '/', '_'), REPLACE(%Q, '/', '_'))", "127.0.0.1", path, 6,
+        if (esegui_query(db, "INSERT OR REPLACE INTO file(host, path, permessi,"
+                " formato, dimensioni, data_ultimo_aggiornamento, musica_titolo"
+                ", musica_nome_album, musica_traccia, basename) values ("
+                "'127.0.0.1', %Q, %d, %Q, %d, NULL, %Q, %Q, %Q, %Q)", path, 6,
                 extract_extension(path), extract_size(path), titolo, album,
                 traccia_s, extract_basename(path)) == -1)
             return -1;
@@ -174,6 +169,6 @@ _'), %d, REPLACE(%Q, '/', '_'), %d, NULL, REPLACE(%Q, '/', '_'), REPLACE(%Q, '/\
     \sa add_file_in_db()
 */
 int del_local_file_from_db(void* db, char* path) {
-    return esegui_query(db, "DELETE FROM file WHERE (host = '127.0.0.1') AND (p\
-ath = REPLACE(%Q, '/', '_'));", path);
+    return esegui_query(db, "DELETE FROM file WHERE (file.host = '127.0.0.1') "
+            "AND (file.path = %Q)", path);
 }

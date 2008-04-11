@@ -19,9 +19,7 @@
 
 #include "db_fuse.h"
 #include "db_fuse_utils.h"   /* subdirs(), exist(), get_db_from_context(),
-                                get_fissi_from_context(),
-                                get_keywords_from_context() */
-// #include "utils.h"           /* errprintf(), dynamic_obj_t */
+        get_fissi_from_context(), get_keywords_from_context() */
 #include "parser.h"          /* parse_path(), IS_A_DIR, IS_A_FILE */
 
 /**
@@ -43,7 +41,7 @@ int db_fuse_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
         return -1;
     if (!exist(db, keywords, dinamici))
         return -1;
-    dynamic_str_t elementi = sub_dir(db, keywords, dinamici);
+    dynamic_str_t elementi = sub_dir(db, fissi, keywords, dinamici);
     for (int i=0; i<elementi.size; i++)
         filler(buf, elementi.buf[i], NULL, 0);
     free_obj(&dinamici);
@@ -71,66 +69,27 @@ int db_fuse_getattr(const char* path, struct stat* filestat) {
     init_obj(&dinamici);
     int type = parse_path(path, fissi, keywords, &dinamici);
     if (type == -1)
-        return -1;
+        return -ENOENT;
     if (!exist(db, keywords, dinamici))
-        return -1;
+        return -ENOENT;
     if (type == IS_A_DIR) {
         filestat->st_mode = S_IFDIR | 0755;
         filestat->st_nlink = 2;
         return 0;
     }
     else {
-        if (is_local_file(db, keywords, dinamici)) {   // file locale
-            char* real_path = get_local_path(db, keywords, dinamici);
+        if (is_local_file(db, fissi, keywords, dinamici)) {   // file locale
+            char* real_path = get_local_path(db, fissi, keywords, dinamici);
             errprintf("getattr -> real_path = `%s'\n", real_path);
             if (real_path)
                 return stat(real_path, filestat);
             else
-                return -1;
+                return -ENOENT;
         }
         // TODO: file remoto
     }
-    return -1;
+    return -ENOENT;
 }
-
-    /*
-    dynamic_str_t splitted_path = split(path+1, '/');
-    dynamic_str_t sliced_path = slice_str(splitted_path, 0, splitted_path.size-1);
-    char* last_element = splitted_path.buf[splitted_path.size-1];
-
-    // devo sapere se l'ultimo elemento di path esiste,
-    //      altrimenti ritornare -ENOENT
-    // come? controllo se l'"ls" di tutto prima dell'ultimo elemento di path
-    //                                        contiene l'ultimo elemento di path
-
-    dynamic_str_t dirs = schema_to_dirs(PATTERN_DIR_NAME, sliced_path);
-//     dbgprint_str(dirs, "getattr.dirs");
-//     dbgprint_str(splitted_path, "splitted_path");
-//     dbgprint_str(sliced_path, "sliced_path");
-//     fprintf(stderr, "last_element = `%s'\n", last_element);
-    if (!contains_str(dirs, last_element)) { // file non esistente
-        free_str(&sliced_path);
-        free_str(&splitted_path);
-        free_str(&dirs);
-        return -ENOENT;
-    }
-    // file esistente, devo solo decidere se è un file o una directory :)
-    memset(filestat, 0, sizeof(struct stat));
-    if (is_a_dir(PATTERN_DIR_NAME, splitted_path)) {
-        filestat->st_mode = S_IFDIR | 0755;
-        filestat->st_nlink = 2;
-    }
-    else{
-        filestat->st_mode = S_IFREG | 0444; // TODO: permessi
-        filestat->st_nlink = 1;
-        filestat->st_size = get_size(PATTERN_DIR_NAME, splitted_path);
-//         fprintf(stderr,
-//                 "[DBG]real_path = `%s', virtual_path = `%s'\n",
-//                 virtual_path_to_real_path(PATTERN_DIR_NAME, splitted_path),
-//                 path);
-//         virtual_path_to_real_path(PATTERN_DIR_NAME, splitted_path);
-    }
-    free_str(&splitted_path);*/
 
 /**
     Implementazione di fuse_operations.rename()
@@ -196,42 +155,23 @@ int db_fuse_open(const char* virtual_path, struct fuse_file_info* ffi) {
     dynamic_obj_t keywords = get_keywords_from_context();
     dynamic_obj_t dinamici;
     init_obj(&dinamici);
-    if (parse_path(virtual_path, fissi, keywords, &dinamici) == -1)
+    if (parse_path(virtual_path, fissi, keywords, &dinamici) != IS_A_FILE)
         return -1;
     if (!exist(db, keywords, dinamici))
         return -1;
-    char* real_path = get_local_path(db, keywords, dinamici);
-    errprintf("real_path = `%s'\t", real_path);
-    int i = open(real_path, O_RDONLY);
-    errprintf("i = %d\n", i);
-    if (i == -1)
-        return -errno;
-    ffi->fh = i;
-    return 0;
+    if (is_local_file(db, fissi, keywords, dinamici)) {   // file locale
+        char* real_path = get_local_path(db, fissi, keywords, dinamici);
+        errprintf("open -> real_path = `%s'\n", real_path);
+        if (!real_path)
+            return -1;
+        int i = open(real_path, O_RDONLY);
+        if (i == -1)
+            return -errno;
+        ffi->fh = i;
+        return 0;
+    }
+    return -1;
 }
-
-/**
-    Implementazione di fuse_operations.opendir()
-    \param virtual_path percorso nel file system virtuale di cui è stato
-            richiesto il contenuto
-    \param ffi informazioni aggiuntive di fuse (in particolare, ffi->fh indica
-            il file descriptor del file REALE da aprire)
-    \return 0 se la directory esiste, -1 altrimenti
-    \sa fuse.h, musicmeshfs_open(), close()
-*/
-// int db_fuse_opendir(const char* virtual_path, struct fuse_file_info* ffi) {
-//     errprintf("[OPENDIR] virtual_path = `%s'\t", virtual_path);
-//     dynamic_str_t chiavi, valori;
-//     if (parse(virtual_path, &chiavi, &valori) == -1)
-//         return -1;
-//     if (!exist(chiavi, valori))
-//         return -1;
-//     dynamic_str_t tmp[2];
-//     tmp[0] = chiavi;
-//     tmp[1] = valori;
-//     ffi->fh = (uint64_t) tmp;
-//     return 0;
-// }
 
 /**
     Implementazione di fuse_operations.release()
@@ -246,23 +186,6 @@ int db_fuse_release(const char* virtual_path, struct fuse_file_info* ffi) {
     errprintf("[RELEASE] path = `%s'\n", virtual_path);
     return close(ffi->fh);   // nella doc dice che non è usata
 }
-
-/**
-    Implementazione di fuse_operations.releasedir()
-    \param virtual_path percorso nel file system virtuale di cui è stato
-            richiesto il contenuto
-    \param ffi informazioni aggiuntive di fuse (in particolare, ffi->fh indica
-            la coppia chiavi / valori da liberare
-    \return 0;
-    \sa fuse.h, musicmeshfs_open(), close()
- */
-// int db_fuse_releasedir(const char* virtual_path, struct fuse_file_info* ffi) {
-//     errprintf("[RELEASEDIR] path = `%s'\n", virtual_path);
-//     dynamic_str_t* tmp = (dynamic_str_t*)ffi->fh;
-//     free_str(&tmp[0]);
-//     free_str(&tmp[1]);
-//     return 0;   // nella doc dice che non è usata
-// }
 
 /**
     Implementazione di fuse_operations.read()

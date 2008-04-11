@@ -22,147 +22,112 @@
                                             init_str(), preprocessing() */
 #include "../common/sqlite.h"            /* esegui_query_callback() */
 #include "../db_fuse/db_fuse_utils.h"    /* get_one_column() */
+#include "../db_fuse/constants.h"        /* column_from_keyword() */
 
 /**
     ritorna la dimensione (in byte) del file originario
     assumo che chiavi.size == valori.size
 */
-int get_size(sqlite3* db, dynamic_obj_t keywords, dynamic_obj_t dinamici) {
-    char* path = get_local_path(db, keywords, dinamici);
-    char query[] = "SELECT dimensioni FROM file WHERE (host='127.0.0.1') and "
-            "(path=%Q)";
+int get_size(sqlite3* db,  dynamic_obj_t fissi, dynamic_obj_t keywords,
+            dynamic_obj_t dinamici) {
+    char query[] = "SELECT file.dimensioni FROM file WHERE "
+            "(file.host = '127.0.0.1') and (file.path = %Q)";
     dynamic_str_t ret;
     init_str(&ret);
+    char* path = get_local_path(db, fissi, keywords, dinamici);
     esegui_query_callback(db, get_one_column, &ret, query, path);
+    free(path);
+    free(query);
     return atoi(ret.buf[0]);
 }
 
-// /**
-//     Funzione booleana che decide se il path richiesto è una directory
-//
-//     Il motto è "When there's only one candidate, there's only one choice!" [MI1]
-//     \param db database su cui effettuare eventuali query
-//     \param chiavi vettore dinamico delle chiavi presenti
-//     \param valori vettore dinamico dei valori corrispondenti
-//     \return 1 se è una dir, 0 altrimenti
-//     \attention host e path corrispondono alla chiave primaria di file, che
-//             indica dove andare a prendere la musica!
-//  */
-// int is_a_dir(sqlite3* db, dynamic_str_t chiavi, dynamic_str_t valori) {
-//     if (chiavi.size == valori.size + 1)
-//         return 1;
-//     dynamic_str_t copiaChiavi = slice_str(chiavi, 0, chiavi.size);
-//     dynamic_str_t copiaValori = slice_str(valori, 0, valori.size);
-//     if (!contains_str(copiaChiavi, "host")) {
-//         append_str(&copiaChiavi, "host");
-//         append_str(&copiaValori, "*");
-//     }
-//     if (!contains_str(copiaChiavi, "path")) {
-//         append_str(&copiaChiavi, "path");
-//         append_str(&copiaValori, "*");
-//     }
-//     append_str(&copiaChiavi, "COUNT()");
-//     char * query = calcola_query_subdirs(copiaChiavi, copiaValori);
-//     dynamic_str_t ret;
-//     init_str(&ret);
-//     esegui_query_callback(db, get_one_column, &ret, query);
-//     free(query);
-//     free_str(&copiaChiavi);
-//     free_str(&copiaValori);
-//     int r = atoi(ret.buf[0]);
-//     free_str(&ret);
-//     return r > 1;
-// }
-
 /**
     Calcola il percorso locale del primo file reale che supera i vincoli
-    impostati dalle coppie chiave/valore,
-    \param chiavi schema del filesystem con cui vengono mostrati i dati
-    \param valori path richiesto dall'utente nel filesystem virtuale
-    \return path locale del file corrispondente, NULL in caso non ne esista uno
-    \sa virtual_path_to_host()
-    \attention utilizza COLUMNS_MISC definita in constants.c
+    impostati dalle coppie chiave/valore
+
+    Assumo che dinamici.size <= keywords.size, non posso assicurare il
+    contrario
+    \param db database
+    \param keywords "chiavi" del dizionario chiave/valore
+    \param dinamici "valori" del dizionario chiave/valore
+    \return path locale del file corrispondente,
+            NULL in caso non ne esista uno
 */
-char* get_local_path(sqlite3* db, dynamic_obj_t keywords, dynamic_obj_t
-        dinamici) {
-/*    // non modifico direttamente chiavi
-    dynamic_str_t copiaChiavi = slice_str(chiavi, 0, chiavi.size);
-    append_str(&copiaChiavi, "path");
+char* get_local_path(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
+        dynamic_obj_t dinamici) {
+    dynamic_str_t tabelle, where;
+    init_str(&tabelle);
+    append_str(&tabelle, "file");
+    for (int i=0; i<keywords.size; i++)
+        if (calcola_tabelle(*(dynamic_str_t*)keywords.buf[i], &tabelle) == -1)
+            return NULL;
+
+    char* query = strmalloccat(calloc(1,1),
+            "SELECT\n\tDISTINCT file.path\nFROM\n\t");
+    for (int i=0; i<tabelle.size; i++) {
+        if (i)
+            query = strmalloccat(query, ", ");
+        query = strmalloccat(query, tabelle.buf[i]);
+    }
+    query = strmalloccat(query, "\nWHERE\n");
+    // assumo che fissi.size == keywords.size >= dinamici.size
+
+    for (int i=0; i<dinamici.size; i++) {
+        dynamic_str_t fissi2 = *(dynamic_str_t*)(fissi.buf[i]);
+        dynamic_str_t chiavi = *(dynamic_str_t*)(keywords.buf[i]);
+        dynamic_str_t valori = *(dynamic_str_t*)(dinamici.buf[i]);
+
+        //assumo che nella directory chiavi.size == valori.size
+        for (int j=0; j<chiavi.size; j++) {
+            if (i)
+                query = strmalloccat(query, " AND\n\t");
+            if (fissi2.size > j+1)          // se è seguito da un elemento fisso
+                query = strmalloccat(query, "\t(REPLACE(");
+            else
+                query = strmalloccat(query, "\t(");
+            query = strmalloccat(strmalloccat(strmalloccat(query, "REPLACE("),
+                    column_from_keyword(chiavi.buf[j])), ", '/', '_')");
+            if (fissi2.size > j+1) {        // se è seguito da un elemento fisso
+                char* tmp = sqlite3_mprintf(", %Q, '_')", fissi2.buf[j+1]);
+                query = strmalloccat(query, tmp);
+                sqlite3_free(tmp);
+            }
+            char* tmp = sqlite3_mprintf(" GLOB %Q)", valori.buf[j]);
+            query = strmalloccat(query, tmp);
+            free(tmp);
+        }
+    }
+
+    calcola_where(tabelle, &where);
+    for (int i=0; i<where.size; i++)
+        query = strmalloccat(strmalloccat(query, " AND "), where.buf[i]);
+
+    errprintf("get_local_path->query = `%s'\n", query);
     dynamic_str_t risultati;
     init_str(&risultati);
-    char* query = calcola_query_subdirs(copiaChiavi, valori);
-//     errprintf("get_real_path->query = `%s'\n", query);
     esegui_query_callback(db, get_one_column, &risultati, query);
     free(query);
-    free_str(&copiaChiavi);
-//     dbgprint_str(risultati, "get_real_path->risultati");
     if (risultati.size) {
         char* ret = strdup(risultati.buf[0]);
         free_str(&risultati);
-//         errprintf("get_real_path->ret = `%s'\n", ret);
         return ret;
-    }*/
+    }
     return NULL;
 }
-/*    char* query = malloc(1); query[0] = '\0';
-    query = strmalloccat(query, "SELECT path FROM ");  // TODO: cacciare fuori il literal "path" dalla query!
-    query = strmalloccat(query, TABLE);
-    query = strmalloccat(query, " WHERE ");
-    dynamic_str_t where;
-    calcola_where(schema, virtual_path, &where);
-    int indice_where = 0;
-    dynamic_str_t tmp_fissi, tmp_dinamici;
-    if (virtual_path.size) {
-    calcola_elementi(schema.buf[0], &tmp_fissi, &tmp_dinamici);
-    free_str(&tmp_fissi);
-    if (tmp_dinamici.size) {
-    query = strmalloccat(query, "(");
-    query = strmalloccat(query, tmp_dinamici.buf[0]);
-    char* quoted = sqlite3_mprintf(" = %Q)", where.buf[indice_where++]);
-    query = strmalloccat(query, quoted);
-    sqlite3_free(quoted);
-}
-    for (int j=1; j<tmp_dinamici.size; j++) {
-    query = strmalloccat(query, "and (");
-    query = strmalloccat(query, tmp_dinamici.buf[j]);
-    char* quoted = sqlite3_mprintf(" = %Q)", where.buf[indice_where++]);
-    query = strmalloccat(query, quoted);
-    sqlite3_free(quoted);
-}
-    free_str(&tmp_dinamici);
-}
-    for (int i=1; i<virtual_path.size; i++) {
-    calcola_elementi(schema.buf[i], &tmp_fissi, &tmp_dinamici);
-    free_str(&tmp_fissi);
-    for (int j=0; j<tmp_dinamici.size; j++) {
-    query = strmalloccat(query, "and (");
-    query = strmalloccat(query, tmp_dinamici.buf[j]);
-    char* quoted = sqlite3_mprintf(" = %Q)", where.buf[indice_where++]);
-    query = strmalloccat(query, quoted);
-    sqlite3_free(quoted);
-}
-    free_str(&tmp_dinamici);
-}
-    dynamic_str_t ret;
-    init_str(&ret);
-    esegui_query_callback(DB, piglia_stringa, &ret, query);
-    sqlite3_free(query);
-    if (ret.size)
-    return ret.buf[0];*/
 
 /**
     Dati il db, e il vettore di dizionari < keywords, dinamici > valuta se
     corrisponde ad un file locale
     \param db datase su cui fare le query
+    \param fissi elementi fissi
     \param keywords chiavi
     \param dinamici valori delle chiavi
     \return 1 se il file è locale,
             0 altrimenti
     \attention al momento è fittizio! (ritorna sempre 1s)
  */
-int is_local_file(sqlite3* db, dynamic_obj_t keywords, dynamic_obj_t dinamici) {
-    (void) db;
-    (void) keywords;
-    (void) dinamici;
+int is_local_file(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
+        dynamic_obj_t dinamici) {
+    // TODO: stub
     return 1;
 }

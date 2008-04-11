@@ -72,18 +72,16 @@ int main(int argc, char** argv) {
         struct fuse_chan* ch;
         char* mountpoint;
         int err = -1;
-
-        dynamic_obj_t* parametro;
-        init_obj(parametro);
-        append_obj(parametro, db);
-        append_obj(parametro, &fissi);
-        append_obj(parametro, &keywords);
-
+        dynamic_obj_t parametro;
+        init_obj(&parametro);
+        append_obj(&parametro, db);
+        append_obj(&parametro, &fissi);
+        append_obj(&parametro, &keywords);
         if (fuse_parse_cmdline(&args, &mountpoint, NULL, NULL) != -1 &&
                 (ch = fuse_mount(mountpoint, &args)) != NULL) {
             struct fuse* se;
             if ((se = fuse_new(ch, &args, &musicmeshfs_op,
-                    sizeof musicmeshfs_op, parametro)) != NULL)
+                    sizeof musicmeshfs_op, &parametro)) != NULL)
                 err = fuse_loop(se);
         }
         fuse_unmount(mountpoint, ch);
