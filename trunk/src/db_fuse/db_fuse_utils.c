@@ -66,24 +66,21 @@ dynamic_obj_t get_keywords_from_context() {
 */
 int exist(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
         dynamic_obj_t dinamici, const char* path) {
-    errprintf("[EXIST]\n");
-
-    errprintf("dinamici.size = %d\n", dinamici.size);
-    if (dinamici.size == 0) // mi sto riferendo a "/"... credo
+    dynamic_str_t splitted_path = split(path+1, '/');
+    char* filename = splitted_path.buf[splitted_path.size-1];
+//     errprintf("[EXIST] path = `%s'\n", filename);
+    if (dinamici.size == 0) // mi sto riferendo a "/"
         return 1;
-
     dynamic_obj_t dinamici_superiore;
-    init_str(&dinamici_superiore);
+    init_obj(&dinamici_superiore);
     for (int i=0; i<dinamici.size-1; i++)
         append_obj(&dinamici_superiore, dinamici.buf[i]);
     dynamic_str_t contenuto_superiore = sub_dir(db, fissi, keywords,
             dinamici_superiore);
 
-    dynamic_str_t splitted_path = split(path+1, '/');
-    errprintf("presente = %s\n", splitted_path.buf[splitted_path.size-1]);
-    dbgprint_str(contenuto_superiore, "exist->contenuto_superiore");
-
-    return contains_str(contenuto_superiore, splitted_path.buf[splitted_path.size-1]);
+    int ret = contains_str(contenuto_superiore, filename);
+    free_str(&splitted_path);
+    return ret;
 }
 
 /**
@@ -95,11 +92,10 @@ dynamic_str_t sub_dir(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
         dynamic_obj_t dinamici) {
     dynamic_str_t ret;
     init_str(&ret);
-    dynamic_str_t fissi_file = *(dynamic_str_t*)fissi.buf[dinamici.size];
-    dynamic_str_t keywords_file = *(dynamic_str_t*)keywords.buf[dinamici.size];
-
     char* query = strmalloccat(calloc(1, 1), "SELECT DISTINCT (\n");
 
+    dynamic_str_t fissi_file = *(dynamic_str_t*)fissi.buf[dinamici.size];
+    dynamic_str_t keywords_file = *(dynamic_str_t*)keywords.buf[dinamici.size];
     for (int i=0; i<keywords_file.size; i++) {
         if (i)
             query = strmalloccat(query, " ||");
@@ -121,8 +117,9 @@ dynamic_str_t sub_dir(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
 
     dynamic_str_t tabelle, where;
     init_str(&tabelle);
-    if (calcola_tabelle(keywords_file, &tabelle) == -1)
-        return ret;
+    for (int i=0; i<keywords.size; i++)
+        if (calcola_tabelle(*(dynamic_str_t*)keywords.buf[i], &tabelle) == -1)
+            return ret;
 
     query = strmalloccat(strmalloccat(query, "\n) FROM\n\t"), tabelle.buf[0]);
 
@@ -140,7 +137,41 @@ dynamic_str_t sub_dir(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
         query = strmalloccat(query, where.buf[i]);
     }
 
-    // TODO: ulteriori condizioni di where (delle sottodirectories)
+    int usa_where = 0;
+    for (int i=0; i<dinamici.size; i++)
+        if (((dynamic_str_t*)dinamici.buf[i])->size) {
+            usa_where = 1;
+            break;
+        }
+    if (!where.size && usa_where)
+        query = strmalloccat(query, "\nWHERE\n\t");
+
+    for (int i=0; i<dinamici.size; i++) {
+        dynamic_str_t fissi2 = *(dynamic_str_t*)(fissi.buf[i]);
+        dynamic_str_t chiavi = *(dynamic_str_t*)(keywords.buf[i]);
+        dynamic_str_t valori = *(dynamic_str_t*)(dinamici.buf[i]);
+
+        //assumo che nella directory chiavi.size == valori.size
+        for (int j=0; j<chiavi.size; j++) {
+            if (i || where.size)
+                query = strmalloccat(query, " AND\n");
+            if (fissi2.size > j+1)          // se è seguito da un elemento fisso
+                query = strmalloccat(query, "\t(REPLACE(");
+            else
+                query = strmalloccat(query, "\t(");
+            query = strmalloccat(strmalloccat(strmalloccat(query, "REPLACE("),
+                                 column_from_keyword(chiavi.buf[j])), ", '/', '_')");
+            if (fissi2.size > j+1) {        // se è seguito da un elemento fisso
+                char* tmp = sqlite3_mprintf(", %Q, '_')", fissi2.buf[j+1]);
+                query = strmalloccat(query, tmp);
+                sqlite3_free(tmp);
+            }
+            char* tmp = sqlite3_mprintf(" GLOB %Q)", valori.buf[j]);
+            query = strmalloccat(query, tmp);
+            free(tmp);
+        }
+
+    }
 
 //     errprintf("sub_dir) query = `%s'\n", query);
     esegui_query_callback(get_db_from_context(), get_one_column, &ret, query);

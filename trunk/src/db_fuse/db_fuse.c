@@ -78,14 +78,9 @@ int db_fuse_getattr(const char* path, struct stat* filestat) {
         return 0;
     }
     else {
-        if (is_local_file(db, fissi, keywords, dinamici)) {   // file locale
-            char* real_path = get_local_path(db, fissi, keywords, dinamici);
-            errprintf("getattr) real_path = `%s'\n", real_path);
-            if (real_path)
-                return stat(real_path, filestat);
-            else
-                return -ENOENT;
-        }
+        if (is_local_file(db, fissi, keywords, dinamici))   // file locale
+            return -stat(get_local_path(db, fissi, keywords, dinamici),
+                    filestat);
         // TODO: file remoto
     }
     return -ENOENT;
@@ -166,7 +161,6 @@ int db_fuse_open(const char* virtual_path, struct fuse_file_info* ffi) {
         return -1;
     if (is_local_file(db, fissi, keywords, dinamici)) {   // file locale
         char* real_path = get_local_path(db, fissi, keywords, dinamici);
-        errprintf("open -> real_path = `%s'\n", real_path);
         if (!real_path)
             return -1;
         int i = open(real_path, O_RDONLY);

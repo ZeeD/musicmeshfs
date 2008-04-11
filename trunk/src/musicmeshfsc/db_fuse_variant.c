@@ -128,6 +128,5 @@ char* get_local_path(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
  */
 int is_local_file(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
         dynamic_obj_t dinamici) {
-    // TODO: stub
     return 1;
 }

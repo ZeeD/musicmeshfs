@@ -50,7 +50,6 @@ int main(int argc, char** argv) {
         errprintf("ERR: MOUNT_SCHEMA `%s' non valido!\n", argv[3]);
         exit(EXIT_FAILURE);
     }
-    // TODO: mettere in loop un oggetto di tipo sqlite3*!!
     sqlite3* db;
     if (sqlite3_open(argv[1], &db) != SQLITE_OK) {
         errprintf("sqlite3_open: `%s'\n", sqlite3_errmsg(db));
