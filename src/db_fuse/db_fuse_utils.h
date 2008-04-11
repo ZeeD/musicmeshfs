@@ -30,7 +30,8 @@ sqlite3* get_db_from_context();
 dynamic_obj_t get_fissi_from_context();
 dynamic_obj_t get_keywords_from_context();
 
-int exist(sqlite3*, dynamic_obj_t, dynamic_obj_t);
+int exist(sqlite3*, dynamic_obj_t, dynamic_obj_t, dynamic_obj_t, const char*);
+
 dynamic_str_t sub_dir(sqlite3*, dynamic_obj_t, dynamic_obj_t, dynamic_obj_t);
 
 char* calcola_query_subdirs(dynamic_str_t, dynamic_str_t);

@@ -39,7 +39,7 @@ int db_fuse_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
     init_obj(&dinamici);
     if (parse_path(path, fissi, keywords, &dinamici) == -1)
         return -1;
-    if (!exist(db, keywords, dinamici))
+    if (!exist(db, fissi, keywords, dinamici, path))
         return -1;
     dynamic_str_t elementi = sub_dir(db, fissi, keywords, dinamici);
     for (int i=0; i<elementi.size; i++)
@@ -70,7 +70,7 @@ int db_fuse_getattr(const char* path, struct stat* filestat) {
     int type = parse_path(path, fissi, keywords, &dinamici);
     if (type == -1)
         return -ENOENT;
-    if (!exist(db, keywords, dinamici))
+    if (!exist(db, fissi, keywords, dinamici, path))
         return -ENOENT;
     if (type == IS_A_DIR) {
         filestat->st_mode = S_IFDIR | 0755;
@@ -80,7 +80,7 @@ int db_fuse_getattr(const char* path, struct stat* filestat) {
     else {
         if (is_local_file(db, fissi, keywords, dinamici)) {   // file locale
             char* real_path = get_local_path(db, fissi, keywords, dinamici);
-            errprintf("getattr -> real_path = `%s'\n", real_path);
+            errprintf("getattr) real_path = `%s'\n", real_path);
             if (real_path)
                 return stat(real_path, filestat);
             else
@@ -105,11 +105,11 @@ int db_fuse_rename(const char* from, const char* to) {
     init_obj(&dinamici_to);
     if (parse_path(from, fissi, keywords, &dinamici_from) == -1)
         return -1;
-    if (!exist(db, keywords, dinamici_from))
+    if (!exist(db, fissi, keywords, dinamici_from, from))
         return -1;
     if (parse_path(to, fissi, keywords, &dinamici_to) == -1)
         return -1;
-    if (exist(db, keywords, dinamici_to))
+    if (exist(db, fissi, keywords, dinamici_to, to))
         return -1;
 /*    dynamic_str_t fissi, dinamici, splitted_to = split(to+1, '/');
     for (int i=0; i<splitted_to.size; i++) {
@@ -122,21 +122,26 @@ int db_fuse_rename(const char* from, const char* to) {
 
 /**
     Implementazione di fuse_operations.chmod()
-    \todo stub!
 */
 int db_fuse_chmod(const char* path, mode_t mode) {
     errprintf("[CHMOD] path = `%s'\n", path);
-    (void) mode;
     sqlite3* db = get_db_from_context();
     dynamic_obj_t fissi = get_fissi_from_context();
     dynamic_obj_t keywords = get_keywords_from_context();
     dynamic_obj_t dinamici;
     init_obj(&dinamici);
-    if (parse_path(path, fissi, keywords, &dinamici) == -1)
-        return -1;
-    if (!exist(db, keywords, dinamici))
-        return -1;
-    return -1;
+    int type = parse_path(path, fissi, keywords, &dinamici);
+    if (type != IS_A_FILE)  // NON posso modificare i diritti su una directory
+        return -EROFS;  // ho un "quasi-ReadOnly FS"
+    if (!exist(db, fissi, keywords, dinamici, path))
+        return -ENOENT; // 'sto file non esiste
+    else
+        if (is_local_file(db, fissi, keywords, dinamici))   // file locale
+//             int chmod(const char *path, mode_t mode);
+            return -chmod(get_local_path(db, fissi, keywords, dinamici), mode);
+        else // TODO: file remoto
+            return -EROFS;  // per il momento non posso farlo
+    return -ENOENT;
 }
 
 /**
@@ -157,7 +162,7 @@ int db_fuse_open(const char* virtual_path, struct fuse_file_info* ffi) {
     init_obj(&dinamici);
     if (parse_path(virtual_path, fissi, keywords, &dinamici) != IS_A_FILE)
         return -1;
-    if (!exist(db, keywords, dinamici))
+    if (!exist(db, fissi, keywords, dinamici, virtual_path))
         return -1;
     if (is_local_file(db, fissi, keywords, dinamici)) {   // file locale
         char* real_path = get_local_path(db, fissi, keywords, dinamici);

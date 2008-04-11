@@ -22,7 +22,7 @@
 
 #define FUSE_USE_VERSION 26  /* richiesto da <fuse.h> */
 #include <fuse.h>            /* fuse_fill_dir_t, struct fuse_file_info */
-#include <sys/stat.h>        /* struct stat */
+#include <sys/stat.h>        /* struct stat, stat(), chmod() */
 #include <errno.h>           /* errno */
 #include <unistd.h>          /* pread() */
 #include <sqlite3.h>         /* sqlite3 */
