@@ -208,7 +208,7 @@ width "30col%"
 special "none"
 height "1in"
 height_special "totalheight"
-status open
+status collapsed
 
 \begin_layout Standard
 \paragraph_spacing single
@@ -289,6 +289,7 @@ Licenza per la documentazione libera GNU
 \end_layout
 
 \begin_layout Dedication
+\noindent
 Ad Anna.
 \end_layout
 
@@ -302,6 +303,10 @@ Ad Anna.
 
 \begin_layout Addchap
 Introduzione
+\end_layout
+
+\begin_layout Quote
+Yoko Kanno/(1998) COWBOY BEBOP - Original Soundtrack 1/01 - Tank!.mp3
 \end_layout
 
 \begin_layout Standard
@@ -371,7 +376,33 @@ destinazione
  Per permettere all'utente di decidere come organizzare la collezione musicale,
  è stato realizzato un semplice linguaggio tramite il quale descrivere i
  nomi delle directory che conterranno i file musicali.
- L'organizzazione sarà implicitamente data appunto dalla gerarchia.
+ L'organizzazione sarà implicitamente data appunto dalla gerarchia
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+Subito dopo ogni capitolo di questo testo è presente il nome di un file.
+ Questi sono solo esempi 
+\emph on
+reali
+\emph default
+ di nomi di file generati tramite il progetto, usando come schema della
+ gerarchia la stringa 
+\family typewriter
+
+\begin_inset Quotes eld
+\end_inset
+
+%autor/(%year) %album/%track - %title.%type
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -414,20 +445,72 @@ File system e configurabilità in ambito musicale
 \end_layout
 
 \begin_layout Chapter
+\begin_inset LatexCommand label
+name "cha:File-system-per"
+
+\end_inset
+
 File system per dati musicali
 \end_layout
 
 \begin_layout Quote
-Castellina Pasi / 1981 - Lupin III - Fisarmonica / 01 - Lupin.mp3
+Elio e le storie tese/(1992) Italyan, rum casusu çikti/12 - Pipppero®.mp3
 \end_layout
 
 \begin_layout Standard
 Per poter realizzare un file system per dati musicali, è stato necessario
  prima di tutto studiare i formati più comuni e le librerie più adatte a
  manipolarli.
+ Una volta fatto questo sarà necessario capire quali sono le informazioni
+ che si possono estrarre, e quali, tra queste, risultano utili per i nostri
+ fini.
+\end_layout
+
+\begin_layout Standard
+Per rispondere a queste due ultime domande ci siamo posti nella condizione
+ dell'utente che potrà usare il sistema.
+ Egli ha una collezione più o meno grande di file musicali, e desidera poterli
+ avere ordinati in base a uno o più vincoli, anche contemporaneamente (ad
+ esempio può volere da una parte la collezione ordinata per genere, da un'altra
+ parte ordinata per anno e artista).
+ Al momento usa un qualche player multimediale per organizzarsi e scegliere
+ cosa ascoltare, ma ha comprato un palmare e, per quanto voglia ascoltare
+ la propria musica anche lì, il suo player non funziona su quella piattaforma,
+ dove invece si trova un programma molto più semplice, che permette solamente
+ di elencare i file presenti su una directory e di ascoltarli uno alla volta.
+\end_layout
+
+\begin_layout Standard
+In base a questa piccola 
+\emph on
+user story
+\emph default
+ possiamo notare come le informazioni che potranno essere usate dovranno
+ essere il minor numero possibile (al massimo una dozzina) e che dovranno
+ essere simili ai possibili valori mostrati dai player musicali esistenti.
+ Ci aspettiamo quindi che sia possibile 
+\emph on
+quantomeno
+\emph default
+ avere informazioni sull'autore del brano, sul titolo, sul suo genere, e
+ poco altro.
+ Possiamo ragionevolmente aspettarci che qualunque formato di file multimediale
+ supporti queste informazioni, riservandoci di espandere questo insieme
+ di informazioni in base a quanto verrà descritto nella sezione 
+\begin_inset LatexCommand vref
+reference "sec:File-multimediali"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
+\begin_inset LatexCommand label
+name "sec:File-multimediali"
+
+\end_inset
+
 File multimediali
 \end_layout
 
@@ -530,10 +613,10 @@ Caratteristica comune a quasi tutti i formati audio è la possibilità di
  Ma questa soluzione è stata abbandonata, a causa dei limiti intrinseci
  dei nomi dei file (a seconda del sistema operativo e del file system, non
  sarebbe stato possibile avere nomi più lunghi di otto caratteri, o con
- alcuni caratteri particolari -- '/', su piattaforme *NIX, '<', '>', ':',
+ alcuni caratteri particolari -- '/', su piattaforme *NIX; '<', '>', ':',
  '"', '/', '
 \backslash
-', '|', '?', '*' su FAT e NTFS) e, a livello pratico, dell'impossibilità
+', '|', '?', '*' su FAT e NTFS -- ) e, a livello pratico, dell'impossibilità
  di avere uno standard comune che s'adatti ad ogni utente (alcuni potrebbero
  preferire ordinare i brani per autore, altri per genere, altri ancora inserire
  mark personalizzati).
@@ -648,7 +731,7 @@ Elemento
 \begin_inset Text
 
 \begin_layout Standard
-Dimensione (byte)
+Byte usati
 \end_layout
 
 \end_inset
@@ -659,6 +742,7 @@ Dimensione (byte)
 \begin_inset Text
 
 \begin_layout Standard
+Stringa 
 \begin_inset Quotes eld
 \end_inset
 
@@ -827,7 +911,7 @@ Elemento
 \begin_inset Text
 
 \begin_layout Standard
-Dimensione (byte)
+Byte usati
 \end_layout
 
 \end_inset
@@ -838,6 +922,7 @@ Dimensione (byte)
 \begin_inset Text
 
 \begin_layout Standard
+Stringa 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1093,16 +1178,76 @@ Esistono, tuttavia, altri formati per la codifica di metadati, anche se
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TODO: Rivedere e correggere
-\end_layout
+Come introdotto nella parte iniziale del capitolo 
+\begin_inset LatexCommand vref
+reference "cha:File-system-per"
 
 \end_inset
 
+, ci si è riservati di espandere le informazioni che l'utente potrà scegliere
+ di usare per mostrare i file presenti nella propria collezione.
+\end_layout
 
+\begin_layout Standard
+In base a quanto detto, e alla babele di formati di musica e metadati, abbiamo
+ deciso di rimanere il più minimalisti possibili, decidendo di lavorare
+ al massimo con i tag supportati dal 
+\emph on
+tutti
+\emph default
+ i formati di metadati analizzati, 
+\emph on
+tranne
+\emph default
+ l'ID3v1(.0), che ci è sembrato troppo limitante sotto questo punto di vista,
+ oltre che poco usato.
+ Questo coincide grosso modo con le informazioni supportate da ID3v1.1; tuttavia
+ abbiamo deciso di non usare le informazioni presenti nel tag 
+\begin_inset Quotes eld
+\end_inset
+
+Comment
+\begin_inset Quotes erd
+\end_inset
+
+, in quanto questo è, nella maggioranza dei casi, o vuoto o con informazioni
+ inutili (spam).
+ Questo riduce le informazioni disponibili per l'utente a sei campi:
+\end_layout
+
+\begin_layout Itemize
+Titolo
+\end_layout
+
+\begin_layout Itemize
+Artista
+\end_layout
+
+\begin_layout Itemize
+Anno
+\end_layout
+
+\begin_layout Itemize
+Album
+\end_layout
+
+\begin_layout Itemize
+Numero traccia nell'album
+\end_layout
+
+\begin_layout Itemize
+Genere
+\end_layout
+
+\begin_layout Standard
+In aggiunta, ci sembra doveroso aggiungere anche l'informazione sul tipo
+ di file analizzato (se ogg, mp3 o altro) e sul nome del file originale.
+ In previsione di un espansione del progetto per il funzionamento in rete,
+ si è pensato di avere anche host e path completo dei file originali, per
+ poter comunque risalire a qual'è il file che si sta ascoltando.
+ Sommando tutto quanto, si arriva a dieci campi.
+ Non pochissimi, ma comunque perfettamente gestibili da qualunque utente
+ per permettergli di esprimere le proprie preferenze.
 \end_layout
 
 \begin_layout Section
@@ -1821,25 +1966,12 @@ fuse_operations.bmap
 .
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TODO: Rivedere e finire!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Chapter
 Analisi delle librerie e API usate
 \end_layout
 
 \begin_layout Quote
-Max Gazzè / 2008 - Tra l'aratro e la radio / 02 - Il solito sesso.mp3
+Francesco De Gregori/(1997) La valigia dell'attore/18 - Niente da capire.mp3
 \end_layout
 
 \begin_layout Standard
@@ -1897,7 +2029,7 @@ status collapsed
 \begin_inset listings
 lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,language=C,numbers=left,numberstyle={\tiny},showstringspaces=false,stepnumber=1"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -2031,7 +2163,15 @@ reference "fig:Loop-principale-di-inotify"
 status open
 
 \begin_layout Standard
-TODO: Rivedere e finire!
+TODO: INSERIRE FUNZIONE CALLBACK!
+\newline
+
+\newline
+
+\newline
+
+\newline
+
 \end_layout
 
 \end_inset
@@ -2459,7 +2599,7 @@ Il file system configurabile Musicmeshfs
 \end_layout
 
 \begin_layout Quote
-Ty Semaka, Theo de Raadt / 2007 - OpenBSD 4.2 / 01 - 100001 101010
+Franco Battiato/(1971) Fetus/05 - Fenomenologia.ogg
 \end_layout
 
 \begin_layout Standard
@@ -3244,18 +3384,59 @@ Generalizzazione della configurabilità a file qualsiasi
 File system per l'interrogazione di un database
 \end_layout
 
-\begin_layout Standard
-èopensource, la metto in rete
+\begin_layout Quote
+Enrico Colombini, Marco Di Francesco/(2007) No album/00 - La ballata del
+ programmatore.mp3
 \end_layout
 
 \begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+La fase finale del progetto è consistita nella realizzazione dei tre sottoproget
+ti: un demone che monitorasse la sorgente dei dati, una libreria che offrisse
+ i dati sotto forma di file system ed un client che usasse ed espandesse
+ questa libreria.
+\end_layout
+
+\begin_layout Standard
+Questi ultimi due elementi del progetto, inizialmente, erano una sola cosa,
+ ma si è pensato di estrapolare la libreria per facilitare lo sviluppo di
+ altre applicazioni simili a questa.
+\end_layout
+
+\begin_layout Standard
+In particolare è da notare come i programmi e la libreria sviluppati siano
+ software libero
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+musicmeshfsd e musicmeshfsc sono licenziati tramite la GNU General Public
+ License, versione 3 e successive
+\end_layout
+
+\begin_layout Standard
+db_fuse è licenziata tramite la GNU Lesser General Public License, versione
+ 3 e successive
+\end_layout
+
+\end_inset
+
+.
+ Entrambi sono disponibili all'indirizzo 
 \begin_inset LatexCommand htmlurl
 name "MusicMeshFS home page"
 target "http://code.google.com/p/musicmeshfs/"
 
 \end_inset
 
+.
+\end_layout
 
+\begin_layout Standard
+Veniamo adesso ad una breve descrizione della libreria sviluppata.
 \end_layout
 
 \begin_layout Section
@@ -3407,6 +3588,13 @@ TABELLA
 
 \begin_layout Standard
 DELLO SCHEMA NE PARLO QUI, DELLE QUERY PURE
+\end_layout
+
+\begin_layout Standard
+Un particolare degno di nota è la presenza nella libreria db_fuse anche
+ dei parser necessari a realizzare filesystem configurabili tramite schemi.
+ In questo modo ogni programma che userà questa libreria avrà, tra le altre
+ cose, la configurabilità dei nomi dei file tramite uno schema.
 \end_layout
 
 \begin_layout Section
@@ -3738,8 +3926,8 @@ confronto con fusepod
 Compilazione dei sorgenti
 \end_layout
 
-\begin_layout Standard
-Paolo Conte / 1987 - Aguaplano / 06 - Max.mp3
+\begin_layout Quote
+Daft punk/(2001) Discovery/04 - Harder, better, faster, stronger.mp3
 \end_layout
 
 \begin_layout Standard
@@ -3948,6 +4136,10 @@ src/Makefile
 Estensione del fs in ambiente distribuito
 \end_layout
 
+\begin_layout Quote
+Frankie Hi-NRG Mc/(2008) dePrimoMaggio/00 - Rivoluzione feat_ Roy Paci.mp3
+\end_layout
+
 \begin_layout Standard
 \begin_inset Note Shaded
 status open
@@ -3962,7 +4154,7 @@ DA FARE DA FARE DA FARE!!!
 \end_layout
 
 \begin_layout Quote
-Yoko Kanno / 1998 - COWBOY BEBOP - Original Soundtrack 1 / 01 - Tank!.mp3
+
 \end_layout
 
 \begin_layout Standard
@@ -4140,11 +4332,6 @@ TODO: Rivedere e finire!
 Porting dell'applicazione su smart phone e testing
 \end_layout
 
-\begin_layout Quote
-Enrico Colombini, Marco Di Francesco / 2007 - No album / 00 - La ballata
- del programmatore
-\end_layout
-
 \begin_layout Subsection
 Installazione del sistema base
 \end_layout
@@ -4282,11 +4469,6 @@ name "cha:Simulazione-dello-scambio"
 Simulazione dello scambio di file tra 2 smart phone
 \end_layout
 
-\begin_layout Quote
-Frankie Hi-NRG Mc / 2008 - dePrimoMaggio / 00 - Rivoluzione feat.
- Roy Paci
-\end_layout
-
 \begin_layout Standard
 \begin_inset Float figure
 wide false
@@ -4361,7 +4543,7 @@ Ringraziamenti
 \end_layout
 
 \begin_layout Quote
-Elio e le storie tese / 1999 - Craccracriccrecr / 15 - Bis.mp3
+Paolo Conte/(1996) The best of/11 - Max.mp3
 \end_layout
 
 \begin_layout Standard
@@ -4474,7 +4656,7 @@ Reference generata da doxygen
 \end_layout
 
 \begin_layout Quote
-Fabrizio De André / 1970 - La buona novella / 10 - Laudate Hominem
+Fabrizio De André/(1970) La buona novella/09 - Il testamento di Tito.mp3
 \end_layout
 
 \begin_layout Standard
@@ -4492,6 +4674,10 @@ Da cancellare?
 
 \begin_layout Chapter
 Licenza per la documentazione libera GNU
+\end_layout
+
+\begin_layout Quote
+Ty Semaka, Theo de Raadt/(2007) OpenBSD 4.2/01 - 100001 1010101.ogg
 \end_layout
 
 \begin_layout Section
@@ -6199,7 +6385,7 @@ If your document contains nontrivial examples of program code, we recommend
 
 \begin_layout Standard
 \begin_inset LatexCommand bibtex
-options "bibtotoc,alpha"
+options "alpha"
 bibfiles "reference"
 
 \end_inset

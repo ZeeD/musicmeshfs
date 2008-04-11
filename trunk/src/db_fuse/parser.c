@@ -210,7 +210,7 @@ int keyword(const char* schema, int offset, dynamic_str_t* keywords) {
         dinamici = [ ["Max Gazzè"], ["2008", "Tra l'aratro e la radio"], ["02",
             "Il solito sesso", "mp3"] ]
     se invece ho un percorso tipo
-        path = "/Max Gazzè/2008 - Tra l'aratro e la radio" # NB già normalizzato!
+        path = "/Max Gazzè/2008 - Tra l'aratro e la radio" # già normalizzato!
     allora tramite parse_path() == IS_A_DIR ottengo
         dinamici = [ ["Max Gazzè"], ["2008", "Tra l'aratro e la radio"] ]
 
@@ -247,7 +247,7 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
         if (offset == -1)
             return -1;
         for (int j=1; j<el_fissi.size; j++) {
-            int new_offset = -1, size_dinamico = -1;
+            int new_offset = -1, size_dinamico = 0;
             for (; new_offset == -1; size_dinamico += 1) {
                 new_offset = startswith(nomi.buf[i]+offset+size_dinamico,
                         el_fissi.buf[j]);
@@ -259,13 +259,15 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
             char tmp[size_dinamico];
             tmp[0] = tmp[size_dinamico-1] = '\0';
             strncpy(tmp, nomi.buf[i]+offset, size_dinamico-1);
-            errprintf("(1) `%s' = `%s'\n", el_keywords.buf[j-1], tmp);
+//             errprintf("(1) `%s' = `%s'\n", el_keywords.buf[j-1], tmp);
             append_str(el_dinamici, tmp);
 //             errprintf("offset = %d, new_offset = %d, size_dinamico = %d\n",
 //                     offset, new_offset, size_dinamico);
             offset += new_offset + size_dinamico - 1;
         }
+//         errprintf("1\n");
         if (el_fissi.size == el_keywords.size) {
+//             errprintf("2\n");
 //             errprintf("con offset = `%s'\n", nomi.buf[i]+offset);
             if (!(nomi.buf[i]+offset))
                 return -1;
@@ -275,7 +277,7 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
             char tmp[size+1];
             tmp[0] = '\0';
             strcpy(tmp, nomi.buf[i]+offset);
-            errprintf("(2) `%s' = `%s'\n", el_keywords.buf[el_keywords.size-1], tmp);
+//             errprintf("(2) `%s' = `%s'\n", el_keywords.buf[el_keywords.size-1], tmp);
             append_str(el_dinamici, tmp);
         }
         append_obj(dinamici, el_dinamici);

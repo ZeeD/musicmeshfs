@@ -78,17 +78,17 @@ FOR EACH ROW BEGIN
             musica_nome_album = OLD.nome_album AND musica_traccia = OLD.traccia;
 END;
 
--- Vista che riunisce tutto come se fosse una sola tabella (read-only!)
-DROP VIEW IF EXISTS vw_all_in_one;
-CREATE VIEW vw_all_in_one AS
-    SELECT file.host AS host, file.path AS path, file.permessi AS permessi,
-            file.formato AS formato, file.dimensioni AS dimensioni,
-            file.data_ultimo_aggiornamento AS data_ultimo_aggiornamento,
-            musica.titolo AS titolo, musica.nome_album AS album, musica_traccia
-            AS traccia, musica.genere AS genere, artista.nome_artista AS
-            artista, musica.lavoro_anno AS anno, file.basename AS basename
-    FROM file, musica, artista
-    WHERE (file.musica_titolo = musica.titolo AND
-            file.musica_nome_album = musica.nome_album AND
-            file.musica_traccia = musica.traccia AND
-            musica.artista_nome_artista = artista.nome_artista);
+-- -- Vista che riunisce tutto come se fosse una sola tabella (read-only!)
+-- DROP VIEW IF EXISTS vw_all_in_one;
+-- CREATE VIEW vw_all_in_one AS
+--     SELECT file.host AS host, file.path AS path, file.permessi AS permessi,
+--             file.formato AS formato, file.dimensioni AS dimensioni,
+--             file.data_ultimo_aggiornamento AS data_ultimo_aggiornamento,
+--             musica.titolo AS titolo, musica.nome_album AS album, musica_traccia
+--             AS traccia, musica.genere AS genere, artista.nome_artista AS
+--             artista, musica.lavoro_anno AS anno, file.basename AS basename
+--     FROM file, musica, artista
+--     WHERE (file.musica_titolo = musica.titolo AND
+--             file.musica_nome_album = musica.nome_album AND
+--             file.musica_traccia = musica.traccia AND
+--             musica.artista_nome_artista = artista.nome_artista);
