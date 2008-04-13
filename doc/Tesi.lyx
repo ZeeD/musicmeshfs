@@ -312,12 +312,12 @@ Yoko Kanno/(1998) COWBOY BEBOP - Original Soundtrack 1/01 - Tank!.mp3
 \begin_layout Standard
 Il lavoro di questa tesi nasce come risposta all'esigenza di catalogare
  ed organizzare collezioni di dimensioni sempre crescenti di file multimediali,
- in maniera veloce, automatica e portabile.
+ in maniera veloce, automatica e portabile su diverse piattaforme.
 \end_layout
 
 \begin_layout Standard
-Un'esigenza del genere, infatti, non è nuova, e infatti tutti i player musicali
- moderni incorporano una qualche forma di 
+Un'esigenza del genere non è nuova, e infatti tutti i player musicali moderni
+ incorporano una qualche forma di 
 \begin_inset Quotes eld
 \end_inset
 
@@ -326,6 +326,46 @@ gestore della collezione
 \end_inset
 
 .
+ Esempi se ne trovano per tutte le piattaforme e tutti i sistemi operativi:
+ da Windows Media Player®
+\begin_inset LatexCommand citep
+key "wmp_home_page"
+
+\end_inset
+
+ a Winamp®
+\begin_inset LatexCommand citep
+key "winamp_home_page"
+
+\end_inset
+
+, da iTunes®
+\begin_inset LatexCommand citep
+key "itunes_home_page"
+
+\end_inset
+
+ ad Amarok
+\begin_inset LatexCommand citep
+key "amarok_home_page"
+
+\end_inset
+
+, da Banshee
+\begin_inset LatexCommand citep
+key "banshee_home_page"
+
+\end_inset
+
+ a Songbird
+\begin_inset LatexCommand citep
+key "songbird_home_page"
+
+\end_inset
+
+; tutti questi (e moltissimi altri) player multimediali offrono, in maniera
+ simile, modi semplici e intuitivi per ordinare e facilitare il ritrovamento
+ dei file in base a varie caratteristiche.
 \end_layout
 
 \begin_layout Standard
@@ -336,12 +376,43 @@ Tuttavia questo vincola l'utente a quale player utilizzare.
 \begin_inset Quotes eld
 \end_inset
 
-potersi portare con sè
+poter portare con sè
 \begin_inset Quotes erd
 \end_inset
 
-, magari su una pentrna USB, la propria collezione di brani preferiti e
- anche la propria organizzazione per questi dati.
+, magari su una penna USB, oltre alla propria collezione di brani preferiti,
+ anche la propria organizzazione per questi dati, per poterla ascoltare
+ su altri computer, con altri player multimediali installati.
+\end_layout
+
+\begin_layout Standard
+Inoltre, questi programmi tendono ad avere un numero impressionante di 
+\begin_inset Quotes eld
+\end_inset
+
+feature
+\begin_inset Quotes erd
+\end_inset
+
+, dalla gestione delle copertine degli album musicali, all'integrazione
+ con sistemi di condivisione/vendita di musica online, al 
+\begin_inset Quotes eld
+\end_inset
+
+riconoscimento
+\begin_inset Quotes erd
+\end_inset
+
+ automatico della musica tramite fingerprint, che possono essere molto utili
+ in alcuni contesti, ma che tendono ad appensantire l'applicazione, fino
+ a renderla improponibile in situazioni in cui le capacità hardware sottostanti
+ sono limitate.
+ Non solo personal computer 
+\emph on
+entry level
+\emph default
+, ma anche i dispositivi portatili, UMPC, palmari e simili, sono tagliati
+ fuori da questi gestori multimediali.
 \end_layout
 
 \begin_layout Standard
@@ -410,11 +481,11 @@ Durante il lavoro ci si è resi conto, tuttavia, che l'idea era generalizzabile
  a qualunque tipo d'informazione, usando un livello d'astrazione ottenuto
  tramite l'uso di un database.
  La semantica dei dati presenti nel database non è importante ai fini del
- file system, quindi era possibile utilizzare le tabelle sia per inserire
+ file system, quindi è possibile utilizzare le tabelle sia per inserire
  informazioni sui file multimediali, come è stato fatto in questa tesi,
  ma anche per avere file system per la gestione della posta, per il monitoraggio
  di host remoti, per le foto, per qualunque informazione ragionevolmente
- organizzabile in una tassonomia.
+ organizzabile in una tassonomia indotta dall'albero delle directory.
 \end_layout
 
 \begin_layout Standard
@@ -551,8 +622,8 @@ lossless vi è compressione del segnale campionato, senza
 \begin_layout Standard
 I codec che non effettuano compressione, come ad esempio quelli associati
  ai formati AIFF e WAV, sono poco usati, se non in alcuni ambiti (ad esempio
- i cd musicali contengono le tracce codificate in WAV) , per le grandi dimension
-i che è necessario avere per il salvataggio del segnale.
+ i cd musicali contengono le tracce codificate in WAV), per le grandi dimensioni
+ che è necessario avere per il salvataggio del segnale.
  A titolo d'esempio, un minuto di audio, codificato in AIFF, occupa circa
  10MB di dati.
 \end_layout
@@ -602,9 +673,33 @@ Metadati
 \end_layout
 
 \begin_layout Standard
-Caratteristica comune a quasi tutti i formati audio è la possibilità di
- associare, all'informazione vera e propria codificata, anche informazioni
- addizionali.
+Caratteristica comune a quasi
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+Una importante eccezione è il formato WAV, usato nei CD musicali: esso non
+ prevede nessun modo per poter inglobare metadati alla traccia audio, ed
+ è il motivo pricipale per cui non è possibile ottenere 
+\emph on
+direttamente dal cd
+\emph default
+ informazioni come l'autore o il titolo del brano.
+ Per questo motivo sono nati servizi come 
+\begin_inset LatexCommand htmlurl
+name "CDDB"
+target "http://www.cddb.org"
+
+\end_inset
+
+, in cui ad ogni cd musicale, identificato tramite il calcolo di una funzione
+ hash, sono associate queste meta informazioni.
+\end_layout
+
+\end_inset
+
+ tutti i formati audio è la possibilità di associare, all'informazione vera
+ e propria codificata, anche informazioni addizionali.
  Autore, titolo o anno di registrazione sono solo alcune delle informazioni
  usualmente associate ad un brano audio.
  Inizialmente non si era pensato ad alcun modo per associare metadati all'audio
@@ -613,10 +708,10 @@ Caratteristica comune a quasi tutti i formati audio è la possibilità di
  Ma questa soluzione è stata abbandonata, a causa dei limiti intrinseci
  dei nomi dei file (a seconda del sistema operativo e del file system, non
  sarebbe stato possibile avere nomi più lunghi di otto caratteri, o con
- alcuni caratteri particolari -- '/', su piattaforme *NIX; '<', '>', ':',
- '"', '/', '
+ alcuni caratteri particolari, come '/', su piattaforme *NIX e '<', '>',
+ ':', '"', '/', '
 \backslash
-', '|', '?', '*' su FAT e NTFS -- ) e, a livello pratico, dell'impossibilità
+', '|', '?', '*' su FAT e NTFS) e, a livello pratico, dell'impossibilità
  di avere uno standard comune che s'adatti ad ogni utente (alcuni potrebbero
  preferire ordinare i brani per autore, altri per genere, altri ancora inserire
  mark personalizzati).
@@ -1211,7 +1306,11 @@ Comment
 \end_inset
 
 , in quanto questo è, nella maggioranza dei casi, o vuoto o con informazioni
- inutili (spam).
+ inutili (in genere il link dell'home page del programma di 
+\emph on
+ripping
+\emph default
+ usato).
  Questo riduce le informazioni disponibili per l'utente a sei campi:
 \end_layout
 
@@ -1993,7 +2092,8 @@ Inotify
 \end_layout
 
 \begin_layout Standard
-Inotify è un'altra componente del kernel che è stata utilizzata nel progetto.
+Inotify è un'altra componente del kernel, oltre Fuse, che è stata utilizzata
+ nel progetto.
  Essa è una API del kernel linux (inclusa ufficialmente dal rilascio 2.6.13,
  disponibile sotto forma di patch per le versioni precedenti
 \begin_inset LatexCommand citep
@@ -2023,13 +2123,13 @@ Le informazioni sono codificate in uno stream, permettendo, quindi, una
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Standard
 \begin_inset listings
 lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,language=C,numbers=left,numberstyle={\tiny},showstringspaces=false,stepnumber=1"
 inline false
-status collapsed
+status open
 
 \begin_layout Standard
 
@@ -2159,24 +2259,56 @@ reference "fig:Loop-principale-di-inotify"
  nel database.
  Come si può vedere il codice è totalmente astratto, e la logica da applicare
  è esterna al loop stesso, in quanto implementata come funzione di callback.
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TODO: INSERIRE FUNZIONE CALLBACK!
-\newline
-
-\newline
-
-\newline
-
-\newline
-
 \end_layout
 
+\begin_layout Standard
+In particolare, è da notare come inotify offra le notifiche sotto forma
+ di un oggetto simile ad un 
+\family typewriter
+FILE
+\family default
+ (
+\family typewriter
+inotify.instance
+\family default
+ è un file number generato tramite 
+\family typewriter
+inotify_init()
+\family default
+) infatti nel codice ci si è limitati ad utilizzare la funzione 
+\family typewriter
+read()
+\family default
+.
+ L'uso di due cicli annidati è dovuto al fatto che il singolo evento è di
+ dimensioni variabili (una parte fissa più una eventuale payload, sotto
+ forma di stringa indicante il nome del file su cui è accorso l'evento);
+ non è possibile leggere da inotify 
+\begin_inset Quotes eld
 \end_inset
 
+un evento per volta
+\begin_inset Quotes erd
+\end_inset
 
+ e si è deciso di utilizzare, perciò, un buffer temporaneo da riempire e
+ da analizzare alla ricerca dei singoli eventi.
+ Ognuno di essi, infatti, contiene un campo (
+\family typewriter
+event->len
+\family default
+) che indica quanto è grande il payload che ha con sé.
+ Una volta individuato l'evento occorso, si invoca una funzione esterna,
+ al fine di facilitare il cambiamento di logica da applicare senza doversi
+ preoccupare di come 
+\begin_inset Quotes eld
+\end_inset
+
+recuperare
+\begin_inset Quotes erd
+\end_inset
+
+ gli eventi stessi.
 \end_layout
 
 \begin_layout Section
@@ -2196,7 +2328,11 @@ Per quanto leggero e minimalista, sqlite offre quasi tutte le features dello
  che i trigger.
  Purtroppo non è supportata l'integrità referenziale tra chiavi esterne,
  quindi non è soddisfatta la richiesta di Consistenza per avere un dbms
- ACID-compliant.
+ ACID-
+\emph on
+compliant
+\emph default
+.
  In compenso i già citati triggers consentono di 
 \begin_inset Quotes eld
 \end_inset
@@ -2292,20 +2428,182 @@ reference "fig:Esempio-di-trigger"
 
  è presente un trigger (preso dallo schema del database sviluppato per il
  progetto) che solleva un errore se è inserita una chiave esterna che non
- fa riferimento a nessun elemento effettivamente presente).
+ fa riferimento a nessun elemento effettivamente presente.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Shaded
+L'API offerta da Sqlite3 è stata molto comoda.
+ L'unica modifica ritenuta utile è stata l'introduzione di un piccolo wrapper
+ per l'esecuzione di query in stile 
+\begin_inset Quotes eld
+\end_inset
+
+*printf
+\begin_inset Quotes erd
+\end_inset
+
+, in cui alcuni elementi della query sono sostituiti con parametri.
+ In figura 
+\begin_inset LatexCommand vref
+reference "fig:Wrapper-di-sqlite3_exec()"
+
+\end_inset
+
+ è presente tale wrapper: esso estende sqlite3_exec(), definendo una funzione
+ con un numero variabile di argomenti, usati per espandere la query stessa.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,language=C,numbers=left,numberstyle={\tiny},showstringspaces=false,stepnumber=1"
+inline false
 status open
 
 \begin_layout Standard
-TODO: continuare e finire
+
+int esegui_query_callback(sqlite3* db, int(*callback)(void*, int, char**,
+ char**), void* callback_par, char* query, ...) {
+\end_layout
+
+\begin_layout Standard
+
+    va_list ap;
+\end_layout
+
+\begin_layout Standard
+
+    va_start(ap, query);     /* inizializzo ap col primo valore successivo
+ a
+\end_layout
+
+\begin_layout Standard
+
+                                query, se ce ne sono */
+\end_layout
+
+\begin_layout Standard
+
+    char* quoted_query = sqlite3_vmprintf(query, ap);
+\end_layout
+
+\begin_layout Standard
+
+    va_end(ap); // chiudo ap (...)
+\end_layout
+
+\begin_layout Standard
+
+    char* errmsg = NULL;
+\end_layout
+
+\begin_layout Standard
+
+    int r = sqlite3_exec(db, quoted_query, callback, callback_par, &errmsg);
+\end_layout
+
+\begin_layout Standard
+
+    sqlite3_free(quoted_query);
+\end_layout
+
+\begin_layout Standard
+
+    if (errmsg) {
+\end_layout
+
+\begin_layout Standard
+
+        errprintf("esegui_query_callback: `%s'
+\backslash
+n", errmsg);
+\end_layout
+
+\begin_layout Standard
+
+        sqlite3_free(errmsg);
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    return r;
+\end_layout
+
+\begin_layout Standard
+
+}
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:Wrapper-di-sqlite3_exec()"
+
+\end_inset
+
+Wrapper di 
+\family typewriter
+sqlite3_exec()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+L'uso di un database relazionare ha consentito di 
+\begin_inset Quotes eld
+\end_inset
+
+disaccoppiare
+\begin_inset Quotes erd
+\end_inset
+
+ ulteriormente il filesystem dalle informazioni che verranno utilizzate
+ per popolarlo.
+\end_layout
+
+\begin_layout Standard
+L'idea che è nata nello sviluppo di questa tesi è stata quella di concepire
+ un percorso come una query di tipo 
+\family typewriter
+SELECT
+\family default
+, dove ogni directory indicasse una o più clausole 
+\family typewriter
+WHERE
+\family default
+.
+ L'argomento è approfondito nel capitolo 
+\begin_inset LatexCommand vref
+reference "cha:DB_FUSE"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
@@ -2351,11 +2649,6 @@ façade
 \emph default
  offre solo funzioni necessarie, e lo studio della libreria è stato questione
  di minuti.
-\end_layout
-
-\begin_layout Standard
-In particolare, le funzioni offerte da TagLib, poi usate, sono state le
- seguenti:
 \end_layout
 
 \begin_layout Standard
@@ -2499,6 +2792,54 @@ reference "fig:Estrazione-delle-meta"
  possibile estrarre le meta informazioni dai file multimediali.
 \end_layout
 
+\begin_layout Standard
+Tramite l'applicazione delle funzioni 
+\family typewriter
+taglib_file_new()
+\family default
+ prima, e 
+\family typewriter
+taglib_file_tag()
+\family default
+ poi, si ottiene una struttura rappresentante l'insieme dei tag del file
+ multimediale.
+ Le funzioni 
+\family typewriter
+taglib_tag_title()
+\family default
+, 
+\family typewriter
+taglib_tag_artist()
+\family default
+, 
+\family typewriter
+taglib_tag_album()
+\family default
+, 
+\family typewriter
+taglib_tag_genre()
+\family default
+, 
+\family typewriter
+taglib_tag_year()
+\family default
+, 
+\family typewriter
+taglib_tag_track()
+\family default
+, come si può intuire, servono per ottenere, rispettivamente, titolo, artista,
+ album, genere, anno e traccia dal file multimediale.
+ 
+\family typewriter
+taglib_tag_free_strings()
+\family default
+ e 
+\family typewriter
+taglib_file_free()
+\family default
+, infine, sono funzioni di utilità per liberare la memoria occupata.
+\end_layout
+
 \begin_layout Subsection
 Id3lib
 \end_layout
@@ -2527,6 +2868,9 @@ solo
  su file .mp3.
  Non sono supportati né i Vorbis comment, né gli APE tags né gli stessi
  tag ID3 in file flac, trueaudio, ecc...
+ Questo avrebbe portato alla necessità di trovare altre librerie per gli
+ altri formati, oltre ad un modo per integrare librerie diverse e analisi
+ di metadati anche semanticamente differenti, seppur simili.
 \end_layout
 
 \begin_layout Itemize
@@ -2538,7 +2882,11 @@ Le API, per quanto più ampie di quelle di TagLib, erano molto più a basso
 \emph on
 rilevanti
 \emph default
- (in 
+:
+\emph on
+ 
+\emph default
+in 
 \begin_inset LatexCommand citep
 key "id3v2.4_frames"
 
@@ -2552,7 +2900,11 @@ nativi
 \begin_inset Quotes erd
 \end_inset
 
- per la definizione del titolo del brano - TIT1, 
+ per la definizione del titolo del brano - 
+\family typewriter
+TIT1
+\family default
+, 
 \family typewriter
 TIT2
 \family default
@@ -2566,7 +2918,11 @@ TOAL
 \family default
  - e quasi una dozzina di frame che possono definire l'artista del brano.
  Queto avrebbe comportato da una parte la scelta di quali usare effettivamente,
- ed in secondo luogo, l'uso di fallback in caso di frame non presenti)
+ ed in secondo luogo, l'uso di 
+\emph on
+fallback
+\emph default
+ in caso di frame non presenti
 \end_layout
 
 \begin_layout Itemize
@@ -2595,6 +2951,11 @@ _t, typedef di interi a 16 bit, ognuno dei quali rappresenta il codice del
 \end_layout
 
 \begin_layout Chapter
+\begin_inset LatexCommand label
+name "cha:MusicMeshFS"
+
+\end_inset
+
 Il file system configurabile Musicmeshfs
 \end_layout
 
@@ -2637,6 +2998,61 @@ In particolare, nel progetto è stato deciso di implementare le due componenti
 \end_layout
 
 \begin_layout Standard
+Caratteristica peculiare del file system che si è deciso di implementare
+ è che esso è in 
+\begin_inset Quotes eld
+\end_inset
+
+quasi sola lettura
+\begin_inset Quotes erd
+\end_inset
+
+: non sarà possibile creare o spostare nel file system file multimediali
+ esterni, e l'unica modifica realizzabile è la rinomina dei file.
+ Il motivo è duplice:
+\end_layout
+
+\begin_layout Itemize
+da una parte non è sensato spostare un file nel file system virtuale, poichè
+ non ci sarebbe alcun luogo fisico (file sorgente) ove spostare il file.
+ Inoltre, anche volendo, accadrebbe che il file non si troverebbe nella
+ posizione indicata, ma, al massimo, verrebbe analizzato e spostato 
+\emph on
+senza avvertimenti
+\emph default
+ dal 
+\emph on
+filesystem stesso
+\emph default
+.
+ Creare un file vuoto (tramite il comando 
+\family typewriter
+touch
+\family default
+, per esempio) è ancor peggio, poiché si creerebbe solo un nome nel database,
+ senza poterlo associare a file veri.
+\end_layout
+
+\begin_layout Itemize
+d'altra parte la rinomina è stata permessa al fine di correggere gli errori
+ di tagging, come possono essere typo o vere e proprie informazioni mancanti.
+ Per questo motivo anche la rinomina dei file è tale per cui è possibile
+ spostare file e directory senza limitazioni, ma in modo che le informazioni
+ tra il nome originario e il nuovo siano identiche: ovviamente il file destinazi
+one dovrà rispettare lo schema dell'utente, ma, oltre questo, il livello
+ di profondità tra il vecchio ed il nuovo nome dovrà essere uguale, altrimenti
+ si avrebbe la possibilità di 
+\begin_inset Quotes eld
+\end_inset
+
+mischiare
+\begin_inset Quotes erd
+\end_inset
+
+ i tag, o di avere un database inconsistente.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -2658,6 +3074,11 @@ status collapsed
 \begin_inset Caption
 
 \begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:Architettura-del-progetto"
+
+\end_inset
+
 Architettura del progetto
 \end_layout
 
@@ -2672,25 +3093,26 @@ Architettura del progetto
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-dopo aver anaLIZZATO dATI MUSICALI ci siamo resi conto che lo stesso discorso
- può esser fatto x qualsiasi cosa ke continee METADATI!!!
-\end_layout
-
-\begin_layout Standard
-file, filezippati,cartelle cliniche, email, 4
-\end_layout
-
-\begin_layout Standard
-qquesta cosa è facile xuso db
-\end_layout
+Tornando all'architettura generale, la figura 
+\begin_inset LatexCommand vref
+reference "fig:Architettura-del-progetto"
 
 \end_inset
 
+ mostra come le due componenti 
+\begin_inset Quotes eld
+\end_inset
 
+dialoghino
+\begin_inset Quotes erd
+\end_inset
+
+ tra loro tramite uno stato condiviso, realizzato tramite database relazionale.
+ musicmeshfsc implementa alcune delle funzioni di Fuse, a loro volta astrazioni
+ del Virtual File System.
+ Dallo stesso layer, tramite inotify, musicmeshfsd monitorizza i file da
+ cui verranno poi estratte le meta informazioni tramite Taglib e quindi
+ inserite nel database condiviso.
 \end_layout
 
 \begin_layout Standard
@@ -2743,13 +3165,9 @@ virtuale
  Tuttavia, nella primissima fase, subito dopo l'instanziazione del programma
  vero e proprio, e fatti i dovuti controlli sui parametri esterni, è necessaria
  una fase 
-\begin_inset Quotes eld
-\end_inset
-
+\emph on
 una tantum
-\begin_inset Quotes erd
-\end_inset
-
+\emph default
  di creazione del database (se non è stato scelto di usarne uno già creato
  e inizializzato) e di aggiunta di tutti i file e le directory, ricorsivamente,
  decisi dall'utente.
@@ -2760,7 +3178,11 @@ Per far questo sono stati implementati due funzioni: la prima ha il compito
  di creare il database usando uno schema SQL appropriato.
  Nel nostro progetto, per poter meglio separare il codice C da quello SQL
  in fase di stesura del codice, è stato predisposto un pre-processore ad
- hoc, sostituisci.py, mostrata in figura 
+ hoc, 
+\family typewriter
+sostituisci.py
+\family default
+, mostrata in figura 
 \begin_inset LatexCommand vref
 reference "fig:sostituisci.py"
 
@@ -2778,22 +3200,23 @@ parola chiave
 \begin_inset Quotes eld
 \end_inset
 
+
+\family typewriter
 TRANSLATE_ME_PLEASE
+\family default
+
 \begin_inset Quotes erd
 \end_inset
 
-) con un'altra stringa contenente il codice SQL desiderato.
+) con il contenuto di un file di testo, nel nostro caso contenente il codice
+ SQL desiderato.
  Nonostante l'uso di un linguaggio ad altissimo livello, il codice è abbastanza
  complicato; questo per ovviare ad alcune limitazioni del linguaggio C:
  in particolare il limite per le stringhe allocate sullo stack (del tipo
- char stringa[] = 
-\begin_inset Quotes eld
-\end_inset
-
-...stringa più lunga di 4095 caratteri...
-\begin_inset Quotes erd
-\end_inset
-
+ 
+\family typewriter
+char stringa[] = "...stringa più lunga di 4095 caratteri..."
+\family default
 ); per far questo la variabile è stata allocata sullo heap, dividendo il
  contenuto del file iniziale in 
 \begin_inset Quotes eld
@@ -2803,8 +3226,11 @@ chunks
 \begin_inset Quotes erd
 \end_inset
 
- e usando calloc per preparare la memoria che ospiterà la concatenazione
- di questi 
+ e usando 
+\family typewriter
+calloc()
+\family default
+ per preparare la memoria che ospiterà la concatenazione di questi 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3027,8 +3453,6 @@ sostituisci.py
 
 \begin_layout Standard
 La seconda funzione implementata, invece, è possibile vederla in figura
-\newline
-
  
 \begin_inset LatexCommand vref
 reference "fig:Inizializzazione-del-db"
@@ -3036,8 +3460,11 @@ reference "fig:Inizializzazione-del-db"
 \end_inset
 
 : il suo compito è quello di popolare il database , e, per far ciò, per
- ogni parametro specificato dall'utente, applica la funzione walk(...), che
- 
+ ogni parametro specificato dall'utente, applica la funzione 
+\family typewriter
+walk()
+\family default
+, che 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3045,14 +3472,17 @@ percorre
 \begin_inset Quotes erd
 \end_inset
 
- l'albero con radice nel parametro e se incontra un file, lo analizza e
- - se supportato - lo aggiunge al database; se incontra una directory, l'aggiung
-e al 
+ l'albero con radice nel parametro ricorsivamente raccogliendo in due array
+ di stringhe i file e le directory attraversati.
+ Per ogni file incontrato, lo analizza e - se supportato - lo aggiunge al
+ database.
+ Ogni directory incontrata, invece, è aggiunta al 
 \emph on
 pool
 \emph default
- di directories monitorate tramite inotify, per poi entrare nella directory
- stessa e applicare sè stesso ricorsivamente.
+ di directories monitorate tramite inotify.
+ Per poter velocizzare l'interazione con il database, l'inserimento dei
+ file locali nel database è riunito in un'unica transazione.
 \end_layout
 
 \begin_layout Standard
@@ -3075,17 +3505,63 @@ int init_db_and_inotify(dynamic_str_t params, sqlite3* db, inotify_t* inotify)
 
 \begin_layout Standard
 
+    dynamic_str_t to_watch, to_add_in_db;
+\end_layout
+
+\begin_layout Standard
+
+    init_str(&to_watch);
+\end_layout
+
+\begin_layout Standard
+
+    init_str(&to_add_in_db);
+\end_layout
+
+\begin_layout Standard
+
     for (int i=0; i<params.size; i++)
 \end_layout
 
 \begin_layout Standard
 
-        if (walk(params.buf[i], add_local_file_in_db, db, add_watch, inotify))
+        if (walk(params.buf[i], (int(*)(void*, const char* str))append_str,
+ &to_add_in_db, (int(*)(void*, const char* str))append_str, &to_watch))
 \end_layout
 
 \begin_layout Standard
 
             return -1;
+\end_layout
+
+\begin_layout Standard
+
+    esegui_query(db, "BEGIN TRANSACTION");
+\end_layout
+
+\begin_layout Standard
+
+    for (int i=0; i<to_add_in_db.size; i++)
+\end_layout
+
+\begin_layout Standard
+
+        add_local_file_in_db(db, to_add_in_db.buf[i]);
+\end_layout
+
+\begin_layout Standard
+
+    esegui_query(db, "COMMIT");
+\end_layout
+
+\begin_layout Standard
+
+    for (int i=0; i<to_watch.size; i++)
+\end_layout
+
+\begin_layout Standard
+
+        add_watch(inotify, to_watch.buf[i]);
 \end_layout
 
 \begin_layout Standard
@@ -3125,49 +3601,23 @@ Inizializzazione del db
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TODO: Rivedere e finire!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Section
 Sincronizzazione dei dati ad eventi
 \end_layout
 
 \begin_layout Standard
-La figura 
+La funzione 
+\family typewriter
+local_loop()
+\family default
+, già descritta a figura 
 \begin_inset LatexCommand vref
 reference "fig:Loop-principale-di-inotify"
 
 \end_inset
 
- descrive come viene utilizzato inotify per monitorare ed agire in base
- agli eventi accorsi: vi è un ciclo infinito il cui compito è leggere da
- un oggetto 
-\begin_inset Quotes eld
-\end_inset
-
-file-like
-\begin_inset Quotes erd
-\end_inset
-
- (infatti si usa la classica read) uno stream di eventi.
- In effetti ogni evento ha dimensione variabile, in quanto porta con sé
- anche un payload aggiuntivo.
- Tuttavia nell'evento stesso è presente un campo (event->len) che indica
- quanto è grande l'informazione a dimensione variabile.
- In questo modo, grazie ad un ciclo più interno, è possibile rilevare ogni
- singolo evento riconosciuto da inotify.
- Nella fattispecie, la funzione local_loop ha, come terzo parametro, una
- funzione di callback da richiamare proprio in occasione di un evento.
+, ha, tra i parametri, anche una funzione atta a rappresentare le regole
+ da applicare all'accadere di determinati eventi.
 \end_layout
 
 \begin_layout Standard
@@ -3270,6 +3720,16 @@ status open
 
 \begin_layout Standard
 TODO: LA FUNZIONE NON È COMPLETA!
+\newline
+
+\newline
+
+\newline
+
+\newline
+
+\newline
+
 \end_layout
 
 \end_inset
@@ -3306,7 +3766,7 @@ reference "fig:Regole-inotify"
 
 \end_inset
 
-, invece, è mostrata l'implementazione della logica da applicare in caso
+ è mostrata l'implementazione utilizzata della logica da applicare in caso
  si verifichi un evento importante sui file monitorati.
 \end_layout
 
@@ -3359,16 +3819,9 @@ Dovranno essere aggiornate le informazioni dei file nel database
 
 \end_deeper
 \begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TODO: Rivedere e finire!
-\end_layout
-
-\end_inset
-
-
+Una volta fatto questo, saremo ragionevolmente sicuri che le informazioni
+ presenti del database saranno sempre aggiornate rispetto ai dati reali,
+ consentendo anche un aggiornamento implicito del file system virtuale.
 \end_layout
 
 \begin_layout Part
@@ -3381,6 +3834,11 @@ Generalizzazione della configurabilità a file qualsiasi
 \end_layout
 
 \begin_layout Chapter
+\begin_inset LatexCommand label
+name "cha:DB_FUSE"
+
+\end_inset
+
 File system per l'interrogazione di un database
 \end_layout
 
@@ -3390,14 +3848,30 @@ Enrico Colombini, Marco Di Francesco/(2007) No album/00 - La ballata del
 \end_layout
 
 \begin_layout Standard
+Nel capitolo 
+\begin_inset LatexCommand vref
+reference "cha:MusicMeshFS"
 
+\end_inset
+
+ il progetto è stato diviso in due componenti, tuttavia nelle fasi finali
+ del progetto si è deciso di realizzare 
+\series bold
+tre
+\series default
+ sottoprogetti:
 \end_layout
 
-\begin_layout Standard
-La fase finale del progetto è consistita nella realizzazione dei tre sottoproget
-ti: un demone che monitorasse la sorgente dei dati, una libreria che offrisse
- i dati sotto forma di file system ed un client che usasse ed espandesse
- questa libreria.
+\begin_layout Itemize
+un demone che monitorasse la sorgente dei dati
+\end_layout
+
+\begin_layout Itemize
+una libreria che offrisse i dati sotto forma di file system
+\end_layout
+
+\begin_layout Itemize
+un client che usasse ed espandesse questa libreria
 \end_layout
 
 \begin_layout Standard
@@ -3413,13 +3887,14 @@ In particolare è da notare come i programmi e la libreria sviluppati siano
 status collapsed
 
 \begin_layout Standard
-musicmeshfsd e musicmeshfsc sono licenziati tramite la GNU General Public
- License, versione 3 e successive
+musicmeshfsd e musicmeshfsc, rispettivamente l'implementazione del demone
+ e del client, sono licenziati tramite la GNU General Public License, versione
+ 3 e successive
 \end_layout
 
 \begin_layout Standard
-db_fuse è licenziata tramite la GNU Lesser General Public License, versione
- 3 e successive
+db_fuse, realizzazione della libreria usata da musicmeshfs, è licenziata
+ tramite la GNU Lesser General Public License, versione 3 e successive
 \end_layout
 
 \end_inset
@@ -3429,6 +3904,25 @@ db_fuse è licenziata tramite la GNU Lesser General Public License, versione
 \begin_inset LatexCommand htmlurl
 name "MusicMeshFS home page"
 target "http://code.google.com/p/musicmeshfs/"
+
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+Essendo software di qualità alpha, è consigliabile utilizzare direttamente
+ i sorgenti scaricandoli dal 
+\emph on
+tree
+\emph default
+ di sviluppo, usando il comando
+\end_layout
+
+\begin_layout LyX-Code
+$ svn checkout https://musicmeshfs.googlecode.com/svn/trunk/ musicmeshfs
+\end_layout
 
 \end_inset
 
@@ -3480,30 +3974,56 @@ Volendo esagerare, è stata realizzata, a livello concettuale, l'equivalente
 
 \end_inset
 
-.
-\begin_inset Note Greyedout
-status open
-
-\begin_layout Standard
-Per semplicità d'implementazione e motivi d'efficienza si è deciso di non
- permettere la creazione del file system partendo da un intero database,
- ma solo da una tabella (o vista, poiché l'accesso da parte della libreria
- sarà in sola lettura); per questo motivo, la libreria è stata chiamata
- table_view_fuse.
- Per semplificare il porting tra un'applicazione e l'altra, inoltre, è stato
- utilizzato il modulo constants ove lo sviluppatore dovrà impostare i propri
- valori d'interesse (nome della tabella da utilizzare, nome delle colonne,
- keyword corrispondente nell'interfaccia utente).
-\end_layout
-
+, oltre che nell'interpretazione delle keyword dello schema immesso dall'utente.
+ Per far questo le funzioni le funzioni e le variabili 
+\begin_inset Quotes eld
 \end_inset
 
+dipendenti dal contenuto del database
+\begin_inset Quotes erd
+\end_inset
 
+ sono dichiarate esterne, nella libreria.
+ Per poter quindi realizzare applicazioni tramite questa libreria sarà quindi
+ necessario implementare queste funzioni e passarle opportunamente al compilator
+e.
+ 
 \end_layout
 
 \begin_layout Standard
-In effetti è stata implementata una gestione, al momento abbastanza rudimentale,
- dei joins per l'estrazione di informazioni da più tabelle contemporaneamente.
+In particolare, le funzioni da definire sono
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+int is_local_file() ;
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+funzione booleana che dice se esiste un file locale che supporti tutti i
+ vincoli richiesti
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\family typewriter
+char* get_local_path();
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+funzione che restituisce il path del primo file reale che supporti tutti
+ i vincoli richiesti
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+La componente principale della libreria è la gestione, al momento abbastanza
+ rudimentale, dei JOIN per l'estrazione di informazioni da più tabelle contempor
+aneamente.
  Allo sviluppatore, tuttavia, è dato carico di impostare i valori di alcune
  costanti che verranno usate; in particolare saranno da definire
 \end_layout
@@ -3558,39 +4078,6 @@ pre-alpha
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TODO: Rivedere e finire!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-ANCORA SULLO SCHEMA
-\end_layout
-
-\begin_layout Standard
-ESEMPIO EMAIL
-\end_layout
-
-\begin_layout Standard
-QUERY
-\end_layout
-
-\begin_layout Standard
-TABELLA
-\end_layout
-
-\begin_layout Standard
-DELLO SCHEMA NE PARLO QUI, DELLE QUERY PURE
-\end_layout
-
-\begin_layout Standard
 Un particolare degno di nota è la presenza nella libreria db_fuse anche
  dei parser necessari a realizzare filesystem configurabili tramite schemi.
  In questo modo ogni programma che userà questa libreria avrà, tra le altre
@@ -3599,10 +4086,6 @@ Un particolare degno di nota è la presenza nella libreria db_fuse anche
 
 \begin_layout Section
 Linguaggio di configurazione
-\end_layout
-
-\begin_layout Standard
-CONFRONTO CON FUSEPOD
 \end_layout
 
 \begin_layout Standard
@@ -3622,8 +4105,8 @@ target "http://fuse.sourceforge.net/wiki/index.php/MediaFileSystems"
 \end_inset
 
  sono elencati 24 progetti, anche se solo Offline Media Content Database,
- FUSEPod, TagsFs, fusedaap e pytagsfs sono confrontabili, anche solo in
- parte, con musicmeshfsd
+ FUSEPod, TagsFs, fusedaap e pytagsfs sono confrontabili, in toto o in parte,
+ con musicmeshfsd
 \end_layout
 
 \end_inset
@@ -3645,16 +4128,36 @@ target "http://fuse.sourceforge.net/wiki/index.php/DatabaseFileSystems"
 
 \end_inset
 
-, ma nessuno offriva, senza dovfs a db a fser esplicitamente effettuare
- delle query in un linguaggio SQL-like, la possibilità, per l'utente, di
- definire come ottenere i propri dati.
+, ma nessuno offriva, senza dover esplicitamente effettuare delle query
+ in un linguaggio SQL-like, la possibilità, per l'utente, di definire come
+ ottenere i propri dati.
+ O sono supportate strane creazioni di file dai nomi dati da query, che
+ poi scompaiono per far posto ai risultati, decisamente irrispettoso del
+ comportamento 
+\begin_inset Quotes eld
+\end_inset
+
+canonico
+\begin_inset Quotes erd
+\end_inset
+
+ di un file system, o non vi è alcuna possibilità di esprimere preferenze
+ su come organizzare la musica, rimanendo costretti a strutture delle directory
+ del tipo AUTORE/ALBUM.
+\end_layout
+
+\begin_layout Standard
+L'idea di MusicMeshFS, invece, è quella di comportarsi il più possibile
+ come un file system classico, ma di creare ordine tra i file multimediali
+ tramite un parametro da passare al client (la componente destinata a realizzare
+ il file system vero e proprio)
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Standard
 \noindent
@@ -3721,13 +4224,13 @@ reference "fig:Descrizione-di-come"
 
 
 \family typewriter
-%artist/%title.%type
+%artist/(%year) album/%track - %title.%type
 \family default
 
 \begin_inset Quotes erd
 \end_inset
 
- è da dividere da una parte in 
+ è da dividere in tre parti: prima 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3739,21 +4242,36 @@ reference "fig:Descrizione-di-come"
 \begin_inset Quotes erd
 \end_inset
 
-, dall'altra in 
+, poi 
 \begin_inset Quotes eld
 \end_inset
 
 
 \family typewriter
-%title.%type
+(%year) album
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ e infine 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+%track - %title.%type
 \family default
 
 \begin_inset Quotes erd
 \end_inset
 
 .
- In questo caso, abbastanza banale, vediamo che l'intero livello si riduce
- ad una sola keyword: 
+\end_layout
+
+\begin_layout Standard
+In questo caso vediamo che l'intero primo livello si riduce ad una sola
+ keyword: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3765,28 +4283,66 @@ reference "fig:Descrizione-di-come"
 \begin_inset Quotes erd
 \end_inset
 
-, quindi, implicitamente, l'utente sta dicendo che, come primo livello vuole
- solamente il nome degli artisti presenti nel database
+, quindi, implicitamente, l'utente sta dicendo che inizialmente vuole solamente
+ il nome degli artisti presenti nel database
 \begin_inset Foot
 status collapsed
 
 \begin_layout Standard
-In effetti il sistema è in grado di lavorare perfettamente in presenza,
- per ogni livello, sia di un numero indefinito di keywords che di elementi
- fissi.
+Il sistema è in grado di lavorare perfettamente in presenza, per ogni livello,
+ sia di un numero indefinito di keywords che di elementi fissi.
  Ad esempio, è uno schema valido anche 
 \begin_inset Quotes eld
 \end_inset
 
 
 \family typewriter
-%type -> %year/%genre_%artist/%%%title (%album).%type
+%type -> %year!!!/CIAO/MONDO%genre#%artist/%%%title (%album).%type
 \family default
 
 \begin_inset Quotes erd
 \end_inset
 
- (anche se, in effetti, poco utile e poco leggibile)
+ (anche se, in effetti, poco utile e poco leggibile).
+\end_layout
+
+\begin_layout Standard
+Gli unici vincoli imposti sullo schema sono che
+\end_layout
+
+\begin_layout Itemize
+esso non può essere una stringa vuota
+\end_layout
+
+\begin_layout Itemize
+esso non può iniziare per '/' (è considerato un separatore)
+\end_layout
+
+\begin_layout Itemize
+tra due keyword deve essere presente una stringa di separazione, detta anche
+ 
+\begin_inset Quotes eld
+\end_inset
+
+elemento fisso
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+nessun elemento fisso tra due keyword, o tra una keyword e il separatore
+ di directory '/' può essere la stringa 
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+; può essere una stringa contente il carattere '_', ma deve essere di lunghezza
+ > 1
 \end_layout
 
 \end_inset
@@ -3803,10 +4359,23 @@ In effetti il sistema è in grado di lavorare perfettamente in presenza,
 
 
 \family typewriter
-SELECT artista FROM tabella
+SELECT artista FROM ...
 \family default
 ;
 \begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+Per questi esempi le query saranno over semplificate, per massimizzare la
+ facilità di comprensione.
+ In particolare non si mostreranno le tabelle coinvolte nell'espressione
+ della query, né le condizioni WHERE necessarie ma non interessanti
+\end_layout
+
 \end_inset
 
 , dove 
@@ -3821,7 +4390,7 @@ artista
 \begin_inset Quotes erd
 \end_inset
 
- dipende da 
+ è la tabella corrispondente alla keyword 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3829,32 +4398,20 @@ artista
 \begin_inset Quotes erd
 \end_inset
 
-, e 
-\begin_inset Quotes eld
-\end_inset
-
-
-\family typewriter
-tabella
-\family default
-
-\begin_inset Quotes erd
-\end_inset
-
- è stata definita dal programmatore come nome della tabella da utilizzare.
+.
 \end_layout
 
 \begin_layout Standard
 I sottolivelli dell'albero vengono calcolati in modo simile, con l'aggiunta
- di una clausola 
+ alla clausola WHERE delle condizioni 
 \begin_inset Quotes eld
 \end_inset
 
-WHERE (colonna1 = valore1) AND (colonna2 = valore2)...
+(colonna1 = valore1) AND (colonna2 = valore2)...
 \begin_inset Quotes erd
 \end_inset
 
- via via più complicata a seconda di quanto in profondità si scende nell'albero.
+ via via più complicate a seconda di quanto in profondità si scende nell'albero.
  In effetti ogni coppia 
 \begin_inset Quotes eld
 \end_inset
@@ -3877,7 +4434,7 @@ valore
 \begin_inset Quotes eld
 \end_inset
 
-Francesco De Gregori
+/Sergio Cammariere
 \begin_inset Quotes erd
 \end_inset
 
@@ -3887,28 +4444,33 @@ Francesco De Gregori
 
 
 \family typewriter
-SELECT titolo, tipo FROM tabella WHERE (artista = 'Francesco De Gregori');
+SELECT anno, album FROM ...
+ WHERE (artista = 'Sergio Cammariere');
 \family default
 
 \begin_inset Quotes erd
 \end_inset
 
-; titolo e tipo, ovviamente, dipendono dal fatto che, nello schema, il secondo
- livello utilizza due elementi dinamici (%title e %type).
-\end_layout
+; e per ottenere i file presenti nella directory 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-L'aggiunta di un supporto trasparente alla condivisione dei file, è un plus.
-\end_layout
+/Sergio Cammariere/(2003) Dalla pace del mare lontano)
+\begin_inset Quotes erd
+\end_inset
 
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
+ verrà effettuata una query del tipo 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-TODO: Rivedere e finire!
-\end_layout
 
+\family typewriter
+SELECT traccia, titolo, tipo FROM ...
+ WHERE (artista = 'Sergio Cammariere') AND (anno = '2003') AND (album =
+ 'Dalla pace del mare lontano');
+\family default
+
+\begin_inset Quotes erd
 \end_inset
 
 
@@ -3919,7 +4481,29 @@ Esempio d'uso per file musicali
 \end_layout
 
 \begin_layout Standard
-confronto con fusepod
+In effetti le cose non sono così banali.
+\end_layout
+
+\begin_layout Standard
+Prima di tutto 
+\begin_inset Note Shaded
+status open
+
+\begin_layout Standard
+DIRE COME FACCIO IL PARSING; PERCHÉ NON POSSO USARE %ARTIST_%YEAR;
+\end_layout
+
+\begin_layout Standard
+POI MOSTRARE IL CONTENUTO DI UNA DIRECTORY
+\end_layout
+
+\begin_layout Standard
+POI MOSTRARE CHE SUCCEDE QUANDO FACCIO RENAME
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
@@ -3931,20 +4515,397 @@ Daft punk/(2001) Discovery/04 - Harder, better, faster, stronger.mp3
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Greyedout
-status open
-
-\begin_layout Standard
-Mettere che è opensource
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Il progetto è strutturato in maniera gerarchica
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+doc
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Tesi.lyx questo documento
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+imgs immagini di questo documento
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+bla bla bla
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+bla
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+reference.bib bibliografia
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+src
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+musicmeshfsc
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+musicmeshfsd
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+db_fuse
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+common
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+utils
+\end_layout
+
+\begin_layout LyX-Code
+musicmeshfs
+\end_layout
+
+\begin_layout LyX-Code
+├── COPYING
+\end_layout
+
+\begin_layout LyX-Code
+├── Doxyfile
+\end_layout
+
+\begin_layout LyX-Code
+├── Makefile
+\end_layout
+
+\begin_layout LyX-Code
+├── bin
+\end_layout
+
+\begin_layout LyX-Code
+├── destdir
+\end_layout
+
+\begin_layout LyX-Code
+├── doc
+\end_layout
+
+\begin_layout LyX-Code
+│   ├── Makefile
+\end_layout
+
+\begin_layout LyX-Code
+│   ├── Tesi.lyx
+\end_layout
+
+\begin_layout LyX-Code
+│   ├── Tesi.lyx~
+\end_layout
+
+\begin_layout LyX-Code
+│   ├── avanzi.lyx
+\end_layout
+
+\begin_layout LyX-Code
+│   ├── imgs
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Architettura.dia
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Architettura.eps
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Architettura.pdf
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── DiagrammaER.dia
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── DiagrammaER.eps
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Rete.dia
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Rete.eps
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Rete.pdf
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Scanner.dia
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Scanner.eps
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── SchemaLinguaggio.dia
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── SchemaLinguaggio.eps
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── SchemaLinguaggio.pdf
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── fuse_structure.png
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── id3v1.1_blocks.gif
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── id3v1.1_blocks.png
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── id3v1_blocks.gif
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── id3v1_blocks.png
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── img91.gif
+\end_layout
+
+\begin_layout LyX-Code
+│   │   └── img91.png
+\end_layout
+
+\begin_layout LyX-Code
+│   └── reference.bib
+\end_layout
+
+\begin_layout LyX-Code
+├── doxy
+\end_layout
+
+\begin_layout LyX-Code
+├── sostituisci.py
+\end_layout
+
+\begin_layout LyX-Code
+├── src
+\end_layout
+
+\begin_layout LyX-Code
+│   ├── Makefile
+\end_layout
+
+\begin_layout LyX-Code
+│   ├── OLD
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── constants.c.OLD
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── constants.h.OLD
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── fuse_utils.c.OLD
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── fuse_utils.h.OLD
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── table_view_fuse.c.OLD
+\end_layout
+
+\begin_layout LyX-Code
+│   │   └── table_view_fuse.h.OLD
+\end_layout
+
+\begin_layout LyX-Code
+│   ├── common
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Makefile
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── schema.sql
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── sqlite.h
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── sqlite.pre_c
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── utils.c
+\end_layout
+
+\begin_layout LyX-Code
+│   │   └── utils.h
+\end_layout
+
+\begin_layout LyX-Code
+│   ├── db_fuse
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── COPYING
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Makefile
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── constants.c
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── constants.h
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── db_fuse.c
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── db_fuse.h
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── db_fuse_utils.c
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── db_fuse_utils.h
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── parser.c
+\end_layout
+
+\begin_layout LyX-Code
+│   │   └── parser.h
+\end_layout
+
+\begin_layout LyX-Code
+│   ├── musicmeshfsc
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── Makefile
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── configurazione.c
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── db_fuse_variant.c
+\end_layout
+
+\begin_layout LyX-Code
+│   │   ├── db_fuse_variant.h
+\end_layout
+
+\begin_layout LyX-Code
+│   │   └── musicmeshfsc.c
+\end_layout
+
+\begin_layout LyX-Code
+│   └── musicmeshfsd
+\end_layout
+
+\begin_layout LyX-Code
+│       ├── Makefile
+\end_layout
+
+\begin_layout LyX-Code
+│       ├── commons.c
+\end_layout
+
+\begin_layout LyX-Code
+│       ├── commons.h
+\end_layout
+
+\begin_layout LyX-Code
+│       ├── inotify.c
+\end_layout
+
+\begin_layout LyX-Code
+│       ├── inotify.h
+\end_layout
+
+\begin_layout LyX-Code
+│       └── musicmeshfsd.c
+\end_layout
+
+\begin_layout LyX-Code
+└── utils
+\end_layout
+
+\begin_layout LyX-Code
+    ├── Makefile
+\end_layout
+
+\begin_layout LyX-Code
+    ├── getta.c
+\end_layout
+
+\begin_layout LyX-Code
+    ├── setta.c
+\end_layout
+
+\begin_layout LyX-Code
+    └── test.mp3
+\end_layout
+
+\begin_layout LyX-Code
+
 \end_layout
 
 \begin_layout Standard
@@ -3967,11 +4928,7 @@ in bin i programmi compilati
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
-
-\begin_layout Standard
-
-\end_layout
+status open
 
 \begin_layout Standard
 \begin_inset Caption

@@ -174,7 +174,7 @@ dynamic_str_t sub_dir(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
     }
 
 //     errprintf("sub_dir) query = `%s'\n", query);
-    esegui_query_callback(get_db_from_context(), get_one_column, &ret, query);
+    esegui_query_callback(db, get_one_column, &ret, query);
     free(query);
     return ret;
 }

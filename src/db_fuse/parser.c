@@ -53,7 +53,8 @@ const int IS_A_FILE = 0;
         - %path -> Path originale
         - %type -> Tipo del file originale
         - %% -> %
-# gli elementi di tipo FISSO non possono essere stringhe vuote
+# gli elementi di tipo FISSO non possono essere stringhe vuote, né essere il
+        solo carattere '_' (poiché è usato per altri scopi)
 
 
     es:
@@ -84,9 +85,8 @@ int parse_schema(const char* schema, dynamic_obj_t* fissi, dynamic_obj_t*
     while (ret != -1) {
         append_obj(fissi, el_fisso);
         append_obj(keywords, el_keyword);
-        if (!schema[ret]) {
+        if (!schema[ret])
             return 0;   // fine stringa
-        }
         if (schema[ret++] != '/')
             return -1;
         el_fisso = malloc(sizeof(dynamic_str_t));
@@ -230,6 +230,7 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
         return -1;
     if (path[0] == '/' && !path[1]) // caso particolare: è "/"
         return IS_A_DIR;
+    init_obj(dinamici);
     dynamic_str_t nomi = split(path+1, '/');
     for (int i=0; i<nomi.size; i++) {
         /*
@@ -237,10 +238,10 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
         quindi avrò
             0 < el_fissi.size == el_dinamici.size + ( 0 || 1 )
         */
-        dynamic_str_t el_fissi = *(dynamic_str_t*)fissi.buf[i];
+        dynamic_str_t el_fissi = *(dynamic_str_t*)(fissi.buf[i]);
         if (!el_fissi.size)
             return -1;
-        dynamic_str_t el_keywords = *(dynamic_str_t*)keywords.buf[i];
+        dynamic_str_t el_keywords = *(dynamic_str_t*)(keywords.buf[i]);
         dynamic_str_t* el_dinamici = malloc(sizeof(dynamic_str_t));
         init_str(el_dinamici);
         int offset = startswith(nomi.buf[i], el_fissi.buf[0]);
@@ -248,36 +249,22 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
             return -1;
         for (int j=1; j<el_fissi.size; j++) {
             int new_offset = -1, size_dinamico = 0;
-            for (; new_offset == -1; size_dinamico += 1) {
+            for (; new_offset == -1; size_dinamico += 1)
                 new_offset = startswith(nomi.buf[i]+offset+size_dinamico,
                         el_fissi.buf[j]);
-//                 if (new_offset == -1)
-//                     errprintf("`%s' NON È INIZIATO PER `%s'\n",
-//                             nomi.buf[i]+offset+size_dinamico, el_fissi.buf[j]);
-
-            }
             char tmp[size_dinamico];
             tmp[0] = tmp[size_dinamico-1] = '\0';
             strncpy(tmp, nomi.buf[i]+offset, size_dinamico-1);
-//             errprintf("(1) `%s' = `%s'\n", el_keywords.buf[j-1], tmp);
             append_str(el_dinamici, tmp);
-//             errprintf("offset = %d, new_offset = %d, size_dinamico = %d\n",
-//                     offset, new_offset, size_dinamico);
             offset += new_offset + size_dinamico - 1;
         }
-//         errprintf("1\n");
         if (el_fissi.size == el_keywords.size) {
-//             errprintf("2\n");
-//             errprintf("con offset = `%s'\n", nomi.buf[i]+offset);
             if (!(nomi.buf[i]+offset))
                 return -1;
-            int size = 0;
-            while (!(nomi.buf[i]+offset+size))
-                size += 1;
+            int size = strlen(nomi.buf[i]+offset);
             char tmp[size+1];
             tmp[0] = '\0';
             strcpy(tmp, nomi.buf[i]+offset);
-//             errprintf("(2) `%s' = `%s'\n", el_keywords.buf[el_keywords.size-1], tmp);
             append_str(el_dinamici, tmp);
         }
         append_obj(dinamici, el_dinamici);
@@ -286,28 +273,20 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
 }
 
 int _main() {
-    const char* schema = "%artist/%year - %album/%track + %title.%type";
-    const char* path = "/Max Gazzè/2008 - Tra l'aratro e la radio"
-            ;//"/02 + Il solito sesso.mp3";
+    const char* schema = "%artist/(%year) %album/%track - %title.%type";
+    const char* path = "/Fabrizio De André";
     dynamic_obj_t fissi, keywords;
     init_obj(&fissi);
     init_obj(&keywords);
-    errprintf("parse_schema() = %d\n\n", parse_schema(schema, &fissi,
-            &keywords));
-    if (fissi.size == keywords.size)
-        for (int i=0; i<fissi.size; i++) {
-            dbgprint_str(*(dynamic_str_t*)fissi.buf[i], "fissi");
-            dbgprint_str(*(dynamic_str_t*)keywords.buf[i], "keywords");
-            errprintf("\n");
-        }
+    parse_schema(schema, &fissi, &keywords);
     dynamic_obj_t dinamici;
-    init_obj(&dinamici);
     int ret = parse_path(path, fissi, keywords, &dinamici);
-    errprintf("parse_path() = `%s'\n\n", ret == -1 ? "-1" : ret == IS_A_FILE ?
-            "IS_A_FILE" : "IS_A_DIR" );
+    errprintf("parse_path() = `%s'\n\ndinamici.size = %d\n", ret == -1 ? "-1" :
+            ret == IS_A_FILE ? "IS_A_FILE" : "IS_A_DIR", dinamici.size);
     for (int i=0; i<dinamici.size; i++) {
-//         dbgprint_str(*(dynamic_str_t*)keywords.buf[i], "keywords");
-        dbgprint_str(*(dynamic_str_t*)dinamici.buf[i], "dinamici");
+        dbgprint_str(*(dynamic_str_t*)fissi.buf[i], "fissi[i]");
+        dbgprint_str(*(dynamic_str_t*)keywords.buf[i], "keywords[i]");
+        dbgprint_str(*(dynamic_str_t*)dinamici.buf[i], "dinamici[i]");
         errprintf("\n");
     }
     return EXIT_SUCCESS;
