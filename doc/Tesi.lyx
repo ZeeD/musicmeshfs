@@ -1358,8 +1358,23 @@ Motivazioni
 \end_layout
 
 \begin_layout Standard
-Dovendo creare un file system per il sistema operativo linux, ci si è posti
- sin dall'inizio il problema di come implementarlo.
+Dovendo creare un file system per il sistema operativo linux
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+In generale 
+\emph on
+linux
+\emph default
+ non individua un sistema operativo, ma solo il kernel.
+ Tuttavia in questa tesi, ove non sia causa di confusione, si userà indifferente
+mente lo stesso termine per entrambi i significati.
+\end_layout
+
+\end_inset
+
+, ci si è posti sin dall'inizio il problema di come implementarlo.
  La dicotomia è data dalla possibilità di lavorare in 
 \emph on
 kernel space
@@ -3179,8 +3194,112 @@ una tantum
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "c"
+use_parbox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Standard
+\noindent
+\align left
+\begin_inset Graphics
+	filename imgs/DiagrammaER.eps
+	lyxscale 50
+	scale 50
+	subcaption
+	subcaptionText "Diagramma ER"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\hfill
+ 
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "c"
+use_parbox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Standard
+\noindent
+\align right
+\begin_inset Graphics
+	filename imgs/Tabelle.eps
+	lyxscale 50
+	scale 50
+	rotateAngle 90
+	subcaption
+	subcaptionText "Schema logico"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:Diagramma-ER-del"
+
+\end_inset
+
+Database usato
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Per far questo sono stati implementati due funzioni: la prima ha il compito
- di creare il database usando uno schema SQL appropriato.
+ di creare il database usando uno schema SQL appropriato, al fine di realizzare
+ il database mostrato in figura 
+\begin_inset LatexCommand vref
+reference "fig:Diagramma-ER-del"
+
+\end_inset
+
+.
  Nel nostro progetto, per poter meglio separare il codice C da quello SQL
  in fase di stesura del codice, è stato predisposto un pre-processore ad
  hoc, 
@@ -3250,7 +3369,7 @@ chunks
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Standard
 \begin_inset listings
@@ -4127,7 +4246,7 @@ reference "tab:Callback-di-Fuse"
 \begin_inset Float table
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Standard
 \noindent
@@ -4445,7 +4564,7 @@ Una componente di rilievo del progetto è data dalla flessibilità con la
  Esistono già parecchi progetti nati con l'obiettivo di indicizzare collezioni
  musicali
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Standard
 Al momento (marzo 2008) su 
@@ -4464,7 +4583,7 @@ target "http://fuse.sourceforge.net/wiki/index.php/MediaFileSystems"
 
 , o mostrare viste su database tramite directories
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Standard
 Al momento (marzo 2008) su 
@@ -4501,7 +4620,486 @@ canonico
 L'idea di MusicMeshFS, invece, è quella di comportarsi il più possibile
  come un file system classico, ma di creare ordine tra i file multimediali
  tramite un parametro da passare al client (la componente destinata a realizzare
- il file system vero e proprio)
+ il file system vero e proprio).
+ La grammatica adottata per rappresentare lo schema, in Extended Backus-Naur
+ Form, è la seguente:
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout LyX-Code
+ <SCHEMA>
+\series bold
+ ::=
+\series default
+ <NOME> 
+\series bold
+(
+\series default
+ 
+\emph on
+"/"
+\emph default
+ <NOME> 
+\series bold
+)*
+\end_layout
+
+\begin_layout LyX-Code
+   <NOME>
+\series bold
+ ::=
+\series default
+ <NOME1> 
+\series bold
+|
+\series default
+ <NOME2>
+\end_layout
+
+\begin_layout LyX-Code
+  <NOME1>
+\series bold
+ ::=
+\series default
+ <FISSO> 
+\series bold
+(
+\series default
+ <NOME2> 
+\series bold
+)?
+\end_layout
+
+\begin_layout LyX-Code
+  <NOME2>
+\series bold
+ ::=
+\series default
+ <KEYWORD 
+\series bold
+(
+\series default
+ <NOME1> 
+\series bold
+)?
+\end_layout
+
+\begin_layout LyX-Code
+  <FISSO> 
+\series bold
+::=
+\series default
+ 
+\series bold
+(
+\series default
+ 
+\series bold
+[^
+\series default
+\emph on
+%_/
+\series bold
+\emph default
+] | 
+\series default
+\emph on
+"%%"
+\series bold
+\emph default
+ | 
+\series default
+\emph on
+"_"
+\series bold
+\emph default
+ ( [^
+\series default
+\emph on
+%/
+\series bold
+\emph default
+] | 
+\series default
+\emph on
+"%%"
+\emph default
+ 
+\series bold
+)
+\series default
+ 
+\series bold
+)
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+              ( [^
+\series default
+\emph on
+%/
+\series bold
+\emph default
+] |
+\series default
+ 
+\emph on
+"%%"
+\emph default
+ 
+\series bold
+)*
+\end_layout
+
+\begin_layout LyX-Code
+<KEYWORD> 
+\series bold
+::= 
+\series default
+\emph on
+"%artist"
+\emph default
+ 
+\series bold
+|
+\series default
+ 
+\emph on
+"%year"
+\emph default
+ 
+\series bold
+|
+\series default
+ 
+\emph on
+"%album"
+\emph default
+ 
+\series bold
+|
+\series default
+ 
+\emph on
+"%track"
+\end_layout
+
+\begin_layout LyX-Code
+
+\emph on
+       
+\emph default
+ 
+\series bold
+      | 
+\series default
+\emph on
+"%title"
+\emph default
+ 
+\series bold
+|
+\series default
+ 
+\emph on
+"%genre"
+\emph default
+ 
+\series bold
+|
+\series default
+ 
+\emph on
+"%host"
+\emph default
+ 
+\series bold
+|
+\series default
+ 
+\emph on
+"%path"
+\end_layout
+
+\begin_layout LyX-Code
+
+\series bold
+              |
+\series default
+ 
+\emph on
+"%type"
+\emph default
+ 
+\series bold
+|
+\series default
+ 
+\emph on
+"%filename"
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In pratica uno schema è diviso in nomi di directory e file, ognuno dei quali
+ è rappresentato come 
+\begin_inset Quotes eld
+\end_inset
+
+alternanza
+\begin_inset Quotes erd
+\end_inset
+
+ di keyword e elementi fissi.
+ Le keyword (e la loro semantica) sono totalmente fuori dalla liberia db_fuse,
+ ed è necessario definirli a parte.
+ Di particolare interesse è la definizione di 
+\noun on
+fisso
+\noun default
+: per esemplificare la grammatica è stato preparato un semplice automa a
+ stati finiti accettore, in figura 
+\begin_inset LatexCommand vref
+reference "fig:FSM-per-elemento_fisso"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Graphics
+	filename imgs/FSM_fisso.eps
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:FSM-per-elemento_fisso"
+
+\end_inset
+
+FSM per 
+\noun on
+fisso
+\newline
+
+\noun default
+Stato iniziale: 
+\begin_inset Formula $A$
+\end_inset
+
+
+\newline
+Insieme degli stati finali: 
+\begin_inset Formula $\left\{ B\right\} $
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Come si può vedere, un elemento fisso è una stringa di lunghezza a piacere,
+ 
+\begin_inset Formula $\ge1$
+\end_inset
+
+, e con tre particolarità:
+\end_layout
+
+\begin_layout Enumerate
+Non è consentito l'uso del carattere '/'.
+\newline
+Questo vincolo deriva direttamente
+ da quelli imposti ai nomi dei file sui sistemi *NIX, sui quali il sistema
+ dovrà funzionare.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset LatexCommand label
+name "enu:caso-%"
+
+\end_inset
+
+L'uso del carattere '%' è concesso solo se subito seguito da un altro '%'
+ (cfr archi 
+\begin_inset Formula $\overline{AB}$
+\end_inset
+
+, 
+\begin_inset Formula $\overline{BB}$
+\end_inset
+
+ e 
+\begin_inset Formula $\overline{AD}$
+\end_inset
+
+, in cui si riconosce ogni carettere diverso da '%', e l'uso del nodo 
+\begin_inset Formula $C$
+\end_inset
+
+, usato come nodo 
+\emph on
+pivot, 
+\emph default
+con unico arco uscente verso il nodo 
+\begin_inset Formula $B$
+\end_inset
+
+).
+\newline
+Il motivo è dato dal fatto che '%' è usato come indicatore di keyword,
+ e si è pensato a '%%' per codificare il '%' nei nomi di file
+\end_layout
+
+\begin_layout Enumerate
+Il fatto che 
+\emph on
+non
+\emph default
+ è ammessa, come elemento fisso, la stringa ridotta al carattere 
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+.
+\newline
+Questo perché 
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+ è usato, per ogni file generato da db_fuse, per sostituire nei vari elementi
+ dinamici l'eventuale presenza dell'elemento fisso subito presente.
+ Questo al fine di rendere non ambiguo il successivo parsing nelle fasi
+ di lettura.
+ A differenza del caso 
+\begin_inset LatexCommand ref
+reference "enu:caso-%"
+
+\end_inset
+
+, per questo carattere non è possibile pensare ad una soluzione, poiché
+ qualunque elemento fisso può essere presente negli elementi dinamici di
+ in un file generato a partire da dati esterni, costringendoci a vietarne
+ semplicemente l'uso.
+ Un esempio pratico degli effetti di questa sostituzione è possibile vederlo
+ nel nome del file generato nella citazione 
+\begin_inset LatexCommand vref
+reference "quo:Frankie-Hi-NRG-Mc/(2008)"
+
+\end_inset
+
+: nel path 
+\begin_inset Quotes eld
+\end_inset
+
+Frankie Hi-NRG Mc/(2008) dePrimoMaggio/00 - Rivoluzione feat_ Roy Paci.mp3
+\begin_inset Quotes erd
+\end_inset
+
+, subito dopo il 
+\begin_inset Quotes eld
+\end_inset
+
+feat
+\begin_inset Quotes erd
+\end_inset
+
+ è presente un 
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+; questo poiché nel tag originario alla keyword 
+\begin_inset Quotes eld
+\end_inset
+
+%title
+\begin_inset Quotes erd
+\end_inset
+
+ corrisponde 
+\begin_inset Quotes eld
+\end_inset
+
+Rivoluzione feat.
+ Roy Paci
+\begin_inset Quotes erd
+\end_inset
+
+ (con il punto); ma 
+\begin_inset Quotes eld
+\end_inset
+
+.
+\begin_inset Quotes erd
+\end_inset
+
+ è anche l'elemento fisso subito seguente, e per questo nel titolo questa
+ stringa è stata sostituita da 
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -4545,9 +5143,9 @@ Descrizione di come verrà analizzato lo schema
 \end_layout
 
 \begin_layout Standard
-In effetti lo schema necessario a musicmeshfsc offre la possibilità di indurre
- una relazione d'ordine tra i file sorgente: concettuale sui livelli del
- tree del file system, lessicografica tra i nodi fratelli.
+Lo schema necessario a musicmeshfsc offre la possibilità di indurre una
+ relazione d'ordine tra i file sorgente: concettuale sui livelli del tree
+ del file system, lessicografica tra i nodi fratelli.
 \end_layout
 
 \begin_layout Standard
@@ -4637,7 +5235,7 @@ In questo caso vediamo che l'intero primo livello si riduce ad una sola
 , quindi, implicitamente, l'utente sta dicendo che inizialmente vuole solamente
  il nome degli artisti presenti nel database
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Standard
 Il sistema è in grado di lavorare perfettamente in presenza, per ogni livello,
@@ -4655,45 +5253,6 @@ Il sistema è in grado di lavorare perfettamente in presenza, per ogni livello,
 \end_inset
 
  (anche se, in effetti, poco utile e poco leggibile).
-\end_layout
-
-\begin_layout Standard
-Gli unici vincoli imposti sullo schema sono che
-\end_layout
-
-\begin_layout Itemize
-esso non può essere una stringa vuota
-\end_layout
-
-\begin_layout Itemize
-esso non può iniziare per '/' (è considerato un separatore)
-\end_layout
-
-\begin_layout Itemize
-tra due keyword deve essere presente una stringa di separazione, detta anche
- 
-\begin_inset Quotes eld
-\end_inset
-
-elemento fisso
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-nessun elemento fisso tra due keyword, o tra una keyword e il separatore
- di directory '/' può essere la stringa 
-\begin_inset Quotes eld
-\end_inset
-
-_
-\begin_inset Quotes erd
-\end_inset
-
-; può essere una stringa contente il carattere '_', ma deve essere di lunghezza
- > 1
 \end_layout
 
 \end_inset
@@ -4839,377 +5398,21 @@ Daft punk/(2001) Discovery/04 - Harder, better, faster, stronger.mp3
 Il progetto è strutturato in maniera gerarchica
 \end_layout
 
-\begin_layout Description
-COPYING Copia della licenza GPLv3 sotto la quale sono distribuiti musicmeshfsc
- e musicmeshfsd
-\end_layout
-
-\begin_layout Description
-Doxyfile File di configurazione per la generazione della doxygen
-\end_layout
-
-\begin_layout Description
-Makefile File di configurazione per la generazione dei file binari e della
- documentazione
-\end_layout
-
-\begin_layout Description
-doc Cartella in cui sono presenti i sorgenti di questo documento
-\end_layout
-
-\begin_deeper
-\begin_layout Description
-Makefile 
-\end_layout
-
-\begin_layout Description
-Tesi.lyx Questo documento
-\end_layout
-
-\begin_layout Description
-imgs Immagini presenti in questo documento
-\end_layout
-
-\begin_deeper
-\begin_layout Description
-Architettura.dia
-\end_layout
-
-\begin_layout Description
-DiagrammaER.dia
-\end_layout
-
-\begin_layout Description
-Rete.dia
-\end_layout
-
-\begin_layout Description
-Scanner.dia
-\end_layout
-
-\begin_layout Description
-SchemaLinguaggio.dia
-\end_layout
-
-\begin_layout Description
-fuse_structure.png
-\end_layout
-
-\begin_layout Description
-...
-\end_layout
-
-\end_deeper
-\begin_layout Description
-reference.bib Bibliografia utilizzata
-\end_layout
-
-\end_deeper
-\begin_layout Description
-sostituisci.py Script in python concepito per includere un file di testo
- come stringa in un programma C.
-\newline
-Per maggiori dettagli si veda la figura 
-\begin_inset LatexCommand vref
-reference "fig:sostituisci.py"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Description
-src sorgenti del progetto vero e proprio
-\end_layout
-
-\begin_deeper
-\begin_layout Description
-Makefile 
-\end_layout
-
-\begin_layout Description
-common file comuni a musicmeshfsc e musicmeshfsd
-\end_layout
-
-\begin_deeper
-\begin_layout Description
-schema.sql codice SQL per la creazione di un database vuoto, con la definizione
- delle tabelle e dei trigger da usare
-\end_layout
-
-\begin_layout Description
-sqlite.h 
-\end_layout
-
-\begin_layout Description
-sqlite.pre_c funzioni per l'accesso al database SQL (pre_c è l'estensione
- scelta per avvisare che deve essere applicato sostituisci.py)
-\end_layout
-
-\begin_layout Description
-utils.c funzioni di utilitià varie, definizione di strutture dati generiche
- (come dynamic_str_t, array a dimensione variabile di stringhe)
-\end_layout
-
-\begin_layout Description
-utils.h
-\end_layout
-
-\end_deeper
-\begin_layout Description
-db_fuse implementazione della libreria db_fuse
-\end_layout
-
-\begin_deeper
-\begin_layout Description
-COPYING Copia della licenza LGPLv3 sotto la quale è distribuito db_fuse
-\end_layout
-
-\begin_layout Description
-constants.c funzioni di utilità da applicare su costanti globali (esterne,
- definiscono le keyword, le tabelle e le colonne da usare nel filesystem)
-\end_layout
-
-\begin_layout Description
-constants.h
-\end_layout
-
-\begin_layout Description
-db_fuse.c implementazione delle callback di Fuse, descritte nella sezione
- 
-\begin_inset LatexCommand vref
-reference "sec:Callback-di-Fuse"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Description
-db_fuse.h
-\end_layout
-
-\begin_layout Description
-db_fuse_utils.c funzioni di utilità usate da db_fuse
-\end_layout
-
-\begin_layout Description
-db_fuse_utils.h
-\end_layout
-
-\begin_layout Description
-parser.c implementazione dei due parser (uno per lo schema, l'altro per i
- path) usati da db_fuse
-\end_layout
-
-\begin_layout Description
-parser.h
-\end_layout
-
-\end_deeper
-\begin_layout Description
-musicmeshfsc implementazione di MusicMeshFSc
-\end_layout
-
-\begin_deeper
-\begin_layout Description
-configurazione.c definizione di quali keyword, tabelle e colonne usare
-\end_layout
-
-\begin_layout Description
-db_fuse_variant.c implementazione delle funzioni 
-\begin_inset Quotes eld
-\end_inset
-
-dipendenti dal contenuto del database
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Description
-db_fuse_variant.h
-\end_layout
-
-\begin_layout Description
-musicmeshfsc.c main del programma
-\end_layout
-
-\end_deeper
-\begin_layout Description
-musicmeshfsd implementazione di MusicMeshFSd
-\end_layout
-
-\begin_deeper
-\begin_layout Description
-commons.c astrazione su sqlite e inotify
-\end_layout
-
-\begin_layout Description
-commons.h
-\end_layout
-
-\begin_layout Description
-inotify.c funzioni per rilevare modifiche sui file
-\end_layout
-
-\begin_layout Description
-inotify.h
-\end_layout
-
-\begin_layout Description
-musicmeshfsd.c main del programma
-\end_layout
-
-\end_deeper
-\end_deeper
-\begin_layout Description
-utils
-\end_layout
-
-\begin_deeper
-\begin_layout Description
-Makefile
-\end_layout
-
-\begin_layout Description
-getta.c programma che analizza un file multimediale, e stampa a video il
- contenuto dei tag
-\end_layout
-
-\begin_layout Description
-setta.c programma che permette di impostare il valore dei tag in un file
- multimediale
-\end_layout
-
-\end_deeper
-\begin_layout LyX-Code
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Standard
-\noindent
-\align center
-\begin_inset Graphics
-	filename imgs/db__fuse_8c__incl.png
-	width 100col%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Caption
-
-\begin_layout Standard
-Schema d'inclusione di db_fuse.c
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status collapsed
-
-\begin_layout Standard
-\noindent
-\align center
-\begin_inset Graphics
-	filename imgs/musicmeshfsc_8c__incl.png
-	width 100col%
-	subcaptionText "musicmeshfsc.c"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Caption
-
-\begin_layout Standard
-Schema d'inclusione di musicmeshfsc.c
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status collapsed
-
-\begin_layout Standard
-\noindent
-\align center
-\begin_inset Graphics
-	filename imgs/musicmeshfsd_8c__incl.png
-	width 100col%
-	subcaptionText "musicmeshfsd.c"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Caption
-
-\begin_layout Standard
-Schema d'inclusione di musicmeshfsd.c
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Section
-Makefile generati
+Organizzazione progetto
 \end_layout
 
 \begin_layout Standard
 Per la compilazione si è usati gnu make, per il quale sono stati scritti
  dei Makefile ad hoc.
- Il più rilevante, dal punto di vista del progetto, è quello, descritto
+ Il più rilevante, dal punto di vista del progetto, sono quelli, descritti
  in figura 
 \begin_inset LatexCommand vref
 reference "fig:src/Makefile"
 
 \end_inset
 
-, presente in src.
+, presenti in
 \end_layout
 
 \begin_layout Standard
@@ -5337,20 +5540,327 @@ src/Makefile
 
 \end_layout
 
-\begin_layout Chapter
-Estensione del fs in ambiente distribuito
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+COPYING Copia della licenza GPLv3 sotto la quale sono distribuiti musicmeshfsc
+ e musicmeshfsd
 \end_layout
 
-\begin_layout Quote
-Frankie Hi-NRG Mc/(2008) dePrimoMaggio/00 - Rivoluzione feat_ Roy Paci.mp3
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Doxyfile File di configurazione per la generazione della doxygen
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Makefile File di configurazione per la generazione dei file binari e della
+ documentazione
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+doc Cartella in cui sono presenti i sorgenti di questo documento
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Makefile 
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Tesi.lyx Questo documento
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+imgs Immagini presenti in questo documento
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Architettura.dia
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+DiagrammaER.dia
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Rete.dia
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Scanner.dia
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+SchemaLinguaggio.dia
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+fuse_structure.png
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+...
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+reference.bib Bibliografia utilizzata
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+sostituisci.py Script in python concepito per includere un file di testo
+ come stringa in un programma C.
+\newline
+Per maggiori dettagli si veda la figura 
+\begin_inset LatexCommand vref
+reference "fig:sostituisci.py"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+src sorgenti del progetto vero e proprio
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Makefile 
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+common file comuni a musicmeshfsc e musicmeshfsd
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+schema.sql codice SQL per la creazione di un database vuoto, con la definizione
+ delle tabelle e dei trigger da usare
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+sqlite.h 
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+sqlite.pre_c funzioni per l'accesso al database SQL (pre_c è l'estensione
+ scelta per avvisare che deve essere applicato sostituisci.py)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+utils.c funzioni di utilitià varie, definizione di strutture dati generiche
+ (come dynamic_str_t, array a dimensione variabile di stringhe)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+utils.h
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+db_fuse implementazione della libreria db_fuse
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+COPYING Copia della licenza LGPLv3 sotto la quale è distribuito db_fuse
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+constants.c funzioni di utilità da applicare su costanti globali (esterne,
+ definiscono le keyword, le tabelle e le colonne da usare nel filesystem)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+constants.h
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+db_fuse.c implementazione delle callback di Fuse, descritte nella sezione
+ 
+\begin_inset LatexCommand vref
+reference "sec:Callback-di-Fuse"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+db_fuse.h
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+db_fuse_utils.c funzioni di utilità usate da db_fuse
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+db_fuse_utils.h
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+parser.c implementazione dei due parser (uno per lo schema, l'altro per i
+ path) usati da db_fuse
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+parser.h
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+musicmeshfsc implementazione di MusicMeshFSc
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+configurazione.c definizione di quali keyword, tabelle e colonne usare
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+db_fuse_variant.c implementazione delle funzioni 
+\begin_inset Quotes eld
+\end_inset
+
+dipendenti dal contenuto del database
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+db_fuse_variant.h
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+musicmeshfsc.c main del programma
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+musicmeshfsd implementazione di MusicMeshFSd
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+commons.c astrazione su sqlite e inotify
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+commons.h
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+inotify.c funzioni per rilevare modifiche sui file
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+inotify.h
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+musicmeshfsd.c main del programma
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+utils
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Makefile
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+getta.c programma che analizza un file multimediale, e stampa a video il
+ contenuto dei tag
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+setta.c programma che permette di impostare il valore dei tag in un file
+ multimediale
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Shaded
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Standard
-DA FARE DA FARE DA FARE!!!
+\noindent
+\align center
+\begin_inset Graphics
+	filename imgs/db__fuse_8c__incl.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Schema d'inclusione di db_fuse.c
 \end_layout
 
 \end_inset
@@ -5358,12 +5868,188 @@ DA FARE DA FARE DA FARE!!!
 
 \end_layout
 
-\begin_layout Quote
+\end_inset
+
 
 \end_layout
 
 \begin_layout Standard
-Spiegare perchè musicMESHfs
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Graphics
+	filename imgs/musicmeshfsc_8c__incl.png
+	width 100col%
+	subcaptionText "musicmeshfsc.c"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Schema d'inclusione di musicmeshfsc.c
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Graphics
+	filename imgs/musicmeshfsd_8c__incl.png
+	width 100col%
+	subcaptionText "musicmeshfsd.c"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Schema d'inclusione di musicmeshfsd.c
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Test programma
+\end_layout
+
+\begin_layout Standard
+Sarà necessario prima di tutto avere della musica da analizzare e monitorare
+ :)
+\end_layout
+
+\begin_layout Standard
+Quindi basterà lanciare `musicmeshfsd`
+\end_layout
+
+\begin_layout LyX-Code
+$ musicmeshfsd collection.db musica_sparsa &
+\end_layout
+
+\begin_layout Standard
+e poi `musicmeshfsc`
+\end_layout
+
+\begin_layout LyX-Code
+$ musicmeshfsc collection.db musica_organizzata 
+\backslash
+
+\end_layout
+
+\begin_layout LyX-Code
+    '%genre/%artist - %year/%title.%type' &
+\end_layout
+
+\begin_layout Standard
+d'ora in poi, in `musica_organizzata` sarà presente il fs virtuale.
+\end_layout
+
+\begin_layout LyX-Code
+$ tree musica_sparsa
+\end_layout
+
+\begin_layout LyX-Code
+file.mp3
+\end_layout
+
+\begin_layout LyX-Code
+directory
+\end_layout
+
+\begin_layout LyX-Code
+|-- altro_file.mp3
+\end_layout
+
+\begin_layout LyX-Code
+...
+\end_layout
+
+\begin_layout LyX-Code
+$ tree musica_organizzata
+\end_layout
+
+\begin_layout LyX-Code
+musica_organizzata
+\end_layout
+
+\begin_layout LyX-Code
+|-- Blues
+\end_layout
+
+\begin_layout LyX-Code
+|   |-- artista - 1999
+\end_layout
+
+\begin_layout LyX-Code
+|   |   |-- canzone.mp3
+\end_layout
+
+\begin_layout LyX-Code
+....
+\end_layout
+
+\begin_layout Chapter
+Estensione del fs in ambiente distribuito
+\end_layout
+
+\begin_layout Quote
+\begin_inset LatexCommand label
+name "quo:Frankie-Hi-NRG-Mc/(2008)"
+
+\end_inset
+
+Frankie Hi-NRG Mc/(2008) dePrimoMaggio/00 - Rivoluzione feat_ Roy Paci.mp3
+\end_layout
+
+\begin_layout Standard
+Come estensione al progetto, vi è l'effettivo porting su dispositivi embedded,
+ in quanto al momento le applicazioni sono state testate solo su dispositivi
+ desktop, e l'estensione di musicmeshfsd al fine di consentire l'organizzazione
+ e ascolto anche di file remoti.
+ Per fare questo si è pensato di realizzare una rete di peer-to-peer tra
+ istanze di musicmeshfsd, che controlleranno i file locali, e chiederanno
+ ai loro vicini per quelli remoti.
+\end_layout
+
+\begin_layout Standard
+Per effettuare queste due estensioni, è stato effettuato un breve studio
+ di fattibilità.
 \end_layout
 
 \begin_layout Section
@@ -5394,23 +6080,7 @@ In genere, tuttavia, tutta questa potenza non è affatto sfruttata appieno
 \end_layout
 
 \begin_layout Standard
-In questa ottica si pongono i sistemi operativi liberi, in particolare linux
-\begin_inset Foot
-status collapsed
-
-\begin_layout Standard
-In generale 
-\emph on
-linux
-\emph default
- non individua un sistema operativo, ma solo il kernel.
- Tuttavia in questo documento, ove non sia causa di confusione, si userà
- indifferentemente lo stesso termine per entrambi i significati.
-\end_layout
-
-\end_inset
-
-.
+In questa ottica si pongono i sistemi operativi liberi, in particolare linux.
 \end_layout
 
 \begin_layout Standard
@@ -5438,22 +6108,9 @@ le su questi dispositivi: le capacità hardware (dalla potenza della CPU
 \end_layout
 
 \begin_layout Standard
-Da qui nasce l'esperienza MVux, distribuzione linux nata nei laboratori
- del dipartimento d'informatica, pensata per offrire il massimo della duttilità
- di linux ottimizzata per le risorse di uno smart phone.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TODO: Rivedere e finire!
-\end_layout
-
-\end_inset
-
-
+Da qui nasce l'esperienza MVux, distribuzione linux nata nel gruppo di ricerca
+ hixos del dipartimento d'informatica di Bari, pensata per offrire il massimo
+ della duttilità di linux ottimizzata per le risorse di uno smart phone.
 \end_layout
 
 \begin_layout Subsection
@@ -5520,172 +6177,81 @@ destinazione
  degli altri dispositivi, in maniera del tutto trasparente.
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TODO: Rivedere e finire!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Porting dell'applicazione su smart phone e testing
-\end_layout
-
 \begin_layout Subsection
-Installazione del sistema base
+Installazione
 \end_layout
 
 \begin_layout Standard
-Per una guida dettagliata e precisa si consiglia lo studi di 
+Dopo aver installato il sistema base, seguendo le orme del lavoro fatto
+ in 
 \begin_inset LatexCommand citep
 key "francesco_pistillo_tesi"
 
 \end_inset
 
-.
-\end_layout
-
-\begin_layout Subsection
-Installazione librerie aggiuntive
-\end_layout
-
-\begin_layout Itemize
-Installa sqlite3 (devel, se si vuole compilare sul cellulare)
-\end_layout
-
-\begin_layout Itemize
-Installa taglib (devel, se si vuole compilare sul cellulare)
-\end_layout
-
-\begin_layout Itemize
-Installa python (se si vuole compilare sul cellulare)
-\end_layout
-
-\begin_layout Subsection
-Installazione programma
+, è necessario installare le librerie usate (sqlite3 e taglib, scelte anche
+ perché esistono implementazioni anche per architettura 
+\noun on
+ARM
+\noun default
+).
 \end_layout
 
 \begin_layout Standard
-Dovrebbe bastare
+Nel caso si desideri compilare i programmi direttamente sul palmare, ovviamente
+ dovranno essere installati gli header delle librerie stesse; inoltre può
+ essere utile la presenza dell'interprete python, in quanto necessario per
+ eseguire lo script di preprocessing 
+\family typewriter
+sostituisci.py
+\family default
+ (vedere pagina 
+\begin_inset LatexCommand pageref
+reference "fig:sostituisci.py"
+
+\end_inset
+
+).
+ Ovviamente la cosa non è necessaria, in quanto è possibile eseguire questa
+ fase su computer fisso senza inficiare la compilazione dei sorgenti stessi.
 \end_layout
 
-\begin_layout LyX-Code
-make
-\end_layout
-
-\begin_layout Subsection
-Test programma
-\end_layout
-
-\begin_layout Standard
-Sarà necessario prima di tutto avere della musica da monitorare :)
-\end_layout
-
-\begin_layout Standard
-Quindi basterà lanciare `musicmeshfsd`
-\end_layout
-
-\begin_layout LyX-Code
-$ musicmeshfsd collection.db musica_sparsa &
-\end_layout
-
-\begin_layout Standard
-e poi `musicmeshfsc`
-\end_layout
-
-\begin_layout LyX-Code
-$ musicmeshfsc collection.db musica_organizzata 
-\backslash
-
-\end_layout
-
-\begin_layout LyX-Code
-    '%genre/%artist - %year/%title.%type' &
+\begin_layout Section
+Condivisione di musica remota
 \end_layout
 
 \begin_layout Standard
-d'ora in poi, in `musica_organizzata` sarà presente il fs virtuale.
-\end_layout
-
-\begin_layout LyX-Code
-$ tree musica_sparsa
-\end_layout
-
-\begin_layout LyX-Code
-file.mp3
-\end_layout
-
-\begin_layout LyX-Code
-altro_file.mp3
-\end_layout
-
-\begin_layout LyX-Code
-...
-\end_layout
-
-\begin_layout LyX-Code
-$ tree musica_organizzata
-\end_layout
-
-\begin_layout LyX-Code
-musica_organizzata
-\end_layout
-
-\begin_layout LyX-Code
-|-- Blues
-\end_layout
-
-\begin_layout LyX-Code
-|   |-- artista - 1999
-\end_layout
-
-\begin_layout LyX-Code
-|   |   |-- canzone.mp3
-\end_layout
-
-\begin_layout LyX-Code
-....
+Questa seconda fase è più nebulosa.
 \end_layout
 
 \begin_layout Standard
-Per provare la sincronizzazione via rete, sarà sufficiente avere a disposizione
- due postazioni in una lan.
- La simulazione verrà meglio descritta nel capitolo 
+Per quanto sia il database che l'architettura generale del progetto siano
+ pensati con in mente l'espandibilità verso la condivisione della musica
+ in rete, al momento non è stata realizzata nessuna soluzione.
+\end_layout
+
+\begin_layout Standard
+L'idea del funzionamento di musicmeshfsd è rappresentata nella figura 
 \begin_inset LatexCommand vref
-reference "cha:Simulazione-dello-scambio"
+reference "fig:Rappresentazione-della-rete"
 
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Subsection
-\begin_inset LatexCommand label
-name "cha:Simulazione-dello-scambio"
-
-\end_inset
-
-Simulazione dello scambio di file tra 2 smart phone
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Standard
 \noindent
 \align center
 \begin_inset Graphics
 	filename imgs/Rete.eps
-	width 50col%
+	width 75col%
 
 \end_inset
 
@@ -5715,14 +6281,24 @@ Rappresentazione della rete formata da musicmeshfsd
 \end_layout
 
 \begin_layout Standard
-Concettualmente musicmeshfsd doveva lavorare anche in rete; un'idea del
- funzionamento è in figura 
-\begin_inset LatexCommand vref
-reference "fig:Rappresentazione-della-rete"
+In realtà ci sono due tipi di problemi
+\end_layout
 
-\end_inset
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+di\InsetSpace ~
+carattere\InsetSpace ~
+etico: la condivisione di informazioni protette da copyright
+ è illegale in italia, come nella maggior parte degli stati.
+ 
+\end_layout
 
-.
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+di\InsetSpace ~
+carattere\InsetSpace ~
+tecnico: è necessario definire una serie di informazioni su come
+ le varie istanze di musicmeshfsd debbano comunicare tra loro, e come 
 \end_layout
 
 \begin_layout Standard
@@ -5730,7 +6306,15 @@ reference "fig:Rappresentazione-della-rete"
 status open
 
 \begin_layout Standard
-TODO: mettere grafico musicmeshfsd
+DA FARE
+\end_layout
+
+\begin_layout Standard
+DA FARE
+\end_layout
+
+\begin_layout Standard
+DA FARE
 \end_layout
 
 \end_inset
@@ -5865,11 +6449,34 @@ Fabrizio De André/(1970) La buona novella/09 - Il testamento di Tito.mp3
 \end_layout
 
 \begin_layout Standard
+\begin_inset LatexCommand htmlurl
+name "Doxygen"
+target "http://www.stack.nl/~dimitri/doxygen/"
+
+\end_inset
+
+ è un tool di generazione automatica di documentazione a partire dal codice
+ sorgente.
+ È stato usato con successo per tutto l'arco di sviluppo del progetto, per
+ documentare automaticamente le specifiche e il ruolo di ogni variabile
+ o funzione sviluppati, e i rapporti tra i vari files.
+\end_layout
+
+\begin_layout Standard
+Per l'utilità evidenziata, si è ritenuto doveroso allegare se non tutto,
+ almeno parte della 
+\emph on
+reference
+\emph default
+ generata.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Note Shaded
 status open
 
 \begin_layout Standard
-Da cancellare?
+CE LA DEVO METTERE????
 \end_layout
 
 \end_inset
@@ -5883,6 +6490,12 @@ Licenza per la documentazione libera GNU
 
 \begin_layout Quote
 Ty Semaka, Theo de Raadt/(2007) OpenBSD 4.2/01 - 100001 1010101.ogg
+\end_layout
+
+\begin_layout Standard
+Questa tesi è distribuita secondo i termini della licenza GNU Free Documentation
+ License.
+ Come previsto dalla licenza, ecco in allegato il testo completo (in inglese).
 \end_layout
 
 \begin_layout Section
@@ -7608,14 +8221,6 @@ bibfiles "reference"
 
 \begin_layout Standard
 \begin_inset FloatList table
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset LatexCommand printindex
 
 \end_inset
 

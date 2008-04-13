@@ -52,7 +52,6 @@ const int IS_A_FILE = 0;
         - %host -> Host
         - %path -> Path originale
         - %type -> Tipo del file originale
-        - %% -> %
 # gli elementi di tipo FISSO non possono essere stringhe vuote, né essere il
         solo carattere '_' (poiché è usato per altri scopi)
 
