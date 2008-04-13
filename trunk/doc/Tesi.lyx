@@ -1482,6 +1482,11 @@ File system in USEr space
 \end_layout
 
 \begin_layout Subsection
+\begin_inset LatexCommand label
+name "sub:Introduzione-a-Fuse"
+
+\end_inset
+
 Introduzione a Fuse
 \end_layout
 
@@ -4079,12 +4084,358 @@ pre-alpha
 
 \begin_layout Standard
 Un particolare degno di nota è la presenza nella libreria db_fuse anche
- dei parser necessari a realizzare filesystem configurabili tramite schemi.
+ dei due parser (uno per lo schema di configurazione, l'altro per i path
+ del filesystem virtuale) necessari a realizzare filesystem configurabili
+ tramite schemi.
  In questo modo ogni programma che userà questa libreria avrà, tra le altre
- cose, la configurabilità dei nomi dei file tramite uno schema.
+ cose, la configurabilità dei nomi dei file tramite uno schema; i dettagli
+ di questo schema sono nella sezione 
+\begin_inset LatexCommand vref
+reference "sec:Linguaggio-di-configurazione"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
+\begin_inset LatexCommand label
+name "sec:Callback-di-Fuse"
+
+\end_inset
+
+Callback di Fuse implementate
+\end_layout
+
+\begin_layout Standard
+Tra tutte le callback descritte nella sottosezione 
+\begin_inset LatexCommand vref
+reference "sub:Introduzione-a-Fuse"
+
+\end_inset
+
+, si è deciso di implementare quelle descritte in tabella 
+\begin_inset LatexCommand eqref
+reference "tab:Callback-di-Fuse"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="2">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Callback di Fuse
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Funzione implementata in db_fuse
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+fuse_operations.readdir
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+db_fuse_readdir()
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+fuse_operations.getattr
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+db_fuse_getattr()
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+fuse_operations.rename
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+db_fuse_rename()
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+fuse_operations.chmod
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+db_fuse_chmod()
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+fuse_operations.read
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+db_fuse_read()
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+fuse_operations.open
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+db_fuse_open()
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+fuse_operations.release
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\family typewriter
+db_fuse_release()
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "tab:Callback-di-Fuse"
+
+\end_inset
+
+Callback di Fuse e funzioni corrispondenti in db_fuse
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La scelta di quali funzioni implementare è stata guidata da una visione
+ di quello che è plausibile che il file system offra, cercando di rimanere
+ il più minimalisti possibili, senza però impedire funzionalità necessarie.
+ 
+\end_layout
+
+\begin_layout Standard
+Per questo motivo sono state implementate le funzioni db_fuse_getattr(),
+ db_fuse_readdir() e db_fuse_read(), per, quantomeno, navigare nel file
+ system; db_fuse_readdir(), in particolare, è delegata ad utilizzare lo
+ schema dell'utente per 
+\emph on
+popolare
+\emph default
+ il contenuto di una directory.
+\end_layout
+
+\begin_layout Standard
+In un secondo momento sono state implementate le funzioni db_fuse_open()
+ e db_fuse_release(), poiché in genere i file multimediali sono di grosse
+ dimensioni, e letti in 
+\emph on
+chunks
+\emph default
+ dai player, e quindi sembrava inutile dover ogni secondo effettuare il
+ parsing del nome dello stesso file.
+ Per far questo è solo db_fuse_open() che analizza la stringa del percorso
+ del file, rileva il nome del file reale, lo apre in sola lettura e assegna
+ ad un parametro (struct fuse_file_info.fh) il file handler ottenuto.
+\end_layout
+
+\begin_layout Standard
+db_fuse_read(), quindi, non dovrà far altro che usare questo parametro,
+ che verrà usato, in seguito, per chiudere il file da db_fuse_release().
+\end_layout
+
+\begin_layout Standard
+Infine è stato implementato db_fuse_rename().
+ Essa offre la possibilità di realizzare un file system in 
+\begin_inset Quotes eld
+\end_inset
+
+quasi sola lettura
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Il motivo di questa scelta è dato dal concetto sottostante all'albero delle
+ directory: ogni percorso valido corrisponde ad una query; perciò anche
+ il nome destinazione deve essere, prima di tutto valido (cioè deve rispettare
+ la sintassi dello schema), ma anche corrispondente ad una richiesta valida.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Shaded
+status open
+
+\begin_layout Standard
+DIRE COME FACCIO IL PARSING; PERCHÉ NON POSSO USARE %ARTIST_%YEAR;
+\end_layout
+
+\begin_layout Standard
+POI MOSTRARE IL CONTENUTO DI UNA DIRECTORY
+\end_layout
+
+\begin_layout Standard
+POI MOSTRARE CHE SUCCEDE QUANDO FACCIO RENAME
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\begin_inset LatexCommand label
+name "sec:Linguaggio-di-configurazione"
+
+\end_inset
+
 Linguaggio di configurazione
 \end_layout
 
@@ -4157,14 +4508,14 @@ L'idea di MusicMeshFS, invece, è quella di comportarsi il più possibile
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Standard
 \noindent
 \align center
 \begin_inset Graphics
 	filename imgs/SchemaLinguaggio.eps
-	width 75col%
+	width 100col%
 
 \end_inset
 
@@ -4476,36 +4827,6 @@ SELECT traccia, titolo, tipo FROM ...
 
 \end_layout
 
-\begin_layout Section
-Esempio d'uso per file musicali
-\end_layout
-
-\begin_layout Standard
-In effetti le cose non sono così banali.
-\end_layout
-
-\begin_layout Standard
-Prima di tutto 
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-DIRE COME FACCIO IL PARSING; PERCHÉ NON POSSO USARE %ARTIST_%YEAR;
-\end_layout
-
-\begin_layout Standard
-POI MOSTRARE IL CONTENUTO DI UNA DIRECTORY
-\end_layout
-
-\begin_layout Standard
-POI MOSTRARE CHE SUCCEDE QUANDO FACCIO RENAME
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Chapter
 Compilazione dei sorgenti
 \end_layout
@@ -4518,410 +4839,253 @@ Daft punk/(2001) Discovery/04 - Harder, better, faster, stronger.mp3
 Il progetto è strutturato in maniera gerarchica
 \end_layout
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-doc
+\begin_layout Description
+COPYING Copia della licenza GPLv3 sotto la quale sono distribuiti musicmeshfsc
+ e musicmeshfsd
+\end_layout
+
+\begin_layout Description
+Doxyfile File di configurazione per la generazione della doxygen
+\end_layout
+
+\begin_layout Description
+Makefile File di configurazione per la generazione dei file binari e della
+ documentazione
+\end_layout
+
+\begin_layout Description
+doc Cartella in cui sono presenti i sorgenti di questo documento
 \end_layout
 
 \begin_deeper
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-Tesi.lyx questo documento
+\begin_layout Description
+Makefile 
 \end_layout
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-imgs immagini di questo documento
+\begin_layout Description
+Tesi.lyx Questo documento
 \end_layout
 
-\begin_deeper
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-bla bla bla
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-bla
-\end_layout
-
-\end_deeper
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-reference.bib bibliografia
-\end_layout
-
-\end_deeper
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-src
+\begin_layout Description
+imgs Immagini presenti in questo documento
 \end_layout
 
 \begin_deeper
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-musicmeshfsc
+\begin_layout Description
+Architettura.dia
 \end_layout
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-musicmeshfsd
+\begin_layout Description
+DiagrammaER.dia
 \end_layout
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-db_fuse
+\begin_layout Description
+Rete.dia
 \end_layout
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-common
+\begin_layout Description
+Scanner.dia
+\end_layout
+
+\begin_layout Description
+SchemaLinguaggio.dia
+\end_layout
+
+\begin_layout Description
+fuse_structure.png
+\end_layout
+
+\begin_layout Description
+...
 \end_layout
 
 \end_deeper
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
+\begin_layout Description
+reference.bib Bibliografia utilizzata
+\end_layout
+
+\end_deeper
+\begin_layout Description
+sostituisci.py Script in python concepito per includere un file di testo
+ come stringa in un programma C.
+\newline
+Per maggiori dettagli si veda la figura 
+\begin_inset LatexCommand vref
+reference "fig:sostituisci.py"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
+src sorgenti del progetto vero e proprio
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+Makefile 
+\end_layout
+
+\begin_layout Description
+common file comuni a musicmeshfsc e musicmeshfsd
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+schema.sql codice SQL per la creazione di un database vuoto, con la definizione
+ delle tabelle e dei trigger da usare
+\end_layout
+
+\begin_layout Description
+sqlite.h 
+\end_layout
+
+\begin_layout Description
+sqlite.pre_c funzioni per l'accesso al database SQL (pre_c è l'estensione
+ scelta per avvisare che deve essere applicato sostituisci.py)
+\end_layout
+
+\begin_layout Description
+utils.c funzioni di utilitià varie, definizione di strutture dati generiche
+ (come dynamic_str_t, array a dimensione variabile di stringhe)
+\end_layout
+
+\begin_layout Description
+utils.h
+\end_layout
+
+\end_deeper
+\begin_layout Description
+db_fuse implementazione della libreria db_fuse
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+COPYING Copia della licenza LGPLv3 sotto la quale è distribuito db_fuse
+\end_layout
+
+\begin_layout Description
+constants.c funzioni di utilità da applicare su costanti globali (esterne,
+ definiscono le keyword, le tabelle e le colonne da usare nel filesystem)
+\end_layout
+
+\begin_layout Description
+constants.h
+\end_layout
+
+\begin_layout Description
+db_fuse.c implementazione delle callback di Fuse, descritte nella sezione
+ 
+\begin_inset LatexCommand vref
+reference "sec:Callback-di-Fuse"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
+db_fuse.h
+\end_layout
+
+\begin_layout Description
+db_fuse_utils.c funzioni di utilità usate da db_fuse
+\end_layout
+
+\begin_layout Description
+db_fuse_utils.h
+\end_layout
+
+\begin_layout Description
+parser.c implementazione dei due parser (uno per lo schema, l'altro per i
+ path) usati da db_fuse
+\end_layout
+
+\begin_layout Description
+parser.h
+\end_layout
+
+\end_deeper
+\begin_layout Description
+musicmeshfsc implementazione di MusicMeshFSc
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+configurazione.c definizione di quali keyword, tabelle e colonne usare
+\end_layout
+
+\begin_layout Description
+db_fuse_variant.c implementazione delle funzioni 
+\begin_inset Quotes eld
+\end_inset
+
+dipendenti dal contenuto del database
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+db_fuse_variant.h
+\end_layout
+
+\begin_layout Description
+musicmeshfsc.c main del programma
+\end_layout
+
+\end_deeper
+\begin_layout Description
+musicmeshfsd implementazione di MusicMeshFSd
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+commons.c astrazione su sqlite e inotify
+\end_layout
+
+\begin_layout Description
+commons.h
+\end_layout
+
+\begin_layout Description
+inotify.c funzioni per rilevare modifiche sui file
+\end_layout
+
+\begin_layout Description
+inotify.h
+\end_layout
+
+\begin_layout Description
+musicmeshfsd.c main del programma
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Description
 utils
 \end_layout
 
-\begin_layout LyX-Code
-musicmeshfs
-\end_layout
-
-\begin_layout LyX-Code
-├── COPYING
-\end_layout
-
-\begin_layout LyX-Code
-├── Doxyfile
-\end_layout
-
-\begin_layout LyX-Code
-├── Makefile
-\end_layout
-
-\begin_layout LyX-Code
-├── bin
-\end_layout
-
-\begin_layout LyX-Code
-├── destdir
-\end_layout
-
-\begin_layout LyX-Code
-├── doc
-\end_layout
-
-\begin_layout LyX-Code
-│   ├── Makefile
-\end_layout
-
-\begin_layout LyX-Code
-│   ├── Tesi.lyx
-\end_layout
-
-\begin_layout LyX-Code
-│   ├── Tesi.lyx~
-\end_layout
-
-\begin_layout LyX-Code
-│   ├── avanzi.lyx
-\end_layout
-
-\begin_layout LyX-Code
-│   ├── imgs
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Architettura.dia
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Architettura.eps
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Architettura.pdf
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── DiagrammaER.dia
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── DiagrammaER.eps
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Rete.dia
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Rete.eps
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Rete.pdf
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Scanner.dia
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Scanner.eps
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── SchemaLinguaggio.dia
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── SchemaLinguaggio.eps
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── SchemaLinguaggio.pdf
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── fuse_structure.png
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── id3v1.1_blocks.gif
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── id3v1.1_blocks.png
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── id3v1_blocks.gif
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── id3v1_blocks.png
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── img91.gif
-\end_layout
-
-\begin_layout LyX-Code
-│   │   └── img91.png
-\end_layout
-
-\begin_layout LyX-Code
-│   └── reference.bib
-\end_layout
-
-\begin_layout LyX-Code
-├── doxy
-\end_layout
-
-\begin_layout LyX-Code
-├── sostituisci.py
-\end_layout
-
-\begin_layout LyX-Code
-├── src
-\end_layout
-
-\begin_layout LyX-Code
-│   ├── Makefile
-\end_layout
-
-\begin_layout LyX-Code
-│   ├── OLD
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── constants.c.OLD
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── constants.h.OLD
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── fuse_utils.c.OLD
+\begin_deeper
+\begin_layout Description
+Makefile
 \end_layout
 
-\begin_layout LyX-Code
-│   │   ├── fuse_utils.h.OLD
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── table_view_fuse.c.OLD
-\end_layout
-
-\begin_layout LyX-Code
-│   │   └── table_view_fuse.h.OLD
-\end_layout
-
-\begin_layout LyX-Code
-│   ├── common
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Makefile
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── schema.sql
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── sqlite.h
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── sqlite.pre_c
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── utils.c
-\end_layout
-
-\begin_layout LyX-Code
-│   │   └── utils.h
-\end_layout
-
-\begin_layout LyX-Code
-│   ├── db_fuse
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── COPYING
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Makefile
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── constants.c
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── constants.h
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── db_fuse.c
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── db_fuse.h
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── db_fuse_utils.c
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── db_fuse_utils.h
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── parser.c
-\end_layout
-
-\begin_layout LyX-Code
-│   │   └── parser.h
-\end_layout
-
-\begin_layout LyX-Code
-│   ├── musicmeshfsc
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── Makefile
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── configurazione.c
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── db_fuse_variant.c
-\end_layout
-
-\begin_layout LyX-Code
-│   │   ├── db_fuse_variant.h
-\end_layout
-
-\begin_layout LyX-Code
-│   │   └── musicmeshfsc.c
-\end_layout
-
-\begin_layout LyX-Code
-│   └── musicmeshfsd
-\end_layout
-
-\begin_layout LyX-Code
-│       ├── Makefile
-\end_layout
-
-\begin_layout LyX-Code
-│       ├── commons.c
-\end_layout
-
-\begin_layout LyX-Code
-│       ├── commons.h
-\end_layout
-
-\begin_layout LyX-Code
-│       ├── inotify.c
-\end_layout
-
-\begin_layout LyX-Code
-│       ├── inotify.h
-\end_layout
-
-\begin_layout LyX-Code
-│       └── musicmeshfsd.c
-\end_layout
-
-\begin_layout LyX-Code
-└── utils
-\end_layout
-
-\begin_layout LyX-Code
-    ├── Makefile
-\end_layout
-
-\begin_layout LyX-Code
-    ├── getta.c
+\begin_layout Description
+getta.c programma che analizza un file multimediale, e stampa a video il
+ contenuto dei tag
 \end_layout
 
-\begin_layout LyX-Code
-    ├── setta.c
-\end_layout
-
-\begin_layout LyX-Code
-    └── test.mp3
+\begin_layout Description
+setta.c programma che permette di impostare il valore dei tag in un file
+ multimediale
 \end_layout
 
+\end_deeper
 \begin_layout LyX-Code
-
-\end_layout
-
-\begin_layout Standard
-i sorgenti sono nella directory src
-\end_layout
-
-\begin_layout Standard
-la documentazione in doc
-\end_layout
-
-\begin_layout Standard
-la reference in doxy
-\end_layout
 
-\begin_layout Standard
-in bin i programmi compilati
 \end_layout
 
 \begin_layout Standard
@@ -4931,10 +5095,94 @@ sideways false
 status open
 
 \begin_layout Standard
+\noindent
+\align center
+\begin_inset Graphics
+	filename imgs/db__fuse_8c__incl.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Caption
 
 \begin_layout Standard
-Schema d'inclusione
+Schema d'inclusione di db_fuse.c
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Graphics
+	filename imgs/musicmeshfsc_8c__incl.png
+	width 100col%
+	subcaptionText "musicmeshfsc.c"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Schema d'inclusione di musicmeshfsc.c
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Graphics
+	filename imgs/musicmeshfsd_8c__incl.png
+	width 100col%
+	subcaptionText "musicmeshfsd.c"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Schema d'inclusione di musicmeshfsd.c
 \end_layout
 
 \end_inset
