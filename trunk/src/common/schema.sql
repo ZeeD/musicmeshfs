@@ -1,3 +1,5 @@
+BEGIN TRANSACTION;
+
 DROP TABLE IF EXISTS artista;
 CREATE TABLE artista(
     nome_artista VARCHAR NOT NULL PRIMARY KEY DEFAULT 'no_artist'
@@ -92,3 +94,6 @@ END;
 --             file.musica_nome_album = musica.nome_album AND
 --             file.musica_traccia = musica.traccia AND
 --             musica.artista_nome_artista = artista.nome_artista);
+
+COMMIT;
+

@@ -6,7 +6,7 @@ doc: ../Doxyfile $(DIA_FILES:.dia=.eps)
 	lyx -e pdf2 $(TESI) # pdf2 = pdf generato con pdflatex
 	mv $(TESI:.lyx=.pdf) ..
 
-$(DIA_FILES:.dia=.eps):
+$(DIA_FILES:.dia=.eps): $(@:.eps=.dia)
 	dia -t eps-pango $(@:.eps=.dia) -e $(@)
 
 clean:

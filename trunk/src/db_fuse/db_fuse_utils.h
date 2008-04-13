@@ -17,8 +17,8 @@
     along with Fuse_DB.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DB_FUSE_UTIS_H
-#define DB_FUSE_UTIS_H
+#ifndef DB_FUSE_UTILS_H
+#define DB_FUSE_UTILS_H
 
 #include <sqlite3.h>         /* sqlite3, sqlite3_mprintf(), sqlite3_free() */
 #include "../common/utils.h" /* dynamic_obj_t */

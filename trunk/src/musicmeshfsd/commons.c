@@ -36,12 +36,18 @@
 */
 int init_db_and_inotify(dynamic_str_t params, sqlite3* db, inotify_t* inotify) {
     // versione delayed, per evitare falsi positivi all'inizio
-    dynamic_str_t to_watch;
+    dynamic_str_t to_watch, to_add_in_db;
     init_str(&to_watch);
+    init_str(&to_add_in_db);
     for (int i=0; i<params.size; i++)
-        if (walk(params.buf[i], add_local_file_in_db, db, (int(*)(void*, const
-                char* str))append_str, &to_watch))
+        if (walk(params.buf[i],
+                (int(*)(void*, const char* str))append_str, &to_add_in_db,
+                (int(*)(void*, const char* str))append_str, &to_watch))
             return -1;
+    esegui_query(db, "BEGIN TRANSACTION");
+    for (int i=0; i<to_add_in_db.size; i++)
+        add_local_file_in_db(db, to_add_in_db.buf[i]);
+    esegui_query(db, "COMMIT");
     for (int i=0; i<to_watch.size; i++)
         add_watch(inotify, to_watch.buf[i]);
     return 0;
