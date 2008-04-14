@@ -18,8 +18,7 @@
 */
 
 #include "inotify.h"
-#include "../common/utils.h"
-#include "commons.h"
+#include "../common/utils.h"    /* errprintf() */
 
 /**
     MAX_BUFFER_LEN rappresenta la massima dimensione usabile per la coda degli
@@ -50,24 +49,24 @@ inotify_t new_inotify_t() {
     \param inotify istanza di inotify_t di riferimento
 */
 void info_print(struct inotify_event* event, inotify_t inotify) {
-    printf("nome = `%s'\t", event_file_name(event, inotify));
-    if (event->mask & IN_ACCESS)        printf("ACCESS ");
-    if (event->mask & IN_ATTRIB)        printf("ATTRIB ");
-    if (event->mask & IN_CLOSE_WRITE)   printf("CLOSE_WRITE ");
-    if (event->mask & IN_CLOSE_NOWRITE) printf("CLOSE_NOWRITE ");
-    if (event->mask & IN_CREATE)        printf("CREATE ");
-    if (event->mask & IN_DELETE)        printf("DELETE ");
-    if (event->mask & IN_DELETE_SELF)   printf("DELETE_SELF ");
-    if (event->mask & IN_MODIFY)        printf("MODIFY ");
-    if (event->mask & IN_MOVE_SELF)     printf("MOVE_SELF ");
-    if (event->mask & IN_MOVED_FROM)    printf("MOVED_FROM ");
-    if (event->mask & IN_MOVED_TO)      printf("MOVED_TO ");
-    if (event->mask & IN_OPEN)          printf("OPEN ");
-    if (event->mask & IN_IGNORED)       printf("IGNORED ");
-    if (event->mask & IN_ISDIR)         printf("ISDIR ");
-    if (event->mask & IN_Q_OVERFLOW)    printf("Q_OVERFLOW ");
-    if (event->mask & IN_UNMOUNT)       printf("UNMOUNT ");
-    puts("");
+    errprintf("nome = `%s'\t", event_file_name(event, inotify));
+    if (event->mask & IN_ACCESS)        errprintf("ACCESS ");
+    if (event->mask & IN_ATTRIB)        errprintf("ATTRIB ");
+    if (event->mask & IN_CLOSE_WRITE)   errprintf("CLOSE_WRITE ");
+    if (event->mask & IN_CLOSE_NOWRITE) errprintf("CLOSE_NOWRITE ");
+    if (event->mask & IN_CREATE)        errprintf("CREATE ");
+    if (event->mask & IN_DELETE)        errprintf("DELETE ");
+    if (event->mask & IN_DELETE_SELF)   errprintf("DELETE_SELF ");
+    if (event->mask & IN_MODIFY)        errprintf("MODIFY ");
+    if (event->mask & IN_MOVE_SELF)     errprintf("MOVE_SELF ");
+    if (event->mask & IN_MOVED_FROM)    errprintf("MOVED_FROM ");
+    if (event->mask & IN_MOVED_TO)      errprintf("MOVED_TO ");
+    if (event->mask & IN_OPEN)          errprintf("OPEN ");
+    if (event->mask & IN_IGNORED)       errprintf("IGNORED ");
+    if (event->mask & IN_ISDIR)         errprintf("ISDIR ");
+    if (event->mask & IN_Q_OVERFLOW)    errprintf("Q_OVERFLOW ");
+    if (event->mask & IN_UNMOUNT)       errprintf("UNMOUNT ");
+    errprintf("\n");
 }
 
 /**
@@ -97,17 +96,18 @@ char* event_file_name(struct inotify_event* event, inotify_t inotify) {
 }
 
 /**
-    aggiunge un percorso da monitorare (callback di utils -> walk)
+    aggiunge un percorso da monitorare
 
     \param path percorso per il file da monitorare
     \param inotify istanza di inotify_t di riferimento
-    \sa rm_all_watches(), utils.h
-    \todo decidere se IN_ALL_EVENTS va bene!!!
+    \sa rm_all_watches(), utils.h, walk()
     \return 0 se non ci sono stati problemi, -1 altrimenti
 */
+// IN_ACCESS, IN_MODIFY, IN_CLOSE_NOWRITE, IN_OPEN, IN_DELETE, IN_DELETE_SELF
 int add_watch(void* inotify, char* path) {
     int watch_fd = inotify_add_watch(((inotify_t*)inotify)->instance, path,
-            IN_ALL_EVENTS);
+            /*IN_ATTRIB | */ IN_CLOSE_WRITE | IN_MOVED_FROM | IN_MOVED_TO |
+            IN_CREATE | IN_DELETE);
     if (watch_fd == -1) {
         perror("inotify_add_watch");
         return -1;
@@ -116,6 +116,29 @@ int add_watch(void* inotify, char* path) {
     append_str(&((inotify_t*)inotify)->files, path);
     return 0;
 }
+
+/**
+    rimuove un percorso da monitorare
+
+    \param path percorso per il file da rimuovere
+    \param inotify istanza di inotify_t di riferimento
+    \sa rm_all_watches(), utils.h
+    \return 0 se non ci sono stati problemi, -1 altrimenti
+ */
+int rem_watch(inotify_t* inotify, const char* path) {
+    int i = index_of_str(inotify->files, path);
+    if (i == -1)
+        return -1;
+    int fd = inotify->watch_fds.buf[i];
+    if (inotify_rm_watch(inotify->instance, fd) == -1) {
+        perror("inotify_rm_watch");
+        return -1;
+    }
+    remove_int(&(inotify->watch_fds), fd);
+    remove_str(&(inotify->files), path);
+    return 0;
+}
+
 
 /**
     rimuove ogni file descriptor watched da un'instanza di inotify

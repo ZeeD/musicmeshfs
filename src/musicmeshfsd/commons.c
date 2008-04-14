@@ -18,10 +18,9 @@
 */
 
 #include "commons.h"
-#include "../common/sqlite.h"    /* add_local_file_in_db(),
-        local_event_callback(), del_local_file_from_db() */
-#include "inotify.h" /* add_watch(), MAX_BUFFER_LEN, rm_all_watches(),
-        info_print(), event_file_name() */
+#include "../common/sqlite.h"    /* add_local_file_in_db(), del_local_file_from_db() */
+#include "inotify.h"             /* add_watch(), rem_watch(), MAX_BUFFER_LEN,
+        rm_all_watches(), event_file_name() */
 
 /**
     Inizializza il database con i file presenti nei tree con radici params
@@ -97,20 +96,34 @@ void local_loop(sqlite3* db, inotify_t inotify,
 */
 int local_event_callback(struct inotify_event* event, sqlite3* db,
         inotify_t inotify) {
-    info_print(event, inotify); // TODO: rimuovere info_print()!!!
+//     info_print(event, inotify); // TODO: rimuovere info_print()!!!
+    char* file_name = event_file_name(event, inotify);
     if (event->mask & IN_ISDIR) {    // se è una directory
         if (event->mask & (IN_CREATE | IN_MOVED_TO))    // creata o spostata in
-            add_watch(&inotify, event_file_name(event, inotify));
+            add_watch(&inotify, file_name);
         else if (event->mask & (IN_DELETE | IN_MOVED_FROM)) // rimossa
-            (void) db;  // TODO
+            rem_watch(&inotify, file_name);
+        else
+            errprintf("NON SO CHE FARE CON `%s'\n", file_name);
     }
-    else {  // se è un file?
+    else {  // se è un file
         if (event->mask & (IN_DELETE | IN_MOVED_FROM))
-            del_local_file_from_db(db, event_file_name(event, inotify));
+            del_local_file_from_db(db, file_name);
         else if (event->mask & (IN_CREATE | IN_MOVED_TO))
-            add_local_file_in_db(db, event_file_name(event, inotify));
+            add_local_file_in_db(db, file_name);
+        else if (event->mask & IN_CLOSE_WRITE) { // (IN_CLOSE_WRITE | IN_ATTRIB)
+            del_local_file_from_db(db, file_name);
+            char* dirname = extract_dirname(file_name);
+            rem_watch(&inotify, dirname);
+            add_local_file_in_db(db, file_name);
+            add_watch(&inotify, dirname);
+            free(dirname);
+        }
+        else if (event->mask & IN_IGNORED)
+            ;   // erh, non ci faccio niente...
+        else
+            errprintf("NON SO CHE FARE CON `%s'\n", file_name);
     }
-    puts("");
     return 0;
 }
 

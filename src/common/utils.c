@@ -278,6 +278,7 @@ const char* extract_extension(const char* path) {
             return path + i;
     return NULL;
 }
+
 /**
     Data una stringa (char* NULL-terminated, vabbè) rappresentante un path,
     ritorna il basename del path stesso
@@ -299,6 +300,30 @@ const char* extract_basename(const char* path) {
     if (last_slash_i == -1)
         return NULL;
     return path+last_slash_i;
+}
+
+/**
+    Data una stringa (char* NULL-terminated, vabbè) rappresentante un path,
+    ritorna il dirname del path stesso (malloc`ed!)
+    (ex: extract_extension("path/file.mp3") == "path")
+
+    \param path percorso (di un file) da analizzare
+    \return un'altra stringa
+ */
+char* extract_dirname(const char* path) {
+    if (!path)
+        return NULL;
+    char* ret = strdup(path);
+    int i = 0, last_slash_i = -1;
+    while (ret[i]) {
+        if (ret[i] == '/')
+            last_slash_i = i+1;
+        i++;
+    }
+    if (last_slash_i == -1)
+        return NULL;
+    ret[last_slash_i-1] = '\0';
+    return ret;
 }
 
 /**
@@ -548,7 +573,23 @@ void remove_str(dynamic_str_t* array, const char* element) {
                 array->buf[i] = array->buf[i+1];
             free(array->buf[i-1]);
             array->size--;
-            break;
+            return;
+        }
+}
+
+/**
+    Rimuove (se presente) la prima occorrenza di element dall'array
+    \param array vettore dinamico di interi (modificato in-place)
+    \param elemnt elemento di array da rimuovere
+    \sa dynamic_int_t
+ */
+void remove_int(dynamic_int_t* array, const int element) {
+    for (int i=0; i<array->size; i++)
+        if (array->buf[i] == element) {
+            for (; i<array->size; i++)
+                array->buf[i] = array->buf[i+1];
+            array->size--;
+            return;
         }
 }
 
