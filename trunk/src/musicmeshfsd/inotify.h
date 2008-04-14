@@ -20,11 +20,11 @@
 #ifndef INOTIFY_H
 #define INOTIFY_H
 
-#include <sys/inotify.h>     /* inotify_init, inotify_add_watch, IN_ALL_EVENTS
-                                struct inotify_event */
-#include <stdio.h>           /* printf, perror, puts */
+#include <sys/inotify.h>     /* inotify_init(), inotify_add_watch(),
+        struct inotify_event,  */
+#include <stdio.h>           /* perror() */
 #include <string.h>          /* strcat, strlen */
-#include "../common/utils.h" /* dynamic_str_t, dynamic_int_t */
+#include "../common/utils.h" /* dynamic_str_t */
 
 /**
     Struttura che incapsula le informazioni necessarie per inotify
@@ -48,6 +48,7 @@ char* watch_fd_to_file(int, inotify_t);
 int file_to_watch_fd(char*, inotify_t);
 
 int add_watch(void*, char*);
+int rem_watch(inotify_t*, const char*);
 void rm_all_watches(inotify_t);
 
 void info_print(struct inotify_event*, inotify_t);

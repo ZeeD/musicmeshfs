@@ -42,9 +42,9 @@
 \cite_engine natbib_authoryear
 \use_bibtopic false
 \paperorientation portrait
-\leftmargin 4cm
+\leftmargin 4.07cm
 \topmargin 5cm
-\rightmargin 3cm
+\rightmargin 3.07cm
 \bottommargin 5cm
 \headheight 3cm
 \headsep 3cm
@@ -449,9 +449,14 @@ destinazione
  nomi delle directory che conterranno i file musicali.
  L'organizzazione sarà implicitamente data appunto dalla gerarchia
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Standard
+\begin_inset LatexCommand label
+name "fn:Subito-dopo-ogni"
+
+\end_inset
+
 Subito dopo ogni capitolo di questo testo è presente il nome di un file.
  Questi sono solo esempi 
 \emph on
@@ -2739,7 +2744,7 @@ int add_local_file_in_db(void* db, char* path) {
 
 \begin_layout Standard
 
-/* OMISSIS */
+/* OMISSIS: inserimento delle informazioni nel DB */
 \end_layout
 
 \begin_layout Standard
@@ -2888,17 +2893,20 @@ solo
  su file .mp3.
  Non sono supportati né i Vorbis comment, né gli APE tags né gli stessi
  tag ID3 in file flac, trueaudio, ecc...
- Questo avrebbe portato alla necessità di trovare altre librerie per gli
- altri formati, oltre ad un modo per integrare librerie diverse e analisi
- di metadati anche semanticamente differenti, seppur simili.
+\newline
+Questo avrebbe portato alla necessità
+ di trovare altre librerie per gli altri formati, oltre ad un modo per integrare
+ librerie diverse e analisi di metadati anche semanticamente differenti,
+ seppur simili.
 \end_layout
 
 \begin_layout Itemize
 Le API, per quanto più ampie di quelle di TagLib, erano molto più a basso
  livello.
- In particolare, in presenza di tag ID3v2.x sarebbe stato necessario controllare
- esplicitamente i frame ID3 presenti nel file multimediale; e per ognuno
- di essi, una volta scelti i frame 
+\newline
+In particolare, in presenza di tag ID3v2.x sarebbe stato necessario
+ controllare esplicitamente i frame ID3 presenti nel file multimediale;
+ e per ognuno di essi, una volta scelti i frame 
 \emph on
 rilevanti
 \emph default
@@ -2937,17 +2945,62 @@ TIT3
 TOAL
 \family default
  - e quasi una dozzina di frame che possono definire l'artista del brano.
- Queto avrebbe comportato da una parte la scelta di quali usare effettivamente,
+\newline
+Questo
+ avrebbe comportato da una parte la scelta di quali usare effettivamente,
  ed in secondo luogo, l'uso di 
 \emph on
 fallback
 \emph default
- in caso di frame non presenti
+ in caso di frame non presenti (ad esempio, il titolo del brano dovrebbe
+ essere il contenuto di 
+\family typewriter
+TIT2
+\family default
+, se presente, 
+\emph on
+altrimenti
+\emph default
+ 
+\family typewriter
+TIT1
+\family default
+, 
+\emph on
+altrimenti
+\emph default
+ 
+\family typewriter
+TIT3
+\family default
+, 
+\emph on
+altrimenti
+\emph default
+ 
+\family typewriter
+TOAL
+\family default
+, 
+\emph on
+altrimenti
+\emph default
+ 
+\begin_inset Quotes eld
+\end_inset
+
+brano sconosciuto
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-Un ultimo problema riguarda la codifica delle stringhe delle informazioni:
- id3lib, infatti, gestisce in modo quantomeno 
+Un ultimo problema riguarda la codifica delle stringhe delle informazioni.
+\newline
+id3lib,
+ infatti, gestisce in modo quantomeno 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2956,18 +3009,29 @@ curioso
 \end_inset
 
  stringhe non codificate in latin1: in primo luogo non è possibile discriminare
- se la stringa è effettivamente in latin1 o codificata in altro modo; inoltre
+ se la stringa è effettivamente in latin1 o codificata in altro modo;
+\newline
+inoltre
  l'alternativa consiste nel lavorare con array di 
 \family typewriter
 unicode
 \family default
-_t, typedef di interi a 16 bit, ognuno dei quali rappresenta il codice del
- carattere codificato in UTF16.
+_t, (
+\family typewriter
+typedef
+\family default
+ di interi a 16 bit), ognuno dei quali rappresenta il codice del carattere
+ codificato in UTF16.
  Da questo array, tuttavia, non è stata offerta alcuna funzione per trasformarlo
- in un char* con codifica a piacere.
- Questo avrebbe portato a dover implementare a mano tale funzione di conversione
- per poter lavorare con ID3 con stringhe contenenti, ad esempio, caratteri
- giapponesi, russi o medio-orientali.
+ in un 
+\family typewriter
+char*
+\family default
+ con codifica a piacere.
+\newline
+Questo avrebbe portato a dover implementare a mano
+ tale funzione di conversione per poter lavorare con ID3 con stringhe contenenti
+, ad esempio, caratteri giapponesi, russi o medio-orientali.
 \end_layout
 
 \begin_layout Chapter
@@ -3198,7 +3262,7 @@ una tantum
 placement H
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Standard
 \noindent
@@ -3336,32 +3400,30 @@ TRANSLATE_ME_PLEASE
  SQL desiderato.
  Nonostante l'uso di un linguaggio ad altissimo livello, il codice è abbastanza
  complicato; questo per ovviare ad alcune limitazioni del linguaggio C:
- in particolare il limite per le stringhe allocate sullo stack (del tipo
- 
+ in particolare il limite per le stringhe allocate sullo 
+\emph on
+stack
+\emph default
+ (del tipo 
 \family typewriter
 char stringa[] = "...stringa più lunga di 4095 caratteri..."
 \family default
-); per far questo la variabile è stata allocata sullo heap, dividendo il
- contenuto del file iniziale in 
-\begin_inset Quotes eld
-\end_inset
-
+); per far questo la variabile è stata allocata sullo 
+\emph on
+heap
+\emph default
+, dividendo il contenuto del file iniziale in 
+\emph on
 chunks
-\begin_inset Quotes erd
-\end_inset
-
+\emph default
  e usando 
 \family typewriter
 calloc()
 \family default
  per preparare la memoria che ospiterà la concatenazione di questi 
-\begin_inset Quotes eld
-\end_inset
-
+\emph on
 chunks
-\begin_inset Quotes erd
-\end_inset
-
+\emph default
 .
 \end_layout
 
@@ -3369,7 +3431,7 @@ chunks
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Standard
 \begin_inset listings
@@ -3583,8 +3645,8 @@ reference "fig:Inizializzazione-del-db"
 
 \end_inset
 
-: il suo compito è quello di popolare il database , e, per far ciò, per
- ogni parametro specificato dall'utente, applica la funzione 
+: il suo compito è quello di popolare il database e, per far ciò, per ogni
+ parametro specificato dall'utente, applica la funzione 
 \family typewriter
 walk()
 \family default
@@ -3764,6 +3826,11 @@ int local_event_callback(struct inotify_event* event, sqlite3* db, inotify_t
 
 \begin_layout Standard
 
+    char* file_name = event_file_name(event, inotify);
+\end_layout
+
+\begin_layout Standard
+
     if (event->mask & IN_ISDIR) {    // se è una directory
 \end_layout
 
@@ -3775,7 +3842,7 @@ int local_event_callback(struct inotify_event* event, sqlite3* db, inotify_t
 
 \begin_layout Standard
 
-            add_watch(&inotify, event_file_name(event, inotify));
+            add_watch(&inotify, file_name);
 \end_layout
 
 \begin_layout Standard
@@ -3785,7 +3852,19 @@ int local_event_callback(struct inotify_event* event, sqlite3* db, inotify_t
 
 \begin_layout Standard
 
-            (void) db;  // TODO
+            rem_watch(&inotify, file_name);
+\end_layout
+
+\begin_layout Standard
+
+        else
+\end_layout
+
+\begin_layout Standard
+
+            errprintf("EVENTO NON SUPPORTATO `%s'
+\backslash
+n", file_name);
 \end_layout
 
 \begin_layout Standard
@@ -3795,7 +3874,7 @@ int local_event_callback(struct inotify_event* event, sqlite3* db, inotify_t
 
 \begin_layout Standard
 
-    else {  // se è un file?
+    else {  // se è un file
 \end_layout
 
 \begin_layout Standard
@@ -3805,7 +3884,7 @@ int local_event_callback(struct inotify_event* event, sqlite3* db, inotify_t
 
 \begin_layout Standard
 
-            del_local_file_from_db(db, event_file_name(event, inotify));
+            del_local_file_from_db(db, file_name);
 \end_layout
 
 \begin_layout Standard
@@ -3815,7 +3894,69 @@ int local_event_callback(struct inotify_event* event, sqlite3* db, inotify_t
 
 \begin_layout Standard
 
-            add_local_file_in_db(db, event_file_name(event, inotify));
+            add_local_file_in_db(db, file_name);
+\end_layout
+
+\begin_layout Standard
+
+        else if (event->mask & IN_CLOSE_WRITE) {
+\end_layout
+
+\begin_layout Standard
+
+            del_local_file_from_db(db, file_name);
+\end_layout
+
+\begin_layout Standard
+
+            char* dirname = extract_dirname(file_name);
+\end_layout
+
+\begin_layout Standard
+
+            rem_watch(&inotify, dirname);
+\end_layout
+
+\begin_layout Standard
+
+            add_local_file_in_db(db, file_name);
+\end_layout
+
+\begin_layout Standard
+
+            add_watch(&inotify, dirname);
+\end_layout
+
+\begin_layout Standard
+
+            free(dirname);
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        else if (event->mask & IN_IGNORED)
+\end_layout
+
+\begin_layout Standard
+
+            ;   // non fare niente
+\end_layout
+
+\begin_layout Standard
+
+        else
+\end_layout
+
+\begin_layout Standard
+
+            errprintf("EVENTO NON SUPPORTATO `%s'
+\backslash
+n", file_name);
 \end_layout
 
 \begin_layout Standard
@@ -3831,29 +3972,6 @@ int local_event_callback(struct inotify_event* event, sqlite3* db, inotify_t
 \begin_layout Standard
 
 }
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TODO: LA FUNZIONE NON È COMPLETA!
-\newline
-
-\newline
-
-\newline
-
-\newline
-
-\newline
-
 \end_layout
 
 \end_inset
@@ -3933,12 +4051,26 @@ Dovranno essere rimosse le informazioni dei file dal database
 
 \end_deeper
 \begin_layout Itemize
-La modifica di file
+La modifica di file, rilevata al momento della chiusura (in scrittura) degli
+ stessi
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
 Dovranno essere aggiornate le informazioni dei file nel database
+\newline
+In particolare,
+ è da notare come Taglib apra i file in lettura/scrittura, anche solo per
+ effettuare il 
+\emph on
+fetching
+\emph default
+ delle informazioni, porta a loop infiniti (un file è modificato, perciò
+ si leggono i tag per inserirli nel database, ma questo genera un nuovo
+ evento sul file, che innesca un altra lettura...).
+ Per evitare questo, si è deciso di ovviare al problema rimuovendo temporaneamen
+te la directory contenente il file monitorato, prima di leggere le informazioni
+ da inserire nel database.
 \end_layout
 
 \end_deeper
@@ -4121,7 +4253,7 @@ In particolare, le funzioni da definire sono
 \begin_layout Itemize
 
 \family typewriter
-int is_local_file() ;
+int is_local_file();
 \end_layout
 
 \begin_deeper
@@ -4170,9 +4302,10 @@ le coppie tabelle che possono essere messe in JOIN
 \end_layout
 
 \begin_layout Itemize
-i vincoli da usare nella condizione WHERE per ogni JOIN (ad esempio, se
+i vincoli da usare nella condizione WHERE per ogni JOIN (ad esempio, posto
  la tabella T1 ha una chiave esterna verso la tabella T2, in caso servano
- informazioni da entrambe le tabele, sarà necessario impostare 
+ informazioni da entrambe le tabelle, sarà necessario che tra le clausole
+ della WHERE vi sia 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4202,9 +4335,12 @@ pre-alpha
 \end_layout
 
 \begin_layout Standard
-Un particolare degno di nota è la presenza nella libreria db_fuse anche
- dei due parser (uno per lo schema di configurazione, l'altro per i path
- del filesystem virtuale) necessari a realizzare filesystem configurabili
+Un particolare degno di nota è la presenza nella libreria 
+\family typewriter
+db_fuse
+\family default
+ anche dei due parser (uno per lo schema di configurazione, l'altro per
+ i path del filesystem virtuale) necessari a realizzare filesystem configurabili
  tramite schemi.
  In questo modo ogni programma che userà questa libreria avrà, tra le altre
  cose, la configurabilità dei nomi dei file tramite uno schema; i dettagli
@@ -4246,7 +4382,7 @@ reference "tab:Callback-di-Fuse"
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Standard
 \noindent
@@ -4481,10 +4617,25 @@ La scelta di quali funzioni implementare è stata guidata da una visione
 \end_layout
 
 \begin_layout Standard
-Per questo motivo sono state implementate le funzioni db_fuse_getattr(),
- db_fuse_readdir() e db_fuse_read(), per, quantomeno, navigare nel file
- system; db_fuse_readdir(), in particolare, è delegata ad utilizzare lo
- schema dell'utente per 
+Per questo motivo sono state implementate le funzioni 
+\family typewriter
+db_fuse_getattr()
+\family default
+, 
+\family typewriter
+db_fuse_readdir()
+\family default
+ e 
+\family typewriter
+db_fuse_read()
+\family default
+; esse, quantomeno, consentono di navigare nel file system.
+ 
+\family typewriter
+db_fuse_readdir()
+\family default
+, in particolare, è delegata ad utilizzare lo schema dell'utente come una
+ grammatica generativa, al fine di 
 \emph on
 popolare
 \emph default
@@ -4492,26 +4643,53 @@ popolare
 \end_layout
 
 \begin_layout Standard
-In un secondo momento sono state implementate le funzioni db_fuse_open()
- e db_fuse_release(), poiché in genere i file multimediali sono di grosse
- dimensioni, e letti in 
+In un secondo momento sono state implementate le funzioni 
+\family typewriter
+db_fuse_open()
+\family default
+ e 
+\family typewriter
+db_fuse_release()
+\family default
+, poiché in genere i file multimediali sono di grosse dimensioni, e letti
+ in 
 \emph on
 chunks
 \emph default
  dai player, e quindi sembrava inutile dover ogni secondo effettuare il
  parsing del nome dello stesso file.
- Per far questo è solo db_fuse_open() che analizza la stringa del percorso
- del file, rileva il nome del file reale, lo apre in sola lettura e assegna
- ad un parametro (struct fuse_file_info.fh) il file handler ottenuto.
+ Per evitare questo spreco di risorse è solo 
+\family typewriter
+db_fuse_open()
+\family default
+ che, all'apertura del file virtuale, analizza la stringa del percorso del
+ file, rileva il nome del file reale, lo apre in sola lettura e assegna
+ ad un parametro (
+\family typewriter
+struct fuse_file_info.fh
+\family default
+) il file handler ottenuto.
 \end_layout
 
 \begin_layout Standard
-db_fuse_read(), quindi, non dovrà far altro che usare questo parametro,
- che verrà usato, in seguito, per chiudere il file da db_fuse_release().
+
+\family typewriter
+db_fuse_read()
+\family default
+, quindi, non dovrà far altro che usare questo parametro, come verrà usato,
+ in seguito, anche da 
+\family typewriter
+db_fuse_release()
+\family default
+ per chiudere il file.
 \end_layout
 
 \begin_layout Standard
-Infine è stato implementato db_fuse_rename().
+Infine è stato implementato 
+\family typewriter
+db_fuse_rename()
+\family default
+.
  Essa offre la possibilità di realizzare un file system in 
 \begin_inset Quotes eld
 \end_inset
@@ -4526,27 +4704,6 @@ quasi sola lettura
  il nome destinazione deve essere, prima di tutto valido (cioè deve rispettare
  la sintassi dello schema), ma anche corrispondente ad una richiesta valida.
  
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-DIRE COME FACCIO IL PARSING; PERCHÉ NON POSSO USARE %ARTIST_%YEAR;
-\end_layout
-
-\begin_layout Standard
-POI MOSTRARE IL CONTENUTO DI UNA DIRECTORY
-\end_layout
-
-\begin_layout Standard
-POI MOSTRARE CHE SUCCEDE QUANDO FACCIO RENAME
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Section
@@ -4564,7 +4721,7 @@ Una componente di rilievo del progetto è data dalla flessibilità con la
  Esistono già parecchi progetti nati con l'obiettivo di indicizzare collezioni
  musicali
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Standard
 Al momento (marzo 2008) su 
@@ -4583,7 +4740,7 @@ target "http://fuse.sourceforge.net/wiki/index.php/MediaFileSystems"
 
 , o mostrare viste su database tramite directories
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Standard
 Al momento (marzo 2008) su 
@@ -4613,13 +4770,15 @@ canonico
 
  di un file system, o non vi è alcuna possibilità di esprimere preferenze
  su come organizzare la musica, rimanendo costretti a strutture delle directory
- del tipo AUTORE/ALBUM.
+ del tipo AUTORE/ALBUM, che magari vannno bene per la maggior parte degli
+ utenti, ma sono limitate per alcuni.
 \end_layout
 
 \begin_layout Standard
 L'idea di MusicMeshFS, invece, è quella di comportarsi il più possibile
- come un file system classico, ma di creare ordine tra i file multimediali
- tramite un parametro da passare al client (la componente destinata a realizzare
+ come un file system classico, usabile sia a riga di comando che da file
+ browser grafici, ma capace di creare ordine tra i file multimediali tramite
+ un parametro da passare al client (la componente destinata a realizzare
  il file system vero e proprio).
  La grammatica adottata per rappresentare lo schema, in Extended Backus-Naur
  Form, è la seguente:
@@ -4638,7 +4797,7 @@ width "100col%"
 special "none"
 height "1in"
 height_special "totalheight"
-status open
+status collapsed
 
 \begin_layout LyX-Code
  <SCHEMA>
@@ -4871,11 +5030,14 @@ alternanza
 \end_inset
 
  di keyword e elementi fissi.
- Le keyword (e la loro semantica) sono totalmente fuori dalla liberia db_fuse,
- ed è necessario definirli a parte.
+ Le keyword (e la loro semantica) sono totalmente fuori dalla liberia 
+\family typewriter
+db_fuse
+\family default
+, ed è necessario definirli a parte.
  Di particolare interesse è la definizione di 
 \noun on
-fisso
+<fisso>
 \noun default
 : per esemplificare la grammatica è stato preparato un semplice automa a
  stati finiti accettore, in figura 
@@ -4945,11 +5107,7 @@ Insieme degli stati finali:
 
 \begin_layout Standard
 Come si può vedere, un elemento fisso è una stringa di lunghezza a piacere,
- 
-\begin_inset Formula $\ge1$
-\end_inset
-
-, e con tre particolarità:
+ non vuota, e con tre particolarità:
 \end_layout
 
 \begin_layout Enumerate
@@ -4967,7 +5125,7 @@ name "enu:caso-%"
 \end_inset
 
 L'uso del carattere '%' è concesso solo se subito seguito da un altro '%'
- (cfr archi 
+ (si vedano ad esempio gli archi 
 \begin_inset Formula $\overline{AB}$
 \end_inset
 
@@ -4983,7 +5141,7 @@ L'uso del carattere '%' è concesso solo se subito seguito da un altro '%'
 \begin_inset Formula $C$
 \end_inset
 
-, usato come nodo 
+, usato come 
 \emph on
 pivot, 
 \emph default
@@ -4998,6 +5156,11 @@ Il motivo è dato dal fatto che '%' è usato come indicatore di keyword,
 \end_layout
 
 \begin_layout Enumerate
+\begin_inset LatexCommand label
+name "enu:Il-fatto-che"
+
+\end_inset
+
 Il fatto che 
 \emph on
 non
@@ -5020,10 +5183,14 @@ _
 \begin_inset Quotes erd
 \end_inset
 
- è usato, per ogni file generato da db_fuse, per sostituire nei vari elementi
- dinamici l'eventuale presenza dell'elemento fisso subito presente.
+ è usato, per ogni file generato da 
+\family typewriter
+db_fuse
+\family default
+, per sostituire nei vari elementi dinamici l'eventuale presenza dell'elemento
+ fisso subito presente.
  Questo al fine di rendere non ambiguo il successivo parsing nelle fasi
- di lettura.
+ di lettura e rinomina.
  A differenza del caso 
 \begin_inset LatexCommand ref
 reference "enu:caso-%"
@@ -5032,74 +5199,9 @@ reference "enu:caso-%"
 
 , per questo carattere non è possibile pensare ad una soluzione, poiché
  qualunque elemento fisso può essere presente negli elementi dinamici di
- in un file generato a partire da dati esterni, costringendoci a vietarne
- semplicemente l'uso.
- Un esempio pratico degli effetti di questa sostituzione è possibile vederlo
- nel nome del file generato nella citazione 
-\begin_inset LatexCommand vref
-reference "quo:Frankie-Hi-NRG-Mc/(2008)"
-
-\end_inset
-
-: nel path 
-\begin_inset Quotes eld
-\end_inset
-
-Frankie Hi-NRG Mc/(2008) dePrimoMaggio/00 - Rivoluzione feat_ Roy Paci.mp3
-\begin_inset Quotes erd
-\end_inset
-
-, subito dopo il 
-\begin_inset Quotes eld
-\end_inset
-
-feat
-\begin_inset Quotes erd
-\end_inset
-
- è presente un 
-\begin_inset Quotes eld
-\end_inset
-
-_
-\begin_inset Quotes erd
-\end_inset
-
-; questo poiché nel tag originario alla keyword 
-\begin_inset Quotes eld
-\end_inset
-
-%title
-\begin_inset Quotes erd
-\end_inset
-
- corrisponde 
-\begin_inset Quotes eld
-\end_inset
-
-Rivoluzione feat.
- Roy Paci
-\begin_inset Quotes erd
-\end_inset
-
- (con il punto); ma 
-\begin_inset Quotes eld
-\end_inset
-
-.
-\begin_inset Quotes erd
-\end_inset
-
- è anche l'elemento fisso subito seguente, e per questo nel titolo questa
- stringa è stata sostituita da 
-\begin_inset Quotes eld
-\end_inset
-
-_
-\begin_inset Quotes erd
-\end_inset
-
-.
+ un file generato a partire da dati esterni, costringendoci a vietarne semplicem
+ente l'uso.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -5386,6 +5488,157 @@ SELECT traccia, titolo, tipo FROM ...
 
 \end_layout
 
+\begin_layout Standard
+Un esempio pratico degli effetti della sostituzione descritti nel caso 
+\begin_inset LatexCommand vref
+reference "enu:Il-fatto-che"
+
+\end_inset
+
+ è possibile vederlo nel nome del file generato nella citazione 
+\begin_inset LatexCommand vref
+reference "quo:Frankie-Hi-NRG-Mc/(2008)"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+Sapendo
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+Vedi nota 
+\begin_inset LatexCommand vref
+reference "fn:Subito-dopo-ogni"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+ che lo schema utilizzato è 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+%artist/(%year) %album/%track - %title.%type
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\emph default
+si può notare come nel path 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+Frankie Hi-NRG Mc/(2008) dePrimoMaggio/00 - Rivoluzione feat_ Roy Paci.mp3
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+, subito dopo il 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+feat
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+ è presente un 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+; questo nonostante al fatto che, nel tag originario, alla keyword 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+%title
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+ corrispondesse 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+Rivoluzione feat.
+ Roy Paci
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+ (con il punto); ma 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+.
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+ è anche l'elemento fisso subito seguente, e per questo nel titolo questa
+ stringa è stata sostituita da 
+\emph on
+
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Shaded
+status open
+
+\begin_layout Standard
+POI MOSTRARE IL CONTENUTO DI UNA DIRECTORY
+\end_layout
+
+\begin_layout Standard
+POI MOSTRARE CHE SUCCEDE QUANDO FACCIO RENAME
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Chapter
 Compilazione dei sorgenti
 \end_layout
@@ -5395,7 +5648,10 @@ Daft punk/(2001) Discovery/04 - Harder, better, faster, stronger.mp3
 \end_layout
 
 \begin_layout Standard
-Il progetto è strutturato in maniera gerarchica
+Per poter testare il progetto, è necessario compilarlo adeguatamente.
+ A scopo illustrativo, e per meglio spiegare come sono stati implementati
+ i differenti sottoprogetti, si è scelto di includere una panoramica dei
+ file sorgenti.
 \end_layout
 
 \begin_layout Section
@@ -5540,6 +5796,15 @@ src/Makefile
 
 \end_layout
 
+\begin_layout Standard
+Il progetto è strutturato in maniera gerarchica, di seguito avremo un semplice
+ albero usato per mostrare come si è scelto di organizzare i sorgenti.
+\end_layout
+
+\begin_layout Standard
+Partendo dalla directory musicmeshfs, avremo
+\end_layout
+
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
 COPYING Copia della licenza GPLv3 sotto la quale sono distribuiti musicmeshfsc
@@ -5559,7 +5824,11 @@ Makefile File di configurazione per la generazione dei file binari e della
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-doc Cartella in cui sono presenti i sorgenti di questo documento
+
+\series bold
+doc
+\series default
+ Cartella in cui sono presenti i sorgenti di questo documento
 \end_layout
 
 \begin_deeper
@@ -5575,7 +5844,11 @@ Tesi.lyx Questo documento
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-imgs Immagini presenti in questo documento
+
+\series bold
+imgs
+\series default
+ Immagini presenti in questo documento
 \end_layout
 
 \begin_deeper
@@ -5637,7 +5910,11 @@ reference "fig:sostituisci.py"
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-src sorgenti del progetto vero e proprio
+
+\series bold
+src
+\series default
+ sorgenti del progetto vero e proprio
 \end_layout
 
 \begin_deeper
@@ -5648,7 +5925,11 @@ Makefile
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-common file comuni a musicmeshfsc e musicmeshfsd
+
+\series bold
+common
+\series default
+ file comuni a musicmeshfsc e musicmeshfsd
 \end_layout
 
 \begin_deeper
@@ -5683,7 +5964,11 @@ utils.h
 \end_deeper
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-db_fuse implementazione della libreria db_fuse
+
+\series bold
+db_fuse
+\series default
+ implementazione della libreria db_fuse
 \end_layout
 
 \begin_deeper
@@ -5744,7 +6029,11 @@ parser.h
 \end_deeper
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-musicmeshfsc implementazione di MusicMeshFSc
+
+\series bold
+musicmeshfsc
+\series default
+ implementazione di MusicMeshFSc
 \end_layout
 
 \begin_deeper
@@ -5779,7 +6068,11 @@ musicmeshfsc.c main del programma
 \end_deeper
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-musicmeshfsd implementazione di MusicMeshFSd
+
+\series bold
+musicmeshfsd
+\series default
+ implementazione di MusicMeshFSd
 \end_layout
 
 \begin_deeper
@@ -5812,6 +6105,8 @@ musicmeshfsd.c main del programma
 \end_deeper
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
+
+\series bold
 utils
 \end_layout
 
@@ -5834,15 +6129,35 @@ setta.c programma che permette di impostare il valore dei tag in un file
 \end_layout
 
 \end_deeper
-\begin_layout LyX-Code
+\begin_layout Standard
+Per poter meglio rappresentare i rapporti tra i file, si è scelto di allegare
+ anche gli schemi d'inclusione dei file principali dei tre progetti, nelle
+ figure 
+\begin_inset LatexCommand vref
+reference "fig:db_fuse.c"
 
+\end_inset
+
+, 
+\begin_inset LatexCommand vref
+reference "fig:musicmeshfsc.c"
+
+\end_inset
+
+ e 
+\begin_inset LatexCommand vref
+reference "fig:musicmeshfsd.c"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Standard
 \noindent
@@ -5860,7 +6175,14 @@ status open
 \begin_inset Caption
 
 \begin_layout Standard
-Schema d'inclusione di db_fuse.c
+\begin_inset LatexCommand label
+name "fig:db_fuse.c"
+
+\end_inset
+
+Schema d'inclusione di 
+\family typewriter
+db_fuse.c
 \end_layout
 
 \end_inset
@@ -5877,7 +6199,7 @@ Schema d'inclusione di db_fuse.c
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Standard
 \noindent
@@ -5896,7 +6218,14 @@ status open
 \begin_inset Caption
 
 \begin_layout Standard
-Schema d'inclusione di musicmeshfsc.c
+\begin_inset LatexCommand label
+name "fig:musicmeshfsc.c"
+
+\end_inset
+
+Schema d'inclusione di 
+\family typewriter
+musicmeshfsc.c
 \end_layout
 
 \end_inset
@@ -5932,7 +6261,14 @@ status collapsed
 \begin_inset Caption
 
 \begin_layout Standard
-Schema d'inclusione di musicmeshfsd.c
+\begin_inset LatexCommand label
+name "fig:musicmeshfsd.c"
+
+\end_inset
+
+Schema d'inclusione di 
+\family typewriter
+musicmeshfsd.c
 \end_layout
 
 \end_inset
@@ -5950,12 +6286,25 @@ Test programma
 \end_layout
 
 \begin_layout Standard
-Sarà necessario prima di tutto avere della musica da analizzare e monitorare
- :)
+Per poter testare i programmi, dopo averli compilati, sarà necessario prima
+ di tutto avere della musica da analizzare e monitorare :)
 \end_layout
 
 \begin_layout Standard
-Quindi basterà lanciare `musicmeshfsd`
+Quindi basterà lanciare 
+\family typewriter
+musicmeshfsd
+\family default
+, seguito dal database da condividere con le varie istanze di 
+\family typewriter
+musicmeshfsc
+\family default
+ e dalle directory da monitorare.
+ Ad esempio, volendo organizzare la directory 
+\family typewriter
+musica_sparsa
+\family default
+, basterà lanciare
 \end_layout
 
 \begin_layout LyX-Code
@@ -5963,7 +6312,12 @@ $ musicmeshfsd collection.db musica_sparsa &
 \end_layout
 
 \begin_layout Standard
-e poi `musicmeshfsc`
+e poi 
+\family typewriter
+musicmeshfsc
+\family default
+ seguito dal nome del database, dalla directory in cui si vuole montare
+ il file system e dallo schema da usare per organizzare la musica
 \end_layout
 
 \begin_layout LyX-Code
@@ -5973,27 +6327,39 @@ $ musicmeshfsc collection.db musica_organizzata
 \end_layout
 
 \begin_layout LyX-Code
-    '%genre/%artist - %year/%title.%type' &
+    '%artist/(%year) %album/%track - %title.%type' &
 \end_layout
 
 \begin_layout Standard
-d'ora in poi, in `musica_organizzata` sarà presente il fs virtuale.
+d'ora in poi, quindi, in 
+\family typewriter
+musica_organizzata
+\family default
+ sarà presente il fs virtuale.
 \end_layout
 
 \begin_layout LyX-Code
-$ tree musica_sparsa
+$ tree -A musica_sparsa
 \end_layout
 
 \begin_layout LyX-Code
-file.mp3
+musica_sparsa
 \end_layout
 
 \begin_layout LyX-Code
-directory
+├── Gazzé
 \end_layout
 
 \begin_layout LyX-Code
-|-- altro_file.mp3
+│   └── 03.Siamo come siamo.mp3
+\end_layout
+
+\begin_layout LyX-Code
+├── Il grande Ratzinger_prova.mp3
+\end_layout
+
+\begin_layout LyX-Code
+└── 1 - Puff the barbarian.ogg
 \end_layout
 
 \begin_layout LyX-Code
@@ -6001,7 +6367,7 @@ directory
 \end_layout
 
 \begin_layout LyX-Code
-$ tree musica_organizzata
+$ tree -A musica_organizzata
 \end_layout
 
 \begin_layout LyX-Code
@@ -6009,19 +6375,60 @@ musica_organizzata
 \end_layout
 
 \begin_layout LyX-Code
-|-- Blues
+├── Marco Di Francesco
 \end_layout
 
 \begin_layout LyX-Code
-|   |-- artista - 1999
+│   └── (2005) Il grande Ratzinger
 \end_layout
 
 \begin_layout LyX-Code
-|   |   |-- canzone.mp3
+│       └── 01 - Il grande Ratzinger.mp3
 \end_layout
 
 \begin_layout LyX-Code
-....
+...
+\end_layout
+
+\begin_layout LyX-Code
+├── Max Gazzé
+\end_layout
+
+\begin_layout LyX-Code
+│   └── (2008) Tra l'aratro e la radio
+\end_layout
+
+\begin_layout LyX-Code
+│       └── 03 - Siamo come siamo.mp3
+\end_layout
+
+\begin_layout LyX-Code
+...
+\end_layout
+
+\begin_layout LyX-Code
+├── OpenBSD
+\end_layout
+
+\begin_layout LyX-Code
+│   └── (2003) 3.3
+\end_layout
+
+\begin_layout LyX-Code
+│       └── 01 - Puff the barbarian.ogg 
+\end_layout
+
+\begin_layout LyX-Code
+...
+\end_layout
+
+\begin_layout Standard
+Per poter, infine, smontare il file system virtuale, basta usare il seguente
+ comando
+\end_layout
+
+\begin_layout LyX-Code
+$ fusermount -u musica_organizzata
 \end_layout
 
 \begin_layout Chapter
@@ -6289,8 +6696,16 @@ In realtà ci sono due tipi di problemi
 di\InsetSpace ~
 carattere\InsetSpace ~
 etico: la condivisione di informazioni protette da copyright
- è illegale in italia, come nella maggior parte degli stati.
- 
+ tra persone è illegale in Italia, come nella maggior parte degli stati.
+\newline
+Tuttavia
+ riteniamo che non sia compito nostro decidere quali file multimediali condivide
+re o meno, ma che sia responsabilità dell'utente non infrangere la legge
+ del proprio stato.
+ Questo anche perché vi sono situazioni in cui la condivisione di file tra
+ vari host è legittima, ad esempio poiché è concesso dall'autore, o anche
+ nel caso in cui i vari host (personal computer, portatile, palmare) appartengan
+o alla stessa persona.
 \end_layout
 
 \begin_layout Labeling
@@ -6298,28 +6713,27 @@ etico: la condivisione di informazioni protette da copyright
 di\InsetSpace ~
 carattere\InsetSpace ~
 tecnico: è necessario definire una serie di informazioni su come
- le varie istanze di musicmeshfsd debbano comunicare tra loro, e come 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-DA FARE
-\end_layout
-
-\begin_layout Standard
-DA FARE
-\end_layout
-
-\begin_layout Standard
-DA FARE
-\end_layout
-
+ le varie istanze di musicmeshfsd debbano comunicare tra loro, e come bilanciare
+ il carico tra i vari nodi della rete, al fine di minimizzare le risorse
+ occupate per ogni host.
+\newline
+Tra le prime cose da definire, vi è almeno un algoritmo
+ di 
+\begin_inset Quotes eld
 \end_inset
 
+scoperta
+\begin_inset Quotes erd
+\end_inset
 
+ di altri processi concorrenti nella stessa rete.
+ L'alternativa sarebbe nella scrittura di un file di configurazione (assimilabil
+e a 
+\family typewriter
+/etc/host
+\family default
+) ma questa soluzione è decisamente troppo limitativa, soprattutto nel caso
+ di connessioni wireless dinamiche.
 \end_layout
 
 \begin_layout Part

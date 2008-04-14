@@ -122,7 +122,7 @@ int esegui_query_callback(sqlite3* db, int(*callback)(void*, int, char**,
     \sa init_db(), esegui_query(), preprocessing()
 */
 int add_local_file_in_db(void* db, const char* path) {
-    errprintf("[add_file_in_db] path = `%s'\n", path);
+    errprintf("[add_local_file_in_db] path = `%s'\n", path);
     TagLib_File* tlf = taglib_file_new(path);
     if (tlf) {
         TagLib_Tag* tlt = taglib_file_tag(tlf); // automaticamente free`d
@@ -166,9 +166,10 @@ int add_local_file_in_db(void* db, const char* path) {
             compatibilità)
     \param path percorso del file da rimuovere
     \return 0 se non ci sono errori, -1 altrimenti
-    \sa add_file_in_db()
+    \sa add_local_file_in_db()
 */
 int del_local_file_from_db(void* db, char* path) {
+    errprintf("[del_local_file_from_db] path = `%s'\n", path);
     return esegui_query(db, "DELETE FROM file WHERE (file.host = '127.0.0.1') "
             "AND (file.path = %Q)", path);
 }

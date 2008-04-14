@@ -64,6 +64,7 @@ void init_str(dynamic_str_t*);
 dynamic_int_t from_int(const int*, const int);
 dynamic_str_t from_str(const char**, const int);
 void remove_str(dynamic_str_t*, const char*);
+void remove_int(dynamic_int_t*, const int);
 int pop_str(dynamic_str_t*);
 
 int contains_int(const dynamic_int_t, const int);
@@ -79,6 +80,7 @@ const char* extract_extension(const char*);
 int extract_group_perm(const char*);
 int extract_size(const char*);
 const char* extract_basename(const char*);
+char* extract_dirname(const char*);
 
 dynamic_str_t split(const char*, const char);
 char* join(const dynamic_str_t, const char);
