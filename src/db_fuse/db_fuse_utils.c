@@ -18,20 +18,19 @@
 */
 
 #include "db_fuse_utils.h"
-#include "constants.h"   /* KEYWORDS_SIZE, KEYWORDS, column_from_keyword */
-#include "../common/utils.h"       /* dynamic_str_t, init_str(), append_str(),
-                            index_of_str(), max() */
-#include "../common/sqlite.h"      /* esegui_query_callback() */
+#include "constants.h"  /* KEYWORDS_SIZE, KEYWORDS, column_from_keyword */
+#include "../common/utils.h"    /* dynamic_str_t, init_str(), append_str(), index_of_str(), max() */
+#include "../common/sqlite.h"   /* esegui_query_callback() */
 
 /**
-    utility per ottenere, da fuse, il database passato come parametro
+    utility per ottenere, da Fuse, il database passato come parametro
 */
 sqlite3* get_db_from_context() {
     return (sqlite3*)((dynamic_obj_t*)fuse_get_context()->private_data)->buf[0];
 }
 
 /**
-    utility per ottenere, da fuse, il vettore degli elementi fissi passato come
+    utility per ottenere, da Fuse, il vettore degli elementi fissi passato come
     parametro
 */
 dynamic_obj_t get_fissi_from_context() {
@@ -40,7 +39,7 @@ dynamic_obj_t get_fissi_from_context() {
 }
 
 /**
-    utility per ottenere, da fuse, il vettore degli elementi keywords passato
+    utility per ottenere, da Fuse, il vettore degli elementi keywords passato
     come parametro
 */
 dynamic_obj_t get_keywords_from_context() {
@@ -68,7 +67,6 @@ int exist(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
         dynamic_obj_t dinamici, const char* path) {
     dynamic_str_t splitted_path = split(path+1, '/');
     char* filename = splitted_path.buf[splitted_path.size-1];
-//     errprintf("[EXIST] path = `%s'\n", filename);
     if (dinamici.size == 0) // mi sto riferendo a "/"
         return 1;
     dynamic_obj_t dinamici_superiore;
@@ -227,20 +225,6 @@ int get_one_column(void* buf, int n_colonne, char** value, char** header) {
     if (n_colonne != 1)
         return -1;
     append_str(((dynamic_str_t*)buf), value[0]);
-    return 0;
-}
-
-/**
-    Assume che buf sia un dynamic_obj_t, composto da 2 dynamic_str_t, e che la
-    query abbia n_colonne == 2
-    Riempie le coppie di buf con le tuple trovate
- */
-int get_two_columns(void* buf, int n_colonne, char** value, char** header) {
-    (void) header; // non usato
-    if (n_colonne != 1)
-        return -1;
-    append_str(((dynamic_str_t*)((dynamic_obj_t*)buf)->buf[0]), value[0]);
-    append_str(((dynamic_str_t*)((dynamic_obj_t*)buf)->buf[1]), value[1]);
     return 0;
 }
 

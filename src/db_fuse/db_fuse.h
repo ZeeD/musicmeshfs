@@ -38,7 +38,9 @@ int db_fuse_open(const char*, struct fuse_file_info*);
 int db_fuse_release(const char*, struct fuse_file_info*);
 
 // dovranno essere reimplementate -> metodi virtuali -.-
-extern char* get_local_path(sqlite3*, dynamic_obj_t, dynamic_obj_t, dynamic_obj_t);
+extern dynamic_str_t get_local_paths(sqlite3*, dynamic_obj_t, dynamic_obj_t, dynamic_obj_t);
 extern int is_local_file(sqlite3*, dynamic_obj_t, dynamic_obj_t, dynamic_obj_t);
+extern int rename_local_file(void*, dynamic_obj_t, dynamic_obj_t,
+        dynamic_obj_t, dynamic_obj_t);
 
 #endif

@@ -18,8 +18,23 @@
 */
 
 #include "sqlite.h"
-// #include "../musicmeshfsd/commons.h"
 #include "utils.h"
+
+
+/**
+    Assume che buf sia un dynamic_obj_t
+    Riempie le coppie di buf con le tuple trovate
+ */
+int get_columns(void* buf, int n_colonne, char** value, char** header) {
+    (void) header; // non usato
+    dynamic_str_t* row = malloc(sizeof(dynamic_str_t));
+    init_str(row);
+    for (int i=0; i<n_colonne; i++)
+        append_str(row, value[i]);
+    append_obj((dynamic_obj_t*)buf, row);
+    return 0;
+}
+
 
 /**
     ha in input un path, e (se non esiste) crea un "database per sqlite3" vuoto.
@@ -124,38 +139,38 @@ int esegui_query_callback(sqlite3* db, int(*callback)(void*, int, char**,
 int add_local_file_in_db(void* db, const char* path) {
     errprintf("[add_local_file_in_db] path = `%s'\n", path);
     TagLib_File* tlf = taglib_file_new(path);
-    if (tlf) {
-        TagLib_Tag* tlt = taglib_file_tag(tlf); // automaticamente free`d
-        char* titolo = preprocessing(taglib_tag_title(tlt));
-        char* artista = preprocessing(taglib_tag_artist(tlt));
-        char* album = preprocessing(taglib_tag_album(tlt));
-        char* genere = preprocessing(taglib_tag_genre(tlt));
-        unsigned int anno = taglib_tag_year(tlt);
-        unsigned int traccia = taglib_tag_track(tlt);
+    if (!tlf)
+        return -1;
+    TagLib_Tag* tlt = taglib_file_tag(tlf); // automaticamente free`d
+    char* titolo = preprocessing(taglib_tag_title(tlt));
+    char* artista = preprocessing(taglib_tag_artist(tlt));
+    char* album = preprocessing(taglib_tag_album(tlt));
+    char* genere = preprocessing(taglib_tag_genre(tlt));
+    unsigned int anno = taglib_tag_year(tlt);
+    unsigned int traccia = taglib_tag_track(tlt);
 
-        char* anno_s = calloc(5, 1);    // andrà bene fino all'anno 9999
-        char* traccia_s = calloc(3, 1); // andrà bene fino alla traccia 99
+    char* anno_s = calloc(5, 1);    // andrà bene fino all'anno 9999
+    char* traccia_s = calloc(3, 1); // andrà bene fino alla traccia 99
 
-        snprintf(anno_s, 5, "%04d", anno);
-        snprintf(traccia_s, 3, "%02d", traccia);
+    snprintf(anno_s, 5, "%04d", anno);
+    snprintf(traccia_s, 3, "%02d", traccia);
 
-        if (esegui_query(db, "INSERT OR REPLACE INTO artista(nome_artista) "
-                "values (%Q)", artista) == -1)
-            return -1;
-        if (esegui_query(db, "INSERT OR REPLACE INTO musica(titolo, nome_album,"
-                " traccia, genere, artista_nome_artista, lavoro_anno) values "
-                "(%Q, %Q, %Q, %Q, %Q, %Q)", titolo, album, traccia_s, genere,
-                artista, anno_s) == -1)
-            return -1;
-        if (esegui_query(db, "INSERT OR REPLACE INTO file(host, path, permessi,"
-                " formato, dimensioni, data_ultimo_aggiornamento, musica_titolo"
-                ", musica_nome_album, musica_traccia, basename) values ("
-                "'127.0.0.1', %Q, %d, %Q, %d, NULL, %Q, %Q, %Q, %Q)", path, 6,
-                extract_extension(path), extract_size(path), titolo, album,
-                traccia_s, extract_basename(path)) == -1)
-            return -1;
-        taglib_tag_free_strings();
-    }
+    if (esegui_query(db, "INSERT OR REPLACE INTO artista(nome_artista) values "
+            "(%Q)", artista) == -1)
+        return -1;
+    if (esegui_query(db, "INSERT OR REPLACE INTO musica(titolo, nome_album,"
+            " traccia, genere, artista_nome_artista, lavoro_anno) values "
+            "(%Q, %Q, %Q, %Q, %Q, %Q)", titolo, album, traccia_s, genere,
+            artista, anno_s) == -1)
+        return -1;
+    if (esegui_query(db, "INSERT OR REPLACE INTO file(host, path, permessi,"
+            " formato, dimensioni, data_ultimo_aggiornamento, musica_titolo"
+            ", musica_nome_album, musica_traccia, basename) values ("
+            "'127.0.0.1', %Q, %d, %Q, %d, NULL, %Q, %Q, %Q, %Q)", path, 6,
+            extract_extension(path), extract_size(path), titolo, album,
+            traccia_s, extract_basename(path)) == -1)
+        return -1;
+    taglib_tag_free_strings();
     taglib_file_free(tlf);
     return 0;
 }
@@ -170,6 +185,38 @@ int add_local_file_in_db(void* db, const char* path) {
 */
 int del_local_file_from_db(void* db, char* path) {
     errprintf("[del_local_file_from_db] path = `%s'\n", path);
-    return esegui_query(db, "DELETE FROM file WHERE (file.host = '127.0.0.1') "
-            "AND (file.path = %Q)", path);
+    dynamic_obj_t musica;
+    init_obj(&musica);
+    if (esegui_query_callback(db, get_columns, &musica, "SELECT titolo,"
+            "nome_album,traccia FROM musica,file WHERE musica_titolo=titolo AND"
+            " musica_nome_album=nome_album AND musica_traccia=traccia AND host="
+            "'127.0.0.1' AND path = %Q", path) == -1)
+        return -1;
+    for (int i=0; i<musica.size; i++) {
+        char* titolo = ((dynamic_str_t*)musica.buf[i])->buf[0];
+        char* nome_album = ((dynamic_str_t*)musica.buf[i])->buf[1];
+        char* traccia = ((dynamic_str_t*)musica.buf[i])->buf[2];
+
+        dynamic_obj_t artista;
+        init_obj(&artista);
+
+        if (esegui_query_callback(db, get_columns, &artista, "SELECT "
+                "nome_artista FROM artista,musica WHERE titolo=%Q AND "
+                "nome_album=%Q AND traccia=%Q AND musica.artista_nome_artista="
+                "nome_artista", titolo, nome_album, traccia) == -1)
+            return -1;
+        for (int j=0; j<artista.size; j++) {
+            char* nome_artista = ((dynamic_str_t*)artista.buf[i])->buf[0];
+            if (esegui_query(db, "DELETE FROM artista WHERE nome_artista = %Q",
+                    nome_artista) == -1)
+                return -1;
+        }
+        if (esegui_query(db, "DELETE FROM musica WHERE titolo = %Q AND nome_alb"
+                "um = %Q AND traccia = %Q", titolo, nome_album, traccia) == -1)
+            return -1;
+    }
+    if (esegui_query(db, "DELETE FROM file WHERE host='127.0.0.1' AND path=%Q",
+            path) == -1)
+        return -1;
+    return 0;
 }

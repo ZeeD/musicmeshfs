@@ -40,6 +40,5 @@ int calcola_tabelle(dynamic_str_t, dynamic_str_t*);
 void calcola_where(dynamic_str_t, dynamic_str_t*);
 
 int get_one_column(void*, int, char**, char**);
-int get_two_columns(void*, int, char**, char**);
 
 #endif

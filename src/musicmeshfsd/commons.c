@@ -87,7 +87,9 @@ void local_loop(sqlite3* db, inotify_t inotify,
     - se l'evento riguarda una directory
         - se viene creata o se viene aggiunta, aggiungila a files e watch_fds
         - se viene distrutta o spostata via, rimuovila da files e watch_fds
-    \todo finire di decidere queste benedette regole da usare!
+    - se l'evento riguarda un file
+        - se viene creato o aggiunto, aggiungilo al db
+        - se viene distrutto o spostato via, rimuovilo dal db
 
     \param event evento notificato
     \param db database sqlite3 (modificato in-place)
@@ -96,7 +98,6 @@ void local_loop(sqlite3* db, inotify_t inotify,
 */
 int local_event_callback(struct inotify_event* event, sqlite3* db,
         inotify_t inotify) {
-//     info_print(event, inotify); // TODO: rimuovere info_print()!!!
     char* file_name = event_file_name(event, inotify);
     if (event->mask & IN_ISDIR) {    // se è una directory
         if (event->mask & (IN_CREATE | IN_MOVED_TO))    // creata o spostata in

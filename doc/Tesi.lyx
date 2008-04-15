@@ -327,37 +327,37 @@ gestore della collezione
 
 .
  Esempi se ne trovano per tutte le piattaforme e tutti i sistemi operativi:
- da Windows Media Player®
+ da Windows Media Player® 
 \begin_inset LatexCommand citep
 key "wmp_home_page"
 
 \end_inset
 
- a Winamp®
+ a Winamp® 
 \begin_inset LatexCommand citep
 key "winamp_home_page"
 
 \end_inset
 
-, da iTunes®
+, da iTunes® 
 \begin_inset LatexCommand citep
 key "itunes_home_page"
 
 \end_inset
 
- ad Amarok
+ ad Amarok 
 \begin_inset LatexCommand citep
 key "amarok_home_page"
 
 \end_inset
 
-, da Banshee
+, da Banshee 
 \begin_inset LatexCommand citep
 key "banshee_home_page"
 
 \end_inset
 
- a Songbird
+ a Songbird 
 \begin_inset LatexCommand citep
 key "songbird_home_page"
 
@@ -680,7 +680,7 @@ Metadati
 \begin_layout Standard
 Caratteristica comune a quasi
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Standard
 Una importante eccezione è il formato WAV, usato nei CD musicali: esso non
@@ -693,7 +693,7 @@ direttamente dal cd
  Per questo motivo sono nati servizi come 
 \begin_inset LatexCommand htmlurl
 name "CDDB"
-target "http://www.cddb.org"
+target "http://www.cddb.com"
 
 \end_inset
 
@@ -3267,65 +3267,12 @@ status collapsed
 \begin_layout Standard
 \noindent
 \align center
-\begin_inset Box Frameless
-position "c"
-hor_pos "c"
-has_inner_box 1
-inner_pos "c"
-use_parbox 0
-width "45col%"
-special "none"
-height "1in"
-height_special "totalheight"
-status open
-
-\begin_layout Standard
-\noindent
-\align left
 \begin_inset Graphics
 	filename imgs/DiagrammaER.eps
 	lyxscale 50
-	scale 50
+	width 50col%
 	subcaption
 	subcaptionText "Diagramma ER"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
- 
-\hfill
- 
-\begin_inset Box Frameless
-position "c"
-hor_pos "c"
-has_inner_box 1
-inner_pos "c"
-use_parbox 0
-width "45col%"
-special "none"
-height "1in"
-height_special "totalheight"
-status open
-
-\begin_layout Standard
-\noindent
-\align right
-\begin_inset Graphics
-	filename imgs/Tabelle.eps
-	lyxscale 50
-	scale 50
-	rotateAngle 90
-	subcaption
-	subcaptionText "Schema logico"
-
-\end_inset
-
-
-\end_layout
 
 \end_inset
 
@@ -3341,7 +3288,7 @@ name "fig:Diagramma-ER-del"
 
 \end_inset
 
-Database usato
+Diagramma ER del database usato
 \end_layout
 
 \end_inset
@@ -3357,14 +3304,67 @@ Database usato
 \begin_layout Standard
 Per far questo sono stati implementati due funzioni: la prima ha il compito
  di creare il database usando uno schema SQL appropriato, al fine di realizzare
- il database mostrato in figura 
+ il database modellato tramite Entity-relationship come mostrato in figura
+ 
 \begin_inset LatexCommand vref
 reference "fig:Diagramma-ER-del"
 
 \end_inset
 
+, e poi implementato come mostrato in figura 
+\begin_inset LatexCommand vref
+reference "fig:Schema-logico"
+
+\end_inset
+
 .
- Nel nostro progetto, per poter meglio separare il codice C da quello SQL
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Graphics
+	filename imgs/Tabelle.eps
+	lyxscale 50
+	height 90theight%
+	rotateAngle 90
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:Schema-logico"
+
+\end_inset
+
+Schema logico
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nel nostro progetto, per poter meglio separare il codice C da quello SQL
  in fase di stesura del codice, è stato predisposto un pre-processore ad
  hoc, 
 \family typewriter
@@ -4013,6 +4013,12 @@ reference "fig:Regole-inotify"
 \end_layout
 
 \begin_layout Standard
+
+\newpage
+
+\end_layout
+
+\begin_layout Standard
 Di particolare interesse saranno
 \end_layout
 
@@ -4266,13 +4272,32 @@ funzione booleana che dice se esiste un file locale che supporti tutti i
 \begin_layout Itemize
 
 \family typewriter
-char* get_local_path();
+dynamic_str get_local_paths();
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-funzione che restituisce il path del primo file reale che supporti tutti
- i vincoli richiesti
+funzione che restituisce i path dei file locali che supportino tutti i vincoli
+ richiesti (potrebbero, ad esempio, esserci due copie dello stesso file,
+ o comunque due file distinti taggati alla stessa maniera)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\family typewriter
+int rename_local_file()
+\family default
+;
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+funzione che implementa la rinomina dei file locali, secondo la logica specifica
+ del tipo di database
+\newline
+Nel nostro caso particolare, l'implementazione modificherà
+ solamente i tag dei file musicali.
 \end_layout
 
 \end_deeper
@@ -4704,6 +4729,247 @@ quasi sola lettura
  il nome destinazione deve essere, prima di tutto valido (cioè deve rispettare
  la sintassi dello schema), ma anche corrispondente ad una richiesta valida.
  
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,language=C,numbers=left,numberstyle={\tiny},showstringspaces=false,stepnumber=1"
+inline false
+status open
+
+\begin_layout Standard
+
+int rename_local_file(void* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
+ dynamic_obj_t values_from, dynamic_obj_t values_to) {
+\end_layout
+
+\begin_layout Standard
+
+    dynamic_str_t paths = get_local_paths((sqlite3*)db, fissi, keywords,
+ values_from);
+\end_layout
+
+\begin_layout Standard
+
+    for (int ipath=0; ipath<paths.size; ipath++) {
+\end_layout
+
+\begin_layout Standard
+
+        char* path = paths.buf[ipath];
+\end_layout
+
+\begin_layout Standard
+
+        TagLib_File* tlf = taglib_file_new(path);
+\end_layout
+
+\begin_layout Standard
+
+        if (!tlf)
+\end_layout
+
+\begin_layout Standard
+
+            return -1;
+\end_layout
+
+\begin_layout Standard
+
+        TagLib_Tag* tlt = taglib_file_tag(tlf);
+\end_layout
+
+\begin_layout Standard
+
+        for (int i=0; i<values_to.size; i++)
+\end_layout
+
+\begin_layout Standard
+
+            for (int j=0; j<((dynamic_str_t*)values_to.buf[i])->size; j++)
+ {
+\end_layout
+
+\begin_layout Standard
+
+                char* keyword = ((dynamic_str_t*)keywords.buf[i])->buf[j];
+\end_layout
+
+\begin_layout Standard
+
+                char* value = ((dynamic_str_t*)values_to.buf[i])->buf[j];
+\end_layout
+
+\begin_layout Standard
+
+                if (!strcmp(keyword, "artist"))
+\end_layout
+
+\begin_layout Standard
+
+                    taglib_tag_set_artist(tlt, value);
+\end_layout
+
+\begin_layout Standard
+
+                else if (!strcmp(keyword, "year"))
+\end_layout
+
+\begin_layout Standard
+
+                    taglib_tag_set_year(tlt, atoi(value));
+\end_layout
+
+\begin_layout Standard
+
+                else if (!strcmp(keyword, "album"))
+\end_layout
+
+\begin_layout Standard
+
+                    taglib_tag_set_album(tlt, value);
+\end_layout
+
+\begin_layout Standard
+
+                else if (!strcmp(keyword, "track"))
+\end_layout
+
+\begin_layout Standard
+
+                    taglib_tag_set_track(tlt, atoi(value));
+\end_layout
+
+\begin_layout Standard
+
+                else if (!strcmp(keyword, "title"))
+\end_layout
+
+\begin_layout Standard
+
+                    taglib_tag_set_title(tlt, value);
+\end_layout
+
+\begin_layout Standard
+
+                else if (!strcmp(keyword, "genre"))
+\end_layout
+
+\begin_layout Standard
+
+                    taglib_tag_set_genre(tlt, value);
+\end_layout
+
+\begin_layout Standard
+
+                else
+\end_layout
+
+\begin_layout Standard
+
+                    errprintf("keyword non supportata `%s' (value = `%s')
+\backslash
+n", keyword, value);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        taglib_file_save(tlf);
+\end_layout
+
+\begin_layout Standard
+
+        taglib_file_free(tlf);
+\end_layout
+
+\begin_layout Standard
+
+        taglib_tag_free_strings();
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    return 0;
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+
+\family typewriter
+\begin_inset LatexCommand label
+name "fig:rename_local_file()"
+
+\end_inset
+
+rename_local_file()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Il compito di quest'ultima funzione è quello di invocare 
+\family typewriter
+rename_local_file()
+\family default
+, descritta in figura 
+\begin_inset LatexCommand vref
+reference "fig:rename_local_file()"
+
+\end_inset
+
+, subito dopo aver effettuato i consueti controlli sintattici sui percorsi
+ virtuali (il nome da modificare e il nuovo nome proposto).
+ In effetti 
+\family typewriter
+rename_local_file()
+\family default
+ altro non fa che, per ogni path rilevato, impostare i nuovi tag nel file
+ multimediale.
+\end_layout
+
+\begin_layout Standard
+L'aggiornamento del database sarà implicito, in quanto la modifica del file
+ sarà rilevata tramite inotify, che avviserà 
+\family typewriter
+musicmeshfsd
+\family default
+ di sincronizzare il database con in dati
 \end_layout
 
 \begin_layout Section
@@ -5337,7 +5603,7 @@ In questo caso vediamo che l'intero primo livello si riduce ad una sola
 , quindi, implicitamente, l'utente sta dicendo che inizialmente vuole solamente
  il nome degli artisti presenti nel database
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Standard
 Il sistema è in grado di lavorare perfettamente in presenza, per ogni livello,
@@ -5620,23 +5886,6 @@ _
 
 \emph default
 .
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-POI MOSTRARE IL CONTENUTO DI UNA DIRECTORY
-\end_layout
-
-\begin_layout Standard
-POI MOSTRARE CHE SUCCEDE QUANDO FACCIO RENAME
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Chapter
@@ -6651,7 +6900,7 @@ reference "fig:Rappresentazione-della-rete"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Standard
 \noindent
@@ -6849,7 +7098,11 @@ E infine grazie alla mia ragazza: questo testo, e tutto il tempo che non
  grandi di me, sono dedicati a lei.
 \end_layout
 
-\begin_layout Chapter
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Standard
 \begin_inset LatexCommand label
 name "cha:Reference-genarata-da"
 
@@ -6891,6 +7144,11 @@ status open
 
 \begin_layout Standard
 CE LA DEVO METTERE????
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
