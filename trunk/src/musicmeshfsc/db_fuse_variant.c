@@ -18,11 +18,10 @@
 */
 
 #include "db_fuse_variant.h"
-#include "../common/utils.h"             /* dynamic_str_t, strmalloccat(),
-                                            init_str(), preprocessing() */
-#include "../common/sqlite.h"            /* esegui_query_callback() */
-#include "../db_fuse/db_fuse_utils.h"    /* get_one_column() */
-#include "../db_fuse/constants.h"        /* column_from_keyword() */
+#include "../common/utils.h"    /* dynamic_str_t, strmalloccat(), init_str(), preprocessing() */
+#include "../common/sqlite.h"   /* esegui_query_callback() */
+#include "../db_fuse/db_fuse_utils.h"   /* get_one_column() */
+#include "../db_fuse/constants.h"   /* column_from_keyword() */
 
 /**
     ritorna la dimensione (in byte) del file originario
@@ -34,7 +33,7 @@ int get_size(sqlite3* db,  dynamic_obj_t fissi, dynamic_obj_t keywords,
             "(file.host = '127.0.0.1') and (file.path = %Q)";
     dynamic_str_t ret;
     init_str(&ret);
-    char* path = get_local_path(db, fissi, keywords, dinamici);
+    char* path = get_local_paths(db, fissi, keywords, dinamici).buf[0];
     esegui_query_callback(db, get_one_column, &ret, query, path);
     free(path);
     free(query);
@@ -53,14 +52,16 @@ int get_size(sqlite3* db,  dynamic_obj_t fissi, dynamic_obj_t keywords,
     \return path locale del file corrispondente,
             NULL in caso non ne esista uno
 */
-char* get_local_path(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
-        dynamic_obj_t dinamici) {
+dynamic_str_t get_local_paths(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t
+        keywords, dynamic_obj_t dinamici) {
+    dynamic_str_t ret;
+    init_str(&ret);
     dynamic_str_t tabelle, where;
     init_str(&tabelle);
     append_str(&tabelle, "file");
     for (int i=0; i<keywords.size; i++)
         if (calcola_tabelle(*(dynamic_str_t*)keywords.buf[i], &tabelle) == -1)
-            return NULL;
+            return ret;
 
     char* query = strmalloccat(calloc(1,1),
             "SELECT\n\tDISTINCT file.path\nFROM\n\t");
@@ -103,16 +104,9 @@ char* get_local_path(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
         query = strmalloccat(strmalloccat(query, " AND\n\t"), where.buf[i]);
 
 //     errprintf("get_local_path) query = `%s'\n", query);
-    dynamic_str_t risultati;
-    init_str(&risultati);
-    esegui_query_callback(db, get_one_column, &risultati, query);
+    esegui_query_callback(db, get_one_column, &ret, query);
     free(query);
-    if (risultati.size) {
-        char* ret = strdup(risultati.buf[0]);
-        free_str(&risultati);
-        return ret;
-    }
-    return NULL;
+    return ret;
 }
 
 /**
@@ -134,3 +128,64 @@ int is_local_file(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
     (void) dinamici;
     return 1;
 }
+/*
+void set_local_file(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
+        dynamic_obj_t dinamici_from, dynamic_obj_t dinamici_to) {
+    dynamic_str_t chiavi_taglib;
+    init_str(&chiavi_taglib);
+    append_str(&chiavi_taglib, "artist");
+    append_str(&chiavi_taglib, "title");
+    append_str(&chiavi_taglib, "album");
+    append_str(&chiavi_taglib, "track");
+    append_str(&chiavi_taglib, "genre");
+    append_str(&chiavi_taglib, "year");
+    for (int i=0; i<dinamici_from.size; i++) {
+        for (int j=0; j<((dynamic_str_t*)dinamici_from.buf[i])->size; j++) {
+            char* keyword = ((dynamic_str_t*)keywords.buf[i])->buf[j];
+            char* value_to = ((dynamic_str_t*)dinamici_to.buf[i])->buf[j];
+            if (contains_str(chiavi_taglib, keyword))
+                rename_local_file(get_local_path(db, fissi, keywords, dinamici_from), keyword, value_to);
+            else {
+                // TODO: che ci faccio?
+                errprintf("Non so come fare a modificare '%s'\n", keyword);
+            }
+        }
+    }
+}*/
+
+int rename_local_file(void* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
+        dynamic_obj_t values_from, dynamic_obj_t values_to) {
+    dynamic_str_t paths = get_local_paths((sqlite3*)db, fissi, keywords, values_from);
+    for (int ipath=0; ipath<paths.size; ipath++) {
+        char* path = paths.buf[ipath];
+        TagLib_File* tlf = taglib_file_new(path);
+        if (!tlf)
+            return -1;
+        TagLib_Tag* tlt = taglib_file_tag(tlf);
+        for (int i=0; i<values_to.size; i++)
+            for (int j=0; j<((dynamic_str_t*)values_to.buf[i])->size; j++) {
+                char* keyword = ((dynamic_str_t*)keywords.buf[i])->buf[j];
+                char* value = ((dynamic_str_t*)values_to.buf[i])->buf[j];
+                if (!strcmp(keyword, "artist"))
+                    taglib_tag_set_artist(tlt, value);
+                else if (!strcmp(keyword, "year"))
+                    taglib_tag_set_year(tlt, atoi(value));
+                else if (!strcmp(keyword, "album"))
+                    taglib_tag_set_album(tlt, value);
+                else if (!strcmp(keyword, "track"))
+                    taglib_tag_set_track(tlt, atoi(value));
+                else if (!strcmp(keyword, "title"))
+                    taglib_tag_set_title(tlt, value);
+                else if (!strcmp(keyword, "genre"))
+                    taglib_tag_set_genre(tlt, value);
+                else
+                    errprintf("keyword non supportata `%s' (value = `%s')\n",
+                            keyword, value);
+            }
+        taglib_file_save(tlf);
+        taglib_file_free(tlf);
+        taglib_tag_free_strings();
+    }
+    return 0;
+}
+

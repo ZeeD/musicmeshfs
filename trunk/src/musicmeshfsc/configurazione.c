@@ -2,11 +2,12 @@ const char* TABLES[] = { "artista", "musica", "file" };
 const int TABLES_SIZE = 3;
 
 const char* KEYWORDS[] = { "artist", "title", "album", "track", "genre", "year",
-        "host", "path", "type" };
+        "host", "path", "type", "filename" };
 const char* COLUMNS[] = { "artista.nome_artista", "musica.titolo",
         "musica.nome_album", "musica.traccia", "musica.genere",
-        "musica.lavoro_anno", "file.host", "file.path", "file.formato" };
-const int KEYWORDS_SIZE = 9;
+        "musica.lavoro_anno", "file.host", "file.path", "file.formato",
+        "file.basename" };
+const int KEYWORDS_SIZE = 10;
 
 const char* COLUMN_EXT = "file.formato";
 

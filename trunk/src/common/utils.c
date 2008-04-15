@@ -367,15 +367,13 @@ int extract_size(const char* path) {
     \param string stringa da splittare
     \param separator carattere da usare per splittare la stringa
     \return un array dinamico (malloc`ed!!) contenente gli elementi separati
-    \todo rivederla in modo da evitare di fare la stessa operazione fuori dal
-            ciclo!
 */
 dynamic_str_t split(const char* string, const char separator) {
     dynamic_str_t r;
     init_str(&r);
     size_t i=0, j=0;
-    for (; string[i]; i++)
-        if (string[i] == separator) {
+    while (1) {
+        if (!string[i] || string[i] == separator) {
             char tmp[i-j+1];
             for (size_t k=0; k<(i-j); k++)
                 tmp[k] = string[j+k];
@@ -383,13 +381,9 @@ dynamic_str_t split(const char* string, const char separator) {
             append_str(&r, tmp);
             j = i + 1;
         }
-    char tmp[i-j+1];
-    for (size_t k=0; k<(i-j); k++)
-        tmp[k] = string[j+k];
-    tmp[i-j] = '\0';
-    append_str(&r, tmp);
-    j = i + 1;
-    return r;
+        if (!string[i++])   // look at i++!
+            return r;
+    }
 }
 
 /**
@@ -415,7 +409,10 @@ char* join(dynamic_str_t array, char separator) {
 }
 
 /**
-    \todo non so se usarla o meno, in produzione
+    Stampa su stderr un array di stringhe, prima la sua dimensione, poi il
+    contenuto
+    \param a array di stringhe da stampare
+    \param s stringa per informazioni aggiuntive
 */
 void dbgprint_str(dynamic_str_t a, char* s) {
     errprintf("[DBG][dbgprint_str][%s.size = %d]\n", s, a.size);
@@ -424,8 +421,11 @@ void dbgprint_str(dynamic_str_t a, char* s) {
 }
 
 /**
-    \todo non so se usarla o meno, in produzione
-*/
+    Stampa su stderr un array di interi, prima la sua dimensione, poi il
+    contenuto
+    \param a array di interi da stampare
+    \param s stringa per informazioni aggiuntive
+ */
 void dbgprint_int(dynamic_int_t a, char* s) {
     errprintf("[DBG][dbgprint_int][%s.size = %d]\n", s, a.size);
     for (int i=0; i<a.size; i++)

@@ -18,8 +18,7 @@
 */
 
 #include "db_fuse.h"
-#include "db_fuse_utils.h"   /* subdirs(), exist(), get_db_from_context(),
-        get_fissi_from_context(), get_keywords_from_context() */
+#include "db_fuse_utils.h"   /* subdirs(), exist(), get_db_from_context(), get_fissi_from_context(), get_keywords_from_context() */
 #include "parser.h"          /* parse_path(), IS_A_DIR, IS_A_FILE */
 
 /**
@@ -78,7 +77,7 @@ int db_fuse_getattr(const char* path, struct stat* filestat) {
     }
     else
         if (is_local_file(db, fissi, keywords, dinamici)) {  // file locale
-            if (stat(get_local_path(db, fissi, keywords, dinamici),
+            if (stat(get_local_paths(db, fissi, keywords, dinamici).buf[0],
                     filestat))
                 return -errno;
             return 0;
@@ -92,6 +91,21 @@ int db_fuse_getattr(const char* path, struct stat* filestat) {
 #include "../common/sqlite.h"    /* esegui_query() */
 /**
     Implementazione di fuse_operations.rename()
+    UPDATE
+        musica
+    SET
+        lavoro_anno = '1971', nome_album = 'Fætus'
+    WHERE
+        lavoro_anno = '1971' AND
+        nome_album = 'Fetus' AND
+        artista_nome_artista in (
+            select artista_nome_artista
+            from musica,artista
+            where
+                nome_artista = 'Franco Battiato' and
+                artista_nome_artista = nome_artista
+        )
+    ;
 */
 int db_fuse_rename(const char* from, const char* to) {
     errprintf("[RENAME] from = `%s', to = `%s'\n", from, to);
@@ -115,6 +129,11 @@ int db_fuse_rename(const char* from, const char* to) {
     if (dinamici_from.size != dinamici_to.size)
         return -EROFS;
 
+    if (is_local_file(db, fissi, keywords, dinamici_from))
+        rename_local_file(db, fissi, keywords, dinamici_from, dinamici_to);
+//     else
+        // TODO: file remoti
+/*
     dynamic_str_t tabelle, where;
     init_str(&tabelle);
     if (calcola_tabelle(*(dynamic_str_t*)keywords.buf[dinamici_to.size-1],
@@ -122,18 +141,19 @@ int db_fuse_rename(const char* from, const char* to) {
         return -EIO;
     if (!tabelle.size)
         return -EIO;
+    calcola_where(tabelle, &where);
 
     char* query = strmalloccat(calloc(1, 1), "BEGIN TRANSACTION\n");
     for (int ii=0; ii<tabelle.size; ii++) {
         query = strmalloccat(strmalloccat(strmalloccat(query, "UPDATE "),
-                tabelle.buf[ii]), " SET (\n");
+                tabelle.buf[ii]), " SET\n\t");
         for (int i=0; i<dinamici_to.size; i++) {
-            if (i)
-                query = strmalloccat(query, ", ");
             dynamic_str_t tabella_colonna = split(column_from_keyword(
                     ((dynamic_str_t*)keywords.buf[dinamici_to.size-1])->buf[i]),
                     '.');
             if (contains_str(tabelle, tabella_colonna.buf[0])) {
+                if (i)
+                    query = strmalloccat(query, ",\n\t");
                 char* tmp = sqlite3_mprintf(" = %Q", ((dynamic_str_t*)
                         dinamici_to.buf[dinamici_to.size-1])->buf[i]);
                 query = strmalloccat(strmalloccat(query,
@@ -141,10 +161,39 @@ int db_fuse_rename(const char* from, const char* to) {
                 free(tmp);
             }
         }
-        query = strmalloccat(query, "\n) WHERE\n");
+        query = strmalloccat(query, "\nWHERE\n\t");
+        for (int i=0; i<dinamici_from.size; i++)
+            for (int j=0; j<((dynamic_str_t*)dinamici_from.buf[i])->size; j++) {
+                if (i || j)
+                    query = strmalloccat(query, " AND\n\t");
+                dynamic_str_t tabella_colonna = split(column_from_keyword(
+                        ((dynamic_str_t*)keywords.buf[i])->buf[j]), '.');
+//                 dbgprint_str(tabella_colonna, "keywords");
+                if (contains_str(tabelle, tabella_colonna.buf[0])) {
+                    char* tmp = sqlite3_mprintf(" = %Q", ((dynamic_str_t*)
+                            dinamici_from.buf[i])->buf[j]);
+                    query = strmalloccat(strmalloccat(query,
+                                        tabella_colonna.buf[1]), tmp);
+                    free(tmp);
+                }
+                else {
+                    // trova percorso da tabella_colonna a tabelle.buf[ii]
+                    // es: da artista.nome_artista a musica.artista_nome_artista
+                    // artista_nome_artista in (
+                    //  SELECT artista_nome_artista
+                    //  FROM artista,musica
+                    //  WHERE
+                    //    nome_artista = '...'
+                    //    artista_nome_artista = artista.nome_artista
+                    // )
+                }
+            }
+        query = strmalloccat(query, "\n;");
 
     }
     query = strmalloccat(query, "\nEND");
+
+*/
 
 /*    char* query = strmalloccat(calloc(1, 1), "UPDATE\n\t");
 
@@ -207,10 +256,11 @@ int db_fuse_rename(const char* from, const char* to) {
 
     }
 */
-    calcola_where(tabelle, &where);
-    for (int i=0; i<where.size; i++)
-        query = strmalloccat(strmalloccat(query, " AND\n\t"), where.buf[i]);
-    errprintf("rename->query = `%s'\n", query);
+
+//     calcola_where(tabelle, &where);
+//     for (int i=0; i<where.size; i++)
+//         query = strmalloccat(strmalloccat(query, " AND\n\t"), where.buf[i]);
+//     errprintf("rename->query = `%s'\n", query);
 
 //     int ret = esegui_query(db, query);
 //     free(query);
@@ -235,7 +285,7 @@ int db_fuse_chmod(const char* path, mode_t mode) {
         return -ENOENT; // 'sto file non esiste
     else
         if (is_local_file(db, fissi, keywords, dinamici)) {
-            if (chmod(get_local_path(db, fissi, keywords, dinamici), mode))
+            if (chmod(get_local_paths(db, fissi, keywords, dinamici).buf[0], mode))
                 return -errno;
             return 0;
         }
@@ -265,7 +315,7 @@ int db_fuse_open(const char* virtual_path, struct fuse_file_info* ffi) {
     if (!exist(db, fissi, keywords, dinamici, virtual_path))
         return -1;
     if (is_local_file(db, fissi, keywords, dinamici)) {   // file locale
-        char* real_path = get_local_path(db, fissi, keywords, dinamici);
+        char* real_path = get_local_paths(db, fissi, keywords, dinamici).buf[0];
         if (!real_path)
             return -1;
         int i = open(real_path, O_RDONLY);

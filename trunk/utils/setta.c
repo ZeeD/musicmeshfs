@@ -47,9 +47,9 @@ int main(int argc, char* argv[]) {
         else if (!strcmp(argv[i], "titolo"))
             taglib_tag_set_title(tlt, argv[i+1]);
         else if (!strcmp(argv[i], "genere"))
-            taglib_tag_set_comment(tlt, argv[i+1]);
-        else if (!strcmp(argv[i], "commento"))
             taglib_tag_set_genre(tlt, argv[i+1]);
+        else if (!strcmp(argv[i], "commento"))
+            taglib_tag_set_comment(tlt, argv[i+1]);
         else {
             fprintf(stderr, "WARN: `%s' non è una keyword supportata\n", argv[i]);
             continue;

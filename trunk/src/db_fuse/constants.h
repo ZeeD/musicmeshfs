@@ -49,12 +49,6 @@ extern const char* WHERE[];
 /** Numero di elementi di JOINS (implicitamente anche di WHERE) */
 extern const int JOINS_SIZE;
 
-/** \todo decidere che fare di MISC_COLUMNS */
-extern const char* MISC_COLUMNS[];
-
-/** Numero di elementi di MISC_COLUMNS */
-extern const int MISC_COLUMNS_SIZE;
-
 // *********************** UTILITÀ ***********************
 
 const char* column_from_keyword(const char*);
