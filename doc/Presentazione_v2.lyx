@@ -1,0 +1,955 @@
+#LyX 1.5.4 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass beamer
+\begin_preamble
+\usetheme{Ilmenau}
+% or ...
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+\AtBeginSubsection[]{
+  \frame<beamer>{ 
+    \frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection] 
+  }
+}
+\end_preamble
+\language italian
+\inputencoding auto
+\font_roman palatino
+\font_sans helvet
+\font_typewriter cmtl
+\font_default_family default
+\font_sc true
+\font_osf true
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Principi per un file system configurabile e sua applicazione per dati musicali
+\end_layout
+
+\begin_layout Author
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="2">
+<features>
+<column alignment="right" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row bottomspace="default">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Laureando:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+dott.
+ Vito De Tullio
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Relatori:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+prof.
+ Salvatore Caporaso
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+ing.
+ Vittoria Cozza
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset OptArg
+status collapsed
+
+\begin_layout Standard
+Laureando: dott.
+ Vito De Tullio
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Institute
+Università degli Studi di Bari
+\end_layout
+
+\begin_layout Date
+Anno Accademico 2006/07
+\end_layout
+
+\begin_layout TitleGraphic
+\begin_inset Graphics
+	filename imgs/logo_uniba.png
+	height 5mm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Standard
+If you wish to uncover everything in a step-wise fashion, uncomment the
+ following command:
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+%
+\backslash
+beamerdefaultoverlayspecification{<+->}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Contenuti
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+File system e configurabilità in ambito musicale
+\end_layout
+
+\begin_layout Subsection
+File system per dati musicali
+\end_layout
+
+\begin_layout BeginFrame
+Make Titles Informative.
+ Use Uppercase Letters.
+\end_layout
+
+\begin_layout FrameSubtitle
+Frame subtitles are optional.
+ Use upper- or lowercase letters.
+\begin_inset Note Note
+status open
+
+\begin_layout Standard
+- A title should summarize the slide in an understandable fashion for anyone
+ how does not follow everything on the slide itself.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Use Itemize a lot.
+\end_layout
+
+\begin_deeper
+\begin_layout Pause
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Use very short sentences or short phrases.
+\end_layout
+
+\begin_deeper
+\begin_layout Pause
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+These overlays are created using the Pause style.
+\end_layout
+
+\begin_layout BeginFrame
+Make Titles Informative.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<1->
+\end_layout
+
+\end_inset
+
+You can also use overlay specifications to create overlays.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<3->
+\end_layout
+
+\end_inset
+
+This allows you to present things in any order.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+This is shown second.
+\end_layout
+
+\begin_layout BeginFrame
+Make Titles Informative.
+\end_layout
+
+\begin_layout Block
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<1->
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Untitled block.
+\end_layout
+
+\begin_layout Itemize
+Shown on all slides.
+\end_layout
+
+\end_deeper
+\begin_layout ExampleBlock
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Some Example Block Title
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $e^{i\pi}=-1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $e^{i\pi/2}=i$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Analisi delle librerie e API usate
+\end_layout
+
+\begin_layout BeginFrame
+Make Titles Informative.
+ 
+\end_layout
+
+\begin_layout Example
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<1->
+\end_layout
+
+\end_inset
+
+On first slide.
+ 
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Example
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+On second slide.
+\end_layout
+
+\begin_layout Subsection
+Il file system configurabile MusicMeshFS
+\end_layout
+
+\begin_layout BeginFrame
+Make Titles Informative.
+ 
+\end_layout
+
+\begin_layout Example
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<1->
+\end_layout
+
+\end_inset
+
+On first slide.
+ 
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Example
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+On second slide.
+\end_layout
+
+\begin_layout BeginFrame
+Make Titles Informative.
+ 
+\end_layout
+
+\begin_layout Example
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<1->
+\end_layout
+
+\end_inset
+
+On first slide.
+ 
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Example
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+On second slide.
+\end_layout
+
+\begin_layout BeginFrame
+Make Titles Informative.
+ 
+\end_layout
+
+\begin_layout Example
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<1->
+\end_layout
+
+\end_inset
+
+On first slide.
+ 
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Example
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+On second slide.
+\end_layout
+
+\begin_layout BeginFrame
+Make Titles Informative.
+ 
+\end_layout
+
+\begin_layout Example
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<1->
+\end_layout
+
+\end_inset
+
+On first slide.
+ 
+\end_layout
+
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Example
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+On second slide.
+\end_layout
+
+\begin_layout Section
+Generalizzazione della configurabilità a file qualsiasi
+\end_layout
+
+\begin_layout Subsection
+Main Results
+\end_layout
+
+\begin_layout BeginFrame
+Make Titles Informative.
+ 
+\end_layout
+
+\begin_layout Theorem
+On first slide.
+\end_layout
+
+\begin_layout Pause
+
+\end_layout
+
+\begin_layout Corollary
+On second slide.
+\end_layout
+
+\begin_layout BeginFrame
+Make Titles Informative.
+ 
+\end_layout
+
+\begin_layout ColumnsTopAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+5cm
+\end_layout
+
+\begin_layout Theorem
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<1->
+\end_layout
+
+\end_inset
+
+In left column.
+\end_layout
+
+\begin_layout Column
+5cm
+\end_layout
+
+\begin_layout Corollary
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+In right column.
+\newline
+New line
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Basic Ideas for Proofs/Implementations
+\end_layout
+
+\begin_layout Section*
+Lavori futuri
+\end_layout
+
+\begin_layout BeginFrame
+Summary
+\end_layout
+
+\begin_layout Itemize
+The
+\color none
+ 
+\color red
+first main message
+\color none
+ of your talk in one or two lines.
+\end_layout
+
+\begin_layout Itemize
+The
+\color none
+ 
+\color red
+second main message
+\color none
+ of your talk in one or two lines.
+\end_layout
+
+\begin_layout Itemize
+Perhaps a
+\color none
+ 
+\color red
+third message
+\color none
+, but not more than that.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Standard
+An outlook is always optional.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+vskip0pt plus.5fill
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Outlook
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+What we have not done yet.
+\end_layout
+
+\begin_layout Itemize
+Even more stuff.
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\begin_layout Section*
+\start_of_appendix
+Appendici
+\end_layout
+
+\begin_layout Subsection*
+Bibliografia
+\end_layout
+
+\begin_layout BeginFrame
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+[allowframebreaks]
+\end_layout
+
+\end_inset
+
+Bibliografia
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+beamertemplatebookbibitems
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset LatexCommand bibitem
+key "Author1990"
+
+\end_inset
+
+A.
+ Author.
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock 
+\end_layout
+
+\end_inset
+
+
+\emph on
+Handbook of Everything
+\emph default
+.
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock 
+\end_layout
+
+\end_inset
+
+Some Press, 1990.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset LatexCommand bibitem
+key "key-9"
+
+\end_inset
+
+Ciccio
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock 
+\end_layout
+
+\end_inset
+
+
+\emph on
+CiccioBombo va in...
+ Tibet
+\emph default
+!
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock 
+\end_layout
+
+\end_inset
+
+Ciccio Bombo Ex Press, 1870.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+beamertemplatearticlebibitems
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset LatexCommand bibitem
+key "Someone2002"
+
+\end_inset
+
+S.
+ Someone.
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+newblock 
+\end_layout
+
+\end_inset
+
+On this and that
+\emph on
+.
+\emph default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+newblock 
+\end_layout
+
+\end_inset
+
+
+\emph on
+Journal on This and That
+\emph default
+.
+ 2(1):50--100, 2000.
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\end_body
+\end_document
