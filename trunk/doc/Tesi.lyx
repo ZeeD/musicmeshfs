@@ -307,12 +307,96 @@ Introduzione
 
 \begin_layout Quote
 Yoko Kanno/(1998) COWBOY BEBOP - Original Soundtrack 1/01 - Tank!.mp3
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fn:Subito-dopo-ogni"
+
+\end_inset
+
+Subito dopo ogni capitolo di questo testo è presente il nome di un file.
+ Questi sono solo esempi 
+\emph on
+reali
+\emph default
+ di nomi di file generati tramite il progetto, usando come schema della
+ gerarchia la stringa 
+\family typewriter
+
+\begin_inset Quotes eld
+\end_inset
+
+%autor/(%year) %album/%track - %title.%type
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 Il lavoro di questa tesi nasce come risposta all'esigenza di catalogare
  ed organizzare collezioni di dimensioni sempre crescenti di file multimediali,
  in maniera veloce, automatica e portabile su diverse piattaforme.
+\end_layout
+
+\begin_layout Standard
+L'idea nata per ovviare a questo problema è stata quella di implementare
+ un 
+\begin_inset Quotes eld
+\end_inset
+
+gestore di collezione
+\begin_inset Quotes erd
+\end_inset
+
+ ad un livello più basso di quello delle singole applicazioni.
+ La soluzione trovata è stata quella di realizzare un file system virtuale,
+ avente come 
+\begin_inset Quotes eld
+\end_inset
+
+sorgente dati
+\begin_inset Quotes erd
+\end_inset
+
+ la collezione di file multimediali da gestire, e come 
+\begin_inset Quotes eld
+\end_inset
+
+destinazione
+\begin_inset Quotes erd
+\end_inset
+
+ un albero delle directory, organizzato secondo i gusti dell'utente.
+ Per permettere all'utente di decidere come organizzare la collezione musicale,
+ è stato realizzato un semplice linguaggio tramite il quale descrivere i
+ nomi delle directory che conterranno i file musicali.
+ L'organizzazione sarà implicitamente data appunto dalla gerarchia.
+\end_layout
+
+\begin_layout Standard
+Durante il lavoro ci si è resi conto, tuttavia, che l'idea era generalizzabile
+ a qualunque tipo d'informazione, usando un livello d'astrazione ottenuto
+ tramite l'uso di un database.
+ La semantica dei dati presenti nel database non è importante ai fini del
+ file system, quindi è possibile utilizzare le tabelle sia per inserire
+ informazioni sui file multimediali, come è stato fatto in questa tesi,
+ ma anche per avere file system per la gestione della posta, per il monitoraggio
+ di host remoti, per le foto, per qualunque informazione ragionevolmente
+ organizzabile in una tassonomia indotta dall'albero delle directory.
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
 \end_layout
 
 \begin_layout Standard
@@ -416,81 +500,9 @@ entry level
 \end_layout
 
 \begin_layout Standard
-L'idea nata per ovviare a questo problema è stata quella di implementare
- un 
-\begin_inset Quotes eld
-\end_inset
 
-gestore di collezione
-\begin_inset Quotes erd
-\end_inset
+\lyxline
 
- ad un livello più basso di quello delle singole applicazioni.
- La soluzione trovata è stata quella di realizzare un file system virtuale,
- avente come 
-\begin_inset Quotes eld
-\end_inset
-
-sorgente dati
-\begin_inset Quotes erd
-\end_inset
-
- la collezione di file multimediali da gestire, e come 
-\begin_inset Quotes eld
-\end_inset
-
-destinazione
-\begin_inset Quotes erd
-\end_inset
-
- un albero delle directory, organizzato secondo i gusti dell'utente.
- Per permettere all'utente di decidere come organizzare la collezione musicale,
- è stato realizzato un semplice linguaggio tramite il quale descrivere i
- nomi delle directory che conterranno i file musicali.
- L'organizzazione sarà implicitamente data appunto dalla gerarchia
-\begin_inset Foot
-status open
-
-\begin_layout Standard
-\begin_inset LatexCommand label
-name "fn:Subito-dopo-ogni"
-
-\end_inset
-
-Subito dopo ogni capitolo di questo testo è presente il nome di un file.
- Questi sono solo esempi 
-\emph on
-reali
-\emph default
- di nomi di file generati tramite il progetto, usando come schema della
- gerarchia la stringa 
-\family typewriter
-
-\begin_inset Quotes eld
-\end_inset
-
-%autor/(%year) %album/%track - %title.%type
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Durante il lavoro ci si è resi conto, tuttavia, che l'idea era generalizzabile
- a qualunque tipo d'informazione, usando un livello d'astrazione ottenuto
- tramite l'uso di un database.
- La semantica dei dati presenti nel database non è importante ai fini del
- file system, quindi è possibile utilizzare le tabelle sia per inserire
- informazioni sui file multimediali, come è stato fatto in questa tesi,
- ma anche per avere file system per la gestione della posta, per il monitoraggio
- di host remoti, per le foto, per qualunque informazione ragionevolmente
- organizzabile in una tassonomia indotta dall'albero delle directory.
 \end_layout
 
 \begin_layout Standard
@@ -500,8 +512,31 @@ reference "par:File-system-e"
 
 \end_inset
 
- descrive il file system realizzato, la sua architettura e le librerie usate;
- nella parte 
+ descrive il file system realizzato, la sua architettura e le librerie usate.
+ Nello specifico, nel capitolo 
+\begin_inset LatexCommand vpageref
+reference "cha:File-system-per"
+
+\end_inset
+
+ è descritta l'idea di realizzare un file system per dati musicali, nel
+ capitolo 
+\begin_inset LatexCommand vpageref
+reference "cha:Analisi-delle-librerie"
+
+\end_inset
+
+ vi è l'analisi delle librerie usate e nel capitolo 
+\begin_inset LatexCommand vpageref
+reference "cha:MusicMeshFS"
+
+\end_inset
+
+ è descritta l'archiettura del sistema.
+\end_layout
+
+\begin_layout Standard
+Nella parte 
 \begin_inset LatexCommand vref
 reference "par:Generalizzazione-della-configurabilità"
 
@@ -509,6 +544,25 @@ reference "par:Generalizzazione-della-configurabilità"
 
 , invece, è presente una descrizione del lavoro svolto per dividere il progetto
  in due parti, come compilare e gli sviluppi futuri.
+ In particolare il capitolo 
+\begin_inset LatexCommand vref
+reference "cha:DB_FUSE"
+
+\end_inset
+
+, il capitolo 
+\begin_inset LatexCommand vref
+reference "cha:Compilazione-dei-sorgenti"
+
+\end_inset
+
+ e il capitolo 
+\begin_inset LatexCommand vref
+reference "cha:SVILUPPI"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Part
@@ -605,23 +659,26 @@ Esistono svariati formati per codificare informazioni multimediali sotto
  È possibile dividere i codec in tre grandi famiglie:
 \end_layout
 
-\begin_layout Description
-Non\InsetSpace ~
-compressi il segnale è campionato e direttamente codificato
+\begin_layout Itemize
+il segnale è campionato e codificato senza compressione dei dati
 \end_layout
 
-\begin_layout Description
-Con\InsetSpace ~
-compressione\InsetSpace ~
-lossy vi è compressione del segnale campionato, con perdita
- d'informazione rispetto all'originale
+\begin_layout Itemize
+Vi è compressione del segnale campionato, con perdita d'informazione rispetto
+ all'originale (
+\emph on
+lossy
+\emph default
+)
 \end_layout
 
-\begin_layout Description
-Con\InsetSpace ~
-compressione\InsetSpace ~
-lossless vi è compressione del segnale campionato, senza
- perdita d'informazione rispetto all'originale
+\begin_layout Itemize
+Vi è compressione del segnale campionato, senza perdita d'informazione rispetto
+ all'originale (
+\emph on
+lossless
+\emph default
+)
 \end_layout
 
 \begin_layout Standard
@@ -635,9 +692,12 @@ I codec che non effettuano compressione, come ad esempio quelli associati
 
 \begin_layout Standard
 Per quanto riguarda i codec che effettuano compressione, essa può essere
- con o senza perdita d'informazione: i codec lossy consentodo di ridurre
- lo spazio d'immagazinamento dell'informazione codificata, a scapito di
- 
+ con o senza perdita d'informazione: i codec 
+\emph on
+lossy
+\emph default
+ consentodo di ridurre lo spazio d'immagazinamento dell'informazione codificata,
+ a scapito di 
 \begin_inset Quotes eld
 \end_inset
 
@@ -651,9 +711,12 @@ artefatti
  I motivi sono dettati soprattutto dal rapporto qualità/dimensione: in genere,
  soprattutto per quanto riguarda i segnali sonori, l'orecchio umano non
  allenato non è capace di raccogliere tutte le sfumature musicali.
- In base a questo principio, ad esempio, un codec lossy non salverà le informazi
-oni relative a frequenze audio se non presenti in un certo intervallo, o
- rimuoverà certi suoni 
+ In base a questo principio, ad esempio, un codec 
+\emph on
+lossy
+\emph default
+ non salverà le informazioni relative a frequenze audio se non presenti
+ in un certo intervallo, o rimuoverà certi suoni 
 \begin_inset Quotes eld
 \end_inset
 
@@ -665,12 +728,16 @@ mascherati
 \end_layout
 
 \begin_layout Standard
-Gli ultimi codec, quelli lossless, come ad esempio quelli associati ai formati
- APE, FLAC, WavPack e WMA lossless, utilizzano algoritmi di compressione
- concettualmente simili a quelli utilizzati nei formati zip, bz2, ma ottimizzati
- per il tipo d'informazione: infatti è possibile arrivare circa il doppio
- di compressione rispetto ad un file codificato tramite un codec non compresso
- e poi compresso con un algoritmo generico.
+Gli ultimi codec, quelli 
+\emph on
+lossless
+\emph default
+, come ad esempio quelli associati ai formati APE, FLAC, WavPack e WMA lossless,
+ utilizzano algoritmi di compressione concettualmente simili a quelli utilizzati
+ nei formati zip, bz2, ma ottimizzati per il tipo d'informazione: infatti
+ è possibile arrivare circa il doppio di compressione rispetto ad un file
+ codificato tramite un codec non compresso e poi compresso con un algoritmo
+ generico.
 \end_layout
 
 \begin_layout Subsection
@@ -678,9 +745,13 @@ Metadati
 \end_layout
 
 \begin_layout Standard
-Caratteristica comune a quasi
-\begin_inset Foot
-status open
+Caratteristica comune a quasi tutti i formati audio è la possibilità di
+ associare, all'informazione vera e propria codificata, anche informazioni
+ addizionali.
+ Autore, titolo o anno di registrazione sono solo alcune delle informazioni
+ usualmente associate ad un brano audio.
+ 
+\end_layout
 
 \begin_layout Standard
 Una importante eccezione è il formato WAV, usato nei CD musicali: esso non
@@ -697,29 +768,70 @@ target "http://www.cddb.com"
 
 \end_inset
 
+ e 
+\begin_inset LatexCommand htmlurl
+name "MusicBrainz"
+target "http://musicbrainz.org/"
+
+\end_inset
+
 , in cui ad ogni cd musicale, identificato tramite il calcolo di una funzione
  hash, sono associate queste meta informazioni.
 \end_layout
 
-\end_inset
-
- tutti i formati audio è la possibilità di associare, all'informazione vera
- e propria codificata, anche informazioni addizionali.
- Autore, titolo o anno di registrazione sono solo alcune delle informazioni
- usualmente associate ad un brano audio.
- Inizialmente non si era pensato ad alcun modo per associare metadati all'audio
+\begin_layout Standard
+Inizialmente non si era pensato ad alcun modo per associare metadati all'audio
  codificato, e quindi era necessario utilizzare il nome del file per inserire
  queste informazioni.
  Ma questa soluzione è stata abbandonata, a causa dei limiti intrinseci
  dei nomi dei file (a seconda del sistema operativo e del file system, non
  sarebbe stato possibile avere nomi più lunghi di otto caratteri, o con
- alcuni caratteri particolari, come '/', su piattaforme *NIX e '<', '>',
- ':', '"', '/', '
+ alcuni caratteri particolari, come '
+\family typewriter
+/
+\family default
+', su piattaforme *NIX e '
+\family typewriter
+<
+\family default
+', '
+\family typewriter
+>
+\family default
+', '
+\family typewriter
+:
+\family default
+', '
+\family typewriter
+"
+\family default
+', '
+\family typewriter
+/
+\family default
+', '
+\family typewriter
+
 \backslash
-', '|', '?', '*' su FAT e NTFS) e, a livello pratico, dell'impossibilità
- di avere uno standard comune che s'adatti ad ogni utente (alcuni potrebbero
- preferire ordinare i brani per autore, altri per genere, altri ancora inserire
- mark personalizzati).
+
+\family default
+', '
+\family typewriter
+|
+\family default
+', '
+\family typewriter
+?
+\family default
+', '
+\family typewriter
+*
+\family default
+' su FAT e NTFS) e, a livello pratico, dell'impossibilità di avere uno standard
+ comune che s'adatti ad ogni utente (alcuni potrebbero preferire ordinare
+ i brani per autore, altri per genere, altri ancora inserire mark personalizzati
+).
 \end_layout
 
 \begin_layout Standard
@@ -2091,6 +2203,11 @@ fuse_operations.bmap
 \end_layout
 
 \begin_layout Chapter
+\begin_inset LatexCommand label
+name "cha:Analisi-delle-librerie"
+
+\end_inset
+
 Analisi delle librerie e API usate
 \end_layout
 
@@ -2113,6 +2230,11 @@ e all'interno di musicmeshfs, si usa inotify; per la memorizzazione e il
 \end_layout
 
 \begin_layout Section
+\begin_inset LatexCommand label
+name "sec:Inotify"
+
+\end_inset
+
 Inotify
 \end_layout
 
@@ -3082,58 +3204,42 @@ In particolare, nel progetto è stato deciso di implementare le due componenti
 \end_layout
 
 \begin_layout Standard
-Caratteristica peculiare del file system che si è deciso di implementare
- è che esso è in 
-\begin_inset Quotes eld
-\end_inset
-
-quasi sola lettura
-\begin_inset Quotes erd
-\end_inset
-
-: non sarà possibile creare o spostare nel file system file multimediali
- esterni, e l'unica modifica realizzabile è la rinomina dei file.
- Il motivo è duplice:
+Il file system è implementato in quasi sola lettura, non sarà possibile
+ infatti creare o spostare file multimediali esterni, e l'unica modifica
+ realizzabile è la rinomina dei file.
 \end_layout
 
-\begin_layout Itemize
-da una parte non è sensato spostare un file nel file system virtuale, poichè
- non ci sarebbe alcun luogo fisico (file sorgente) ove spostare il file.
- Inoltre, anche volendo, accadrebbe che il file non si troverebbe nella
- posizione indicata, ma, al massimo, verrebbe analizzato e spostato 
-\emph on
-senza avvertimenti
-\emph default
- dal 
-\emph on
-filesystem stesso
-\emph default
-.
- Creare un file vuoto (tramite il comando 
+\begin_layout Standard
+Innanzitutto dal punto di vista semantico non ha senso cancellare, creare,
+ un file virtuale.
+ Il motivo però per cui si permette la rename è che può essere interessante
+ modificare i tag.
+\end_layout
+
+\begin_layout Standard
+Ad esempio non si può spostare un file nel file system virtuale, poiché
+ non ci sarebbe alcun luogo fisico (file sorgente) ove spostare il file,
+ si ricordi infatti che quali son i files può essere specificato solo aggiungend
+o files alle directory monitorate e quindi modifcando il database.
+ Un caso limite è creare un file vuoto (tramite il comando 
 \family typewriter
 touch
 \family default
-, per esempio) è ancor peggio, poiché si creerebbe solo un nome nel database,
- senza poterlo associare a file veri.
+, per esempio), poiché si creerebbe solo un nome nel database, senza poterlo
+ associare a file veri.
 \end_layout
 
-\begin_layout Itemize
-d'altra parte la rinomina è stata permessa al fine di correggere gli errori
- di tagging, come possono essere typo o vere e proprie informazioni mancanti.
- Per questo motivo anche la rinomina dei file è tale per cui è possibile
- spostare file e directory senza limitazioni, ma in modo che le informazioni
- tra il nome originario e il nuovo siano identiche: ovviamente il file destinazi
-one dovrà rispettare lo schema dell'utente, ma, oltre questo, il livello
- di profondità tra il vecchio ed il nuovo nome dovrà essere uguale, altrimenti
- si avrebbe la possibilità di 
-\begin_inset Quotes eld
-\end_inset
-
-mischiare
-\begin_inset Quotes erd
-\end_inset
-
- i tag, o di avere un database inconsistente.
+\begin_layout Standard
+Riguardo la rinomina, questa è stata permessa al fine di correggere gli
+ errori di tagging, o aggiungere eventuali informazioni mancanti.
+ La rinomina dei file semplicemente agisce sui tag, è implementata in modo
+ è tale per cui è possibile spostare file e directory senza limitazioni,
+ ma in modo che le informazioni tra il nome originario e il nuovo siano
+ identiche; ovviamente il file destinazione dovrà rispettare lo schema dell'uten
+te, ma, oltre questo, il livello di profondità tra il vecchio ed il nuovo
+ nome dovrà essere uguale, per evitare confusione fra i tipi di tag (ad
+ es.
+ confondere artista con album), o di avere un database inconsistente.
 \end_layout
 
 \begin_layout Standard
@@ -3177,33 +3283,31 @@ Architettura del progetto
 \end_layout
 
 \begin_layout Standard
-Tornando all'architettura generale, la figura 
+In figura 
 \begin_inset LatexCommand vref
 reference "fig:Architettura-del-progetto"
 
 \end_inset
 
- mostra come le due componenti 
-\begin_inset Quotes eld
-\end_inset
-
-dialoghino
-\begin_inset Quotes erd
-\end_inset
-
- tra loro tramite uno stato condiviso, realizzato tramite database relazionale.
- musicmeshfsc implementa alcune delle funzioni di Fuse, a loro volta astrazioni
- del Virtual File System.
+ è mostrata l'architettura generale.
+ È possibile vedere come le due componenti dialoghino tra loro tramite uno
+ stato condiviso, realizzato tramite database relazionale.
+ 
+\family typewriter
+musicmeshfsc
+\family default
+ implementa alcune delle funzioni di Fuse, a loro volta astrazioni del Virtual
+ File System.
  Dallo stesso layer, tramite inotify, musicmeshfsd monitorizza i file da
  cui verranno poi estratte le meta informazioni tramite Taglib e quindi
  inserite nel database condiviso.
 \end_layout
 
 \begin_layout Standard
-In effetti l'uso di un database per la gestione delle informazioni ha messo
- in luce come il sistema poteva essere facilmente reso più generale: non
- solo file multimediali, ma qualunque collezione d'oggetti contenenti metadati
- poteva fungere da 
+L'uso di un database per la gestione delle informazioni ha messo in luce
+ come il sistema poteva essere facilmente reso più generale: non solo file
+ multimediali, ma qualunque collezione d'oggetti contenenti metadati poteva
+ fungere da 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3218,9 +3322,9 @@ sorgente
 Riuscire ad astrarre dai file musicali e lavorare solamente con i campi
  (testuali) di tabelle di un database è stata una cosa complicata, e sulla
  quale il lavoro non è certo terminato, ma permette di riutilizzare gran
- parte del codice già scritto, per implementare virtual file system per
- organizzare email, cartelle cliniche, o anche file compressi, o qualunque
- altra cosa.
+ parte del codice già scritto in altri domini.
+ Una estensione realizzata consente di creare un virtual file system per
+ organizzare email.
 \end_layout
 
 \begin_layout Section
@@ -3302,16 +3406,22 @@ Diagramma ER del database usato
 \end_layout
 
 \begin_layout Standard
-Per far questo sono stati implementati due funzioni: la prima ha il compito
- di creare il database usando uno schema SQL appropriato, al fine di realizzare
- il database modellato tramite Entity-relationship come mostrato in figura
- 
+Allo scopo di creare e popolare il database sono state implementate due
+ funzioni.
+\end_layout
+
+\begin_layout Standard
+Il database è stato creato tramite una sequenza di 
+\emph on
+statement
+\emph default
+ SQL; il diagramma Entity-relationship è mostrato in figura 
 \begin_inset LatexCommand vref
 reference "fig:Diagramma-ER-del"
 
 \end_inset
 
-, e poi implementato come mostrato in figura 
+ e il conseguente diagramma logico è mostrato in figura 
 \begin_inset LatexCommand vref
 reference "fig:Schema-logico"
 
@@ -3414,7 +3524,7 @@ heap
 \emph default
 , dividendo il contenuto del file iniziale in 
 \emph on
-chunks
+frammenti
 \emph default
  e usando 
 \family typewriter
@@ -3422,7 +3532,7 @@ calloc()
 \family default
  per preparare la memoria che ospiterà la concatenazione di questi 
 \emph on
-chunks
+frammenti
 \emph default
 .
 \end_layout
@@ -3650,16 +3760,8 @@ reference "fig:Inizializzazione-del-db"
 \family typewriter
 walk()
 \family default
-, che 
-\begin_inset Quotes eld
-\end_inset
-
-percorre
-\begin_inset Quotes erd
-\end_inset
-
- l'albero con radice nel parametro ricorsivamente raccogliendo in due array
- di stringhe i file e le directory attraversati.
+, che percorre l'albero con radice nel parametro ricorsivamente raccogliendo
+ in due array di stringhe i file e le directory attraversati.
  Per ogni file incontrato, lo analizza e - se supportato - lo aggiunge al
  database.
  Ogni directory incontrata, invece, è aggiunta al 
@@ -3796,9 +3898,9 @@ La funzione
 \family typewriter
 local_loop()
 \family default
-, già descritta a figura 
+, già descritta nella sezione 
 \begin_inset LatexCommand vref
-reference "fig:Loop-principale-di-inotify"
+reference "sec:Inotify"
 
 \end_inset
 
@@ -4110,14 +4212,8 @@ Enrico Colombini, Marco Di Francesco/(2007) No album/00 - La ballata del
 \end_layout
 
 \begin_layout Standard
-Nel capitolo 
-\begin_inset LatexCommand vref
-reference "cha:MusicMeshFS"
-
-\end_inset
-
- il progetto è stato diviso in due componenti, tuttavia nelle fasi finali
- del progetto si è deciso di realizzare 
+Inizialmente il sembrava essere diviso in due componenti principali, tuttavia
+ nelle fasi finali del progetto si è deciso di strutturarlo 
 \series bold
 tre
 \series default
@@ -4137,9 +4233,9 @@ un client che usasse ed espandesse questa libreria
 \end_layout
 
 \begin_layout Standard
-Questi ultimi due elementi del progetto, inizialmente, erano una sola cosa,
- ma si è pensato di estrapolare la libreria per facilitare lo sviluppo di
- altre applicazioni simili a questa.
+La libreria è stata separata dal client per essere riutilizzata.
+ Altre applicazioni possono far uso di questa libreria per poter realizzare
+ un file system virtuale basato sul contenuto di un database.
 \end_layout
 
 \begin_layout Standard
@@ -5046,8 +5142,8 @@ L'idea di MusicMeshFS, invece, è quella di comportarsi il più possibile
  browser grafici, ma capace di creare ordine tra i file multimediali tramite
  un parametro da passare al client (la componente destinata a realizzare
  il file system vero e proprio).
- La grammatica adottata per rappresentare lo schema, in Extended Backus-Naur
- Form, è la seguente:
+ Poiché il parametro è da La grammatica adottata per rappresentare lo schema,
+ in Extended Backus-Naur Form, è la seguente:
 \end_layout
 
 \begin_layout Standard
@@ -5889,6 +5985,11 @@ _
 \end_layout
 
 \begin_layout Chapter
+\begin_inset LatexCommand label
+name "cha:Compilazione-dei-sorgenti"
+
+\end_inset
+
 Compilazione dei sorgenti
 \end_layout
 
@@ -6681,6 +6782,11 @@ $ fusermount -u musica_organizzata
 \end_layout
 
 \begin_layout Chapter
+\begin_inset LatexCommand label
+name "cha:SVILUPPI"
+
+\end_inset
+
 Estensione del fs in ambiente distribuito
 \end_layout
 
@@ -6694,18 +6800,16 @@ Frankie Hi-NRG Mc/(2008) dePrimoMaggio/00 - Rivoluzione feat_ Roy Paci.mp3
 \end_layout
 
 \begin_layout Standard
-Come estensione al progetto, vi è l'effettivo porting su dispositivi embedded,
- in quanto al momento le applicazioni sono state testate solo su dispositivi
- desktop, e l'estensione di musicmeshfsd al fine di consentire l'organizzazione
- e ascolto anche di file remoti.
- Per fare questo si è pensato di realizzare una rete di peer-to-peer tra
- istanze di musicmeshfsd, che controlleranno i file locali, e chiederanno
- ai loro vicini per quelli remoti.
+Per coloro che utilizzeranno MMf in dispositivi embedded, e quindi dotati
+ di poca memoria, potrebbe essere interessante riuscir ad ascoltare musica
+ disponibile in remoto, qualora i dispositivi siano dotati di scheda wireless.
+ 
 \end_layout
 
 \begin_layout Standard
-Per effettuare queste due estensioni, è stato effettuato un breve studio
- di fattibilità.
+Per fare questo si potrebbe estendere mmf non solo per la gestione dei file
+ locali, ma anche per lo scambio di file remoti ai vicini nodi di rete,
+ collegati in peer to peer.
 \end_layout
 
 \begin_layout Section
@@ -6780,7 +6884,7 @@ key "francesco_pistillo_tesi"
 
 \end_inset
 
-, è stato già effettuato il porting di MVux su smart phone.
+, è stato già effettuato il porting di linux su smart phone.
  La seguente tesi, invece, si focalizzerà sullo sviluppo di un programma
  di utilità, svolto a semplificare alcune delle funzioni classiche di questi
  dispositivi, oltre che ad aggiungerne altre non previste dagli sviluppatori
@@ -6877,17 +6981,8 @@ Condivisione di musica remota
 \end_layout
 
 \begin_layout Standard
-Questa seconda fase è più nebulosa.
-\end_layout
-
-\begin_layout Standard
-Per quanto sia il database che l'architettura generale del progetto siano
- pensati con in mente l'espandibilità verso la condivisione della musica
- in rete, al momento non è stata realizzata nessuna soluzione.
-\end_layout
-
-\begin_layout Standard
-L'idea del funzionamento di musicmeshfsd è rappresentata nella figura 
+L'architettura generale del progetto è stata pensata per essere facilmemente
+ estesa per la condivisione della musica in rete, come nella figura 
 \begin_inset LatexCommand vref
 reference "fig:Rappresentazione-della-rete"
 
@@ -6937,52 +7032,39 @@ Rappresentazione della rete formata da musicmeshfsd
 \end_layout
 
 \begin_layout Standard
-In realtà ci sono due tipi di problemi
+La difficoltà principale dal punto di vista tecnico/implementativo è la
+ necessità di definire una serie di informazioni su come le varie istanze
+ di musicmeshfsd debbano comunicare tra loro, e come bilanciare il carico
+ tra i vari nodi della rete, al fine di minimizzare le risorse occupate
+ per ogni host.
 \end_layout
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-di\InsetSpace ~
-carattere\InsetSpace ~
-etico: la condivisione di informazioni protette da copyright
- tra persone è illegale in Italia, come nella maggior parte degli stati.
-\newline
-Tuttavia
- riteniamo che non sia compito nostro decidere quali file multimediali condivide
-re o meno, ma che sia responsabilità dell'utente non infrangere la legge
- del proprio stato.
- Questo anche perché vi sono situazioni in cui la condivisione di file tra
- vari host è legittima, ad esempio poiché è concesso dall'autore, o anche
- nel caso in cui i vari host (personal computer, portatile, palmare) appartengan
-o alla stessa persona.
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-di\InsetSpace ~
-carattere\InsetSpace ~
-tecnico: è necessario definire una serie di informazioni su come
- le varie istanze di musicmeshfsd debbano comunicare tra loro, e come bilanciare
- il carico tra i vari nodi della rete, al fine di minimizzare le risorse
- occupate per ogni host.
-\newline
-Tra le prime cose da definire, vi è almeno un algoritmo
- di 
-\begin_inset Quotes eld
-\end_inset
-
-scoperta
-\begin_inset Quotes erd
-\end_inset
-
- di altri processi concorrenti nella stessa rete.
+\begin_layout Standard
+Innanzitutto deve essere definito un algoritmo di scoperta di altri processi
+ concorrenti nella stessa rete.
  L'alternativa sarebbe nella scrittura di un file di configurazione (assimilabil
 e a 
 \family typewriter
 /etc/host
 \family default
-) ma questa soluzione è decisamente troppo limitativa, soprattutto nel caso
- di connessioni wireless dinamiche.
+), ma questa soluzione è decisamente troppo limitativa, soprattutto nel
+ caso di connessioni wireless dinamiche.
+\end_layout
+
+\begin_layout Standard
+Un ulteriore problema è di natura etica in quanto la condivisione di informazion
+i protette da copyright tra persone è illegale in Italia, come nella maggior
+ parte degli stati.
+\end_layout
+
+\begin_layout Standard
+Tuttavia riteniamo che non sia compito nostro decidere quali file multimediali
+ condividere o meno, ma che sia responsabilità dell'utente non infrangere
+ la legge del proprio stato.
+ Questo anche perché vi sono situazioni in cui la condivisione di file tra
+ vari host è legittima, ad esempio poiché è concesso dall'autore, o anche
+ nel caso in cui i vari host (personal computer, portatile, palmare) appartengan
+o alla stessa persona.
 \end_layout
 
 \begin_layout Part
