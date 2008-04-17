@@ -65,6 +65,43 @@
 
 \begin_body
 
+\begin_layout Standard
+Pagine da stampare a colori
+\end_layout
+
+\begin_layout Itemize
+\begin_inset LatexCommand pageref
+reference "fig:Formato-ID3v1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset LatexCommand pageref
+reference "fig:musicmeshfsc.c"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset LatexCommand pageref
+reference "fig:Rappresentazione-della-rete"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\newpage
+
+\end_layout
+
 \begin_layout Titlehead
 
 \size footnotesize
@@ -440,7 +477,7 @@ reference "cha:MusicMeshFS"
 
 \end_inset
 
- è descritta l'archiettura del sistema.
+ è descritta l'architettura del sistema.
  Nella parte 
 \begin_inset LatexCommand vref
 reference "par:Generalizzazione-della-configurabilità"
@@ -495,12 +532,11 @@ Elio e le storie tese/(1992) Italyan, rum casusu çikti/12 - Pipppero®.mp3
 \end_layout
 
 \begin_layout Standard
-Per poter realizzare un file system per dati musicali, è stato necessario
- prima di tutto studiare i formati più comuni e le librerie più adatte a
- manipolarli.
- Una volta fatto questo sarà necessario capire quali sono le informazioni
- che si possono estrarre, e quali, tra queste, risultano utili per i nostri
- fini.
+Per poter realizzare un file system per dati musicali, è necessario prima
+ di tutto studiare i formati più comuni e le librerie più adatte a manipolarli.
+ Una volta fatto questo è necessario continuare l'analisi per capire quali
+ sono le informazioni che si possono estrarre, e quali, tra queste, risultano
+ utili per i nostri fini.
 \end_layout
 
 \begin_layout Standard
@@ -571,7 +607,7 @@ il segnale è campionato e codificato senza compressione dei dati
 \end_layout
 
 \begin_layout Itemize
-Vi è compressione del segnale campionato, con perdita d'informazione rispetto
+vi è compressione del segnale campionato, con perdita d'informazione rispetto
  all'originale (
 \emph on
 lossy
@@ -580,7 +616,7 @@ lossy
 \end_layout
 
 \begin_layout Itemize
-Vi è compressione del segnale campionato, senza perdita d'informazione rispetto
+vi è compressione del segnale campionato, senza perdita d'informazione rispetto
  all'originale (
 \emph on
 lossless
@@ -1254,8 +1290,8 @@ decideva
 \end_inset
 
  di codificare le informazioni in un qualunque locale; tuttavia non è possibile
- descrivere, nel tag, quale locale si è usato, quindi andando incontro a
- problemi di Mojibake
+ descrivere, nel tag, quale locale si è usato, andando incontro a problemi
+ di Mojibake
 \begin_inset Foot
 status collapsed
 
@@ -1270,8 +1306,8 @@ Problemi di rappresentazione di testi codificati con un certo encode, e
 \end_layout
 
 \begin_layout Standard
-Come risposta venne definito, nel 1998, il formato ID3v2, poi sostituito
- dal formato ID3v2.3.0.
+Come risposta venne definito, nel 1998, il formato ID3v2, evolutosi fino
+ al formato ID3v2.4.0.
  In questo caso le informazioni sono codificate 
 \begin_inset Quotes eld
 \end_inset
@@ -1282,7 +1318,7 @@ in testa
 
  al file, e i tag sono pensati per essere aggiunti in modo dinamico, ed
  ognuno di tipo e dimensione liberi (è possibile inglobare interi, stringhe,
- e anche blob in un elemento del tag ID3v.2.3.0).
+ e anche blob in un elemento del tag ID3v2.X).
 \end_layout
 
 \begin_layout Standard
@@ -1369,8 +1405,19 @@ In aggiunta, ci sembra doveroso aggiungere anche l'informazione sul tipo
  si è pensato di avere anche host e path completo dei file originali, per
  poter comunque risalire a qual'è il file che si sta ascoltando.
  Sommando tutto quanto, si arriva a dieci campi.
- Non pochissimi, ma comunque perfettamente gestibili da qualunque utente
- per permettergli di esprimere le proprie preferenze.
+ Non pochissimi
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+If you have a procedure with 10 parameters, you probably missed some.
+ -- Alan Perlis
+\end_layout
+
+\end_inset
+
+, ma comunque perfettamente gestibili da qualunque utente per permettergli
+ di esprimere le proprie preferenze.
 \end_layout
 
 \begin_layout Section
@@ -2031,88 +2078,108 @@ accessorie
 \end_inset
 
 , pensate per casi particolari, ma usate di rado; esse sono
+\end_layout
+
+\begin_layout Itemize
+
 \family typewriter
 fuse_operations.statfs
-\family default
-, 
+\end_layout
+
+\begin_layout Itemize
+
 \family typewriter
 fuse_operations.flush
-\family default
-, 
+\end_layout
+
+\begin_layout Itemize
+
 \family typewriter
 fuse_operations.fsync
-\family default
-, 
+\end_layout
+
+\begin_layout Itemize
+
 \family typewriter
 fuse_operations.setxattr
-\family default
-,
-\family typewriter
+\end_layout
 
-\newline
+\begin_layout Itemize
+
+\family typewriter
 fuse_operations.getxattr
-\family default
-, 
+\end_layout
+
+\begin_layout Itemize
+
 \family typewriter
 fuse_operations.listxattr
-\family default
-,
-\family typewriter
+\end_layout
 
-\newline
+\begin_layout Itemize
+
+\family typewriter
 fuse_operations.removexattr
-\family default
-, 
+\end_layout
+
+\begin_layout Itemize
+
 \family typewriter
 fuse_operations.fsyncdir
-\family default
-,
-\family typewriter
+\end_layout
 
-\newline
+\begin_layout Itemize
+
+\family typewriter
 fuse_operations.init
-\family default
-,
-\family typewriter
- fuse_operations.destroy
-\family default
-,
-\family typewriter
+\end_layout
 
-\newline
+\begin_layout Itemize
+
+\family typewriter
+fuse_operations.destroy
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
 fuse_operations.access
-\family default
-, 
+\end_layout
+
+\begin_layout Itemize
+
 \family typewriter
 fuse_operations.create
-\family default
-,
-\family typewriter
+\end_layout
 
-\newline
+\begin_layout Itemize
+
+\family typewriter
 fuse_operations.ftruncate
-\family default
-, 
+\end_layout
+
+\begin_layout Itemize
+
 \family typewriter
 fuse_operations.fgetattr
-\family default
-,
-\family typewriter
+\end_layout
 
-\newline
+\begin_layout Itemize
+
+\family typewriter
 fuse_operations.lock
-\family default
-,
-\family typewriter
- fuse_operations.utimens
-\family default
- e
-\family typewriter
+\end_layout
 
-\newline
+\begin_layout Itemize
+
+\family typewriter
+fuse_operations.utimens
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
 fuse_operations.bmap
-\family default
-.
 \end_layout
 
 \begin_layout Chapter
@@ -2129,8 +2196,14 @@ Francesco De Gregori/(1997) La valigia dell'attore/18 - Niente da capire.mp3
 \end_layout
 
 \begin_layout Standard
-Il progetto utilizza la libreria FUSE, già descritta nel capitolo, per permetter
-e la creazione di un file system in spazio utente.
+Il progetto utilizza la libreria FUSE, già descritta nella sottosezione
+ 
+\begin_inset LatexCommand vref
+reference "sub:Introduzione-a-Fuse"
+
+\end_inset
+
+, per permettere la creazione di un file system in spazio utente.
 \end_layout
 
 \begin_layout Standard
@@ -3062,9 +3135,9 @@ curioso
 inoltre
  l'alternativa consiste nel lavorare con array di 
 \family typewriter
-unicode
+unicode_t
 \family default
-_t, (
+, (
 \family typewriter
 typedef
 \family default
@@ -3301,7 +3374,6 @@ status collapsed
 	filename imgs/DiagrammaER.eps
 	lyxscale 50
 	width 50col%
-	subcaption
 	subcaptionText "Diagramma ER"
 
 \end_inset
@@ -3420,7 +3492,7 @@ parola chiave
 \begin_inset Quotes erd
 \end_inset
 
- in un file .c (nello specifico 
+ in un file .c (nello specifico la stringa scelta è stata 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3435,16 +3507,21 @@ TRANSLATE_ME_PLEASE
 ) con il contenuto di un file di testo, nel nostro caso contenente il codice
  SQL desiderato.
  Nonostante l'uso di un linguaggio ad altissimo livello, il codice è abbastanza
- complicato; questo per ovviare ad alcune limitazioni del linguaggio C:
- in particolare il limite per le stringhe allocate sullo 
+ complicato; questo per ovviare ad alcune limitazioni del linguaggio C,
+ in particolare il limite di 4095 caratteri (+1 per il terminatore) per
+ le stringhe allocate sullo 
 \emph on
 stack
 \emph default
- (del tipo 
+ (tramite codice del tipo 
 \family typewriter
-char stringa[] = "...stringa più lunga di 4095 caratteri..."
+char stringa[] = "
+\begin_inset Formula $\dots$
+\end_inset
+
+"
 \family default
-); per far questo la variabile è stata allocata sullo 
+); per rimediare a questo limite la variabile è stata allocata sullo 
 \emph on
 heap
 \emph default
@@ -3460,7 +3537,11 @@ calloc()
 \emph on
 frammenti
 \emph default
-.
+ e 
+\family typewriter
+strcat()
+\family default
+ per giustapporli.
 \end_layout
 
 \begin_layout Standard
@@ -3859,7 +3940,7 @@ int local_event_callback(struct inotify_event* event, sqlite3* db, inotify_t
 
 \begin_layout Standard
 
-    if (event->mask & IN_ISDIR) {    // se è una directory
+    if (event->mask & IN_ISDIR) {    // se e' una directory
 \end_layout
 
 \begin_layout Standard
@@ -3902,7 +3983,7 @@ n", file_name);
 
 \begin_layout Standard
 
-    else {  // se è un file
+    else {  // se e' un file
 \end_layout
 
 \begin_layout Standard
@@ -4166,25 +4247,26 @@ La libreria è stata separata dal client per essere riutilizzata.
 
 \begin_layout Standard
 In particolare è da notare come i programmi e la libreria sviluppati siano
- software libero
-\begin_inset Foot
-status collapsed
-
-\begin_layout Standard
-musicmeshfsd e musicmeshfsc, rispettivamente l'implementazione del demone
- e del client, sono licenziati tramite la GNU General Public License, versione
- 3 e successive
+ software libero.
+ In particolare 
+\family typewriter
+musicmeshfsd
+\family default
+ e 
+\family typewriter
+musicmeshfsc
+\family default
+, rispettivamente l'implementazione del demone e del client, sono distribuiti
+ tramite la GNU General Public License, versione 3 e successive; 
+\family typewriter
+db_fuse
+\family default
+, realizzazione della libreria usata da MusicMeshFS, è licenziata tramite
+ la GNU Lesser General Public License, versione 3 e successive.
 \end_layout
 
 \begin_layout Standard
-db_fuse, realizzazione della libreria usata da musicmeshfs, è licenziata
- tramite la GNU Lesser General Public License, versione 3 e successive
-\end_layout
-
-\end_inset
-
-.
- Entrambi sono disponibili all'indirizzo 
+Tutti e tre i programmi sono disponibili all'indirizzo 
 \begin_inset LatexCommand htmlurl
 name "MusicMeshFS home page"
 target "http://code.google.com/p/musicmeshfs/"
@@ -4196,8 +4278,9 @@ target "http://code.google.com/p/musicmeshfs/"
 status collapsed
 
 \begin_layout Standard
-Essendo software di qualità alpha, è consigliabile utilizzare direttamente
- i sorgenti scaricandoli dal 
+Essendo software di qualità pre-alpha, non sono disponibili al momento pacchetti
+ precompilati, ed è consigliabile utilizzare direttamente i sorgenti scaricandol
+i dal 
 \emph on
 tree
 \emph default
@@ -5073,8 +5156,21 @@ L'idea di MusicMeshFS, invece, è quella di comportarsi il più possibile
  browser grafici, ma capace di creare ordine tra i file multimediali tramite
  un parametro da passare al client (la componente destinata a realizzare
  il file system vero e proprio).
- Poiché il parametro è da La grammatica adottata per rappresentare lo schema,
- in Extended Backus-Naur Form, è la seguente:
+ Poiché il parametro è la parte più complessa dell'interazione tra l'utente
+ e il programma, si è cercato di trovare il giusto compromesso tra 
+\emph on
+features
+\emph default
+ e semplicità d'espressione.
+ In particolare, la scelta è stata quella di permettere di definire la struttura
+ che dovranno avere le directory, usando dei segnaposto (come %artist o
+ %album) per indicare che il nome del file o della directory dovrà contenere,
+ in quella posizione, l'artista o l'album.
+\end_layout
+
+\begin_layout Standard
+La grammatica adottata per rappresentare lo schema, in Extended Backus-Naur
+ Form, è la seguente:
 \end_layout
 
 \begin_layout Standard
@@ -5307,6 +5403,13 @@ status collapsed
 "%filename"
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip*
 \end_inset
 
 
@@ -5562,7 +5665,9 @@ reference "fig:Descrizione-di-come"
 /
 \family default
 ').
- Quindi 
+ Quindi
+\newline
+
 \begin_inset Quotes eld
 \end_inset
 
@@ -5574,7 +5679,9 @@ reference "fig:Descrizione-di-come"
 \begin_inset Quotes erd
 \end_inset
 
- è da dividere in tre parti: prima 
+
+\newline
+è da dividere in tre parti: prima 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5658,7 +5765,9 @@ Il sistema è in grado di lavorare perfettamente in presenza, per ogni livello,
 \family typewriter
 /
 \family default
-', effettuerà una query del tipo 
+', effettuerà una query del tipo
+\newline
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5678,12 +5787,18 @@ status collapsed
 Per questi esempi le query saranno over semplificate, per massimizzare la
  facilità di comprensione.
  In particolare non si mostreranno le tabelle coinvolte nell'espressione
- della query, né le condizioni WHERE necessarie ma non interessanti
+ della query, né le condizioni 
+\family typewriter
+WHERE
+\family default
+ necessarie ma non interessanti
 \end_layout
 
 \end_inset
 
-, dove 
+
+\newline
+dove 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5699,7 +5814,11 @@ artista
 \begin_inset Quotes eld
 \end_inset
 
+
+\family typewriter
 %artist
+\family default
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -5708,11 +5827,19 @@ artista
 
 \begin_layout Standard
 I sottolivelli dell'albero vengono calcolati in modo simile, con l'aggiunta
- alla clausola WHERE delle condizioni 
+ alla clausola 
+\family typewriter
+WHERE
+\family default
+ delle condizioni 
+\family typewriter
+
 \begin_inset Quotes eld
 \end_inset
 
 (colonna1 = valore1) AND (colonna2 = valore2)...
+\family default
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -5721,7 +5848,11 @@ I sottolivelli dell'albero vengono calcolati in modo simile, con l'aggiunta
 \begin_inset Quotes eld
 \end_inset
 
+
+\family typewriter
 colonna
+\family default
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -5729,50 +5860,94 @@ colonna
 \begin_inset Quotes eld
 \end_inset
 
+
+\family typewriter
 valore
+\family default
+
 \begin_inset Quotes erd
 \end_inset
 
  corrisponde ai termini variabili ritrovati nella gerarchia fino a quel
  livello; quindi per ottenere l'elenco dei file presenti nella directory
- 
+\newline
+
 \begin_inset Quotes eld
 \end_inset
 
+
+\family typewriter
 /Sergio Cammariere
+\family default
+
 \begin_inset Quotes erd
 \end_inset
 
- verrà effettuata una query del tipo 
+
+\newline
+verrà effettuata una query del tipo
+\newline
+
 \begin_inset Quotes eld
 \end_inset
 
 
 \family typewriter
 SELECT anno, album FROM ...
- WHERE (artista = 'Sergio Cammariere');
+ WHERE (artista = 
+\backslash
+
+\newline
+'Sergio Cammariere');
 \family default
 
 \begin_inset Quotes erd
 \end_inset
 
-; e per ottenere i file presenti nella directory 
+;
+\newline
+e per ottenere i file presenti nella directory
+\newline
+
 \begin_inset Quotes eld
 \end_inset
 
-/Sergio Cammariere/(2003) Dalla pace del mare lontano)
+
+\family typewriter
+/Sergio Cammariere/(2003) Dalla pace del mare 
+\backslash
+
+\newline
+lontano)
+\family default
+
 \begin_inset Quotes erd
 \end_inset
 
- verrà effettuata una query del tipo 
+
+\newline
+verrà effettuata una query del tipo
+\newline
+
 \begin_inset Quotes eld
 \end_inset
 
 
 \family typewriter
 SELECT traccia, titolo, tipo FROM ...
- WHERE (artista = 'Sergio Cammariere') AND (anno = '2003') AND (album =
- 'Dalla pace del mare lontano');
+ WHERE 
+\backslash
+
+\newline
+(artista = 'Sergio Cammariere') AND 
+\backslash
+
+\newline
+(anno = '2003') AND 
+\backslash
+
+\newline
+(album = 'Dalla pace del mare lontano');
 \family default
 
 \begin_inset Quotes erd
@@ -5788,8 +5963,9 @@ reference "enu:Il-fatto-che"
 
 \end_inset
 
- è possibile vederlo nel nome del file generato nella citazione 
-\begin_inset LatexCommand vref
+ è possibile vederlo nel nome del file generato nella citazione presente
+ subito sotto il capitolo 
+\begin_inset LatexCommand ref
 reference "quo:Frankie-Hi-NRG-Mc/(2008)"
 
 \end_inset
@@ -6059,6 +6235,8 @@ clean:
 \begin_inset Caption
 
 \begin_layout Standard
+
+\family typewriter
 \begin_inset LatexCommand label
 name "fig:src/Makefile"
 
@@ -6619,6 +6797,10 @@ musica_organizzata
  sarà presente il fs virtuale.
 \end_layout
 
+\begin_layout Standard
+Vediamo ora come può mostrarsi la directory monitorata
+\end_layout
+
 \begin_layout LyX-Code
 $ tree -A musica_sparsa
 \end_layout
@@ -6643,8 +6825,8 @@ musica_sparsa
 └── 1 - Puff the barbarian.ogg
 \end_layout
 
-\begin_layout LyX-Code
-...
+\begin_layout Standard
+e quella generata tramite MusicMeshFS
 \end_layout
 
 \begin_layout LyX-Code
@@ -6731,16 +6913,21 @@ Frankie Hi-NRG Mc/(2008) dePrimoMaggio/00 - Rivoluzione feat_ Roy Paci.mp3
 \end_layout
 
 \begin_layout Standard
-Per coloro che utilizzeranno MMf in dispositivi embedded, e quindi dotati
- di poca memoria, potrebbe essere interessante riuscir ad ascoltare musica
- disponibile in remoto, qualora i dispositivi siano dotati di scheda wireless.
+Per coloro che utilizzeranno MusicMeshFS in dispositivi embedded, e quindi
+ dotati di poca memoria, potrebbe essere interessante riuscire ad ascoltare
+ musica disponibile in remoto, qualora i dispositivi siano dotati di scheda
+ wireless.
  
 \end_layout
 
 \begin_layout Standard
-Per fare questo si potrebbe estendere mmf non solo per la gestione dei file
- locali, ma anche per lo scambio di file remoti ai vicini nodi di rete,
- collegati in peer to peer.
+Per fare questo si potrebbe estendere MusicMeshFS non solo per la gestione
+ dei file locali, ma anche per offrire file remoti, ottenuti tramite l'interroga
+zione dei nodi di rete vicini, collegati in 
+\emph on
+peer-to-peer
+\emph default
+.
 \end_layout
 
 \begin_layout Section
@@ -6971,7 +7158,7 @@ La difficoltà principale dal punto di vista tecnico/implementativo è la
 \end_layout
 
 \begin_layout Standard
-Innanzitutto deve essere definito un algoritmo di scoperta di altri processi
+Sin dall'inizio deve essere definito un algoritmo di scoperta di altri processi
  concorrenti nella stessa rete.
  L'alternativa sarebbe nella scrittura di un file di configurazione (assimilabil
 e a 
@@ -6980,11 +7167,23 @@ e a
 \family default
 ), ma questa soluzione è decisamente troppo limitativa, soprattutto nel
  caso di connessioni wireless dinamiche.
+ In un secondo momento si deve studiare un modo per evitare il proliferare
+ di 
+\emph on
+leechers
+\emph default
+, capaci solo di prendere musica, senza dare niente in cambio.
+ Sotto quest'ottica andranno studiate le soluzioni già trovate dai programmi
+ di 
+\emph on
+file sharing
+\emph default
+ più usati.
 \end_layout
 
 \begin_layout Standard
-Un ulteriore problema è di natura etica in quanto la condivisione di informazion
-i protette da copyright tra persone è illegale in Italia, come nella maggior
+Un ulteriore problema è di natura etica, in quanto la condivisione di informazio
+ni protette da copyright tra persone è illegale in Italia, come nella maggior
  parte degli stati.
 \end_layout
 
