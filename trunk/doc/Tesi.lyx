@@ -347,18 +347,8 @@ Il lavoro di questa tesi nasce come risposta all'esigenza di catalogare
 \end_layout
 
 \begin_layout Standard
-L'idea nata per ovviare a questo problema è stata quella di implementare
- un 
-\begin_inset Quotes eld
-\end_inset
-
-gestore di collezione
-\begin_inset Quotes erd
-\end_inset
-
- ad un livello più basso di quello delle singole applicazioni.
- La soluzione trovata è stata quella di realizzare un file system virtuale,
- avente come 
+La soluzione trovata è stata quella di realizzare un file system virtuale;
+ questi avrà come 
 \begin_inset Quotes eld
 \end_inset
 
@@ -378,7 +368,37 @@ destinazione
  Per permettere all'utente di decidere come organizzare la collezione musicale,
  è stato realizzato un semplice linguaggio tramite il quale descrivere i
  nomi delle directory che conterranno i file musicali.
- L'organizzazione sarà implicitamente data appunto dalla gerarchia.
+ In questo modo è stato implementaro un 
+\begin_inset Quotes eld
+\end_inset
+
+gestore di collezione
+\begin_inset Quotes erd
+\end_inset
+
+ ad un livello più basso di quello delle singole applicazioni, in cui l'organizz
+azione sarà implicitamente data dalla gerarchia presente nel file system
+ stesso.
+\end_layout
+
+\begin_layout Standard
+L'idea innovativa di organizzare i file musicali a livello del file system
+ garantisce maggiore portabilità, rispetto alle soluzioni implementate a
+ livello dei player multimediali.
+\end_layout
+
+\begin_layout Standard
+Infatti non esiste uno standard per gestire collezioni di dati musicali:
+ ogni player decide autonomamente, e questo vincola l'utente a non poter
+ avere sempre con sè, oltre alla propria collezione di brani preferiti,
+ anche informazioni accessorie, al fine di ordinare i brani in base ai propri
+ gusti.
+\end_layout
+
+\begin_layout Standard
+Inoltre tra gli obiettivi di questa tesi vi è anche quello di ridurre al
+ minimo le risorse necessarie, per poter permettere realizzare questo file
+ system anche su dispositivi portatili, UMPC, palmari e simili.
 \end_layout
 
 \begin_layout Standard
@@ -394,118 +414,6 @@ Durante il lavoro ci si è resi conto, tuttavia, che l'idea era generalizzabile
 \end_layout
 
 \begin_layout Standard
-
-\lyxline
-
-\end_layout
-
-\begin_layout Standard
-Un'esigenza del genere non è nuova, e infatti tutti i player musicali moderni
- incorporano una qualche forma di 
-\begin_inset Quotes eld
-\end_inset
-
-gestore della collezione
-\begin_inset Quotes erd
-\end_inset
-
-.
- Esempi se ne trovano per tutte le piattaforme e tutti i sistemi operativi:
- da Windows Media Player® 
-\begin_inset LatexCommand citep
-key "wmp_home_page"
-
-\end_inset
-
- a Winamp® 
-\begin_inset LatexCommand citep
-key "winamp_home_page"
-
-\end_inset
-
-, da iTunes® 
-\begin_inset LatexCommand citep
-key "itunes_home_page"
-
-\end_inset
-
- ad Amarok 
-\begin_inset LatexCommand citep
-key "amarok_home_page"
-
-\end_inset
-
-, da Banshee 
-\begin_inset LatexCommand citep
-key "banshee_home_page"
-
-\end_inset
-
- a Songbird 
-\begin_inset LatexCommand citep
-key "songbird_home_page"
-
-\end_inset
-
-; tutti questi (e moltissimi altri) player multimediali offrono, in maniera
- simile, modi semplici e intuitivi per ordinare e facilitare il ritrovamento
- dei file in base a varie caratteristiche.
-\end_layout
-
-\begin_layout Standard
-Tuttavia questo vincola l'utente a quale player utilizzare.
- Infatti non esiste un formato comune di memorizzazione delle informazioni
- su una collezione di file multimediali, ed ogni player decide autonomamente:
- questo porta a non 
-\begin_inset Quotes eld
-\end_inset
-
-poter portare con sè
-\begin_inset Quotes erd
-\end_inset
-
-, magari su una penna USB, oltre alla propria collezione di brani preferiti,
- anche la propria organizzazione per questi dati, per poterla ascoltare
- su altri computer, con altri player multimediali installati.
-\end_layout
-
-\begin_layout Standard
-Inoltre, questi programmi tendono ad avere un numero impressionante di 
-\begin_inset Quotes eld
-\end_inset
-
-feature
-\begin_inset Quotes erd
-\end_inset
-
-, dalla gestione delle copertine degli album musicali, all'integrazione
- con sistemi di condivisione/vendita di musica online, al 
-\begin_inset Quotes eld
-\end_inset
-
-riconoscimento
-\begin_inset Quotes erd
-\end_inset
-
- automatico della musica tramite fingerprint, che possono essere molto utili
- in alcuni contesti, ma che tendono ad appensantire l'applicazione, fino
- a renderla improponibile in situazioni in cui le capacità hardware sottostanti
- sono limitate.
- Non solo personal computer 
-\emph on
-entry level
-\emph default
-, ma anche i dispositivi portatili, UMPC, palmari e simili, sono tagliati
- fuori da questi gestori multimediali.
-\end_layout
-
-\begin_layout Standard
-
-\lyxline
-
-\end_layout
-
-\begin_layout Standard
 La parte 
 \begin_inset LatexCommand vref
 reference "par:File-system-e"
@@ -514,55 +422,54 @@ reference "par:File-system-e"
 
  descrive il file system realizzato, la sua architettura e le librerie usate.
  Nello specifico, nel capitolo 
-\begin_inset LatexCommand vpageref
+\begin_inset LatexCommand ref
 reference "cha:File-system-per"
 
 \end_inset
 
  è descritta l'idea di realizzare un file system per dati musicali, nel
  capitolo 
-\begin_inset LatexCommand vpageref
+\begin_inset LatexCommand ref
 reference "cha:Analisi-delle-librerie"
 
 \end_inset
 
  vi è l'analisi delle librerie usate e nel capitolo 
-\begin_inset LatexCommand vpageref
+\begin_inset LatexCommand ref
 reference "cha:MusicMeshFS"
 
 \end_inset
 
  è descritta l'archiettura del sistema.
-\end_layout
-
-\begin_layout Standard
-Nella parte 
+ Nella parte 
 \begin_inset LatexCommand vref
 reference "par:Generalizzazione-della-configurabilità"
 
 \end_inset
 
 , invece, è presente una descrizione del lavoro svolto per dividere il progetto
- in due parti, come compilare e gli sviluppi futuri.
+ in tre parti, come compilare e gli sviluppi futuri.
  In particolare il capitolo 
-\begin_inset LatexCommand vref
+\begin_inset LatexCommand ref
 reference "cha:DB_FUSE"
 
 \end_inset
 
-, il capitolo 
-\begin_inset LatexCommand vref
+ descrive la libreria sviluppata e il capitolo 
+\begin_inset LatexCommand ref
 reference "cha:Compilazione-dei-sorgenti"
 
 \end_inset
 
- e il capitolo 
-\begin_inset LatexCommand vref
+ mostra l'organizzazione dei sorgenti e come fare per compilare e usare
+ i programmi; il capitolo 
+\begin_inset LatexCommand ref
 reference "cha:SVILUPPI"
 
 \end_inset
 
-
+, infine, suggerisce alcune direzioni sugli sviluppi futuri.
+ 
 \end_layout
 
 \begin_layout Part
@@ -1575,7 +1482,13 @@ molto
  a basso livello: VFS presuppone che qualunque nuovo fs venga creato, debba
  essere implementato basandosi su una struttura inode, che esista il concetto
  di superblocco e si implementi, in modo esplicito, una gestione dei buffer
- delle informazioni.
+ delle informazioni, come si può vedere in 
+\begin_inset LatexCommand citep
+key "roverto_de_ioris_fs"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -2241,15 +2154,22 @@ Inotify
 \begin_layout Standard
 Inotify è un'altra componente del kernel, oltre Fuse, che è stata utilizzata
  nel progetto.
- Essa è una API del kernel linux (inclusa ufficialmente dal rilascio 2.6.13,
- disponibile sotto forma di patch per le versioni precedenti
+ Essa è una API del kernel linux, nata per sostituire l'obsoleto dnotify
+ 
+\begin_inset LatexCommand citep
+key "inotify_readme"
+
+\end_inset
+
+, inclusa ufficialmente dal rilascio 2.6.13 e disponibile sotto forma di patch
+ per le versioni precedenti, che rende molto semplice monitorare i cambiamenti
+ effettuati su file e directory, come mostrato in 
 \begin_inset LatexCommand citep
 key "robert_love_inotify"
 
 \end_inset
 
-) che rende molto semplice monitorare i cambiamenti effettuati su file e
- directory.
+.
  In ogni istante, infatti, è possibile sapere se uno o più file 
 \begin_inset Quotes eld
 \end_inset
@@ -2270,7 +2190,7 @@ Le informazioni sono codificate in uno stream, permettendo, quindi, una
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Standard
 \begin_inset listings
@@ -2463,8 +2383,14 @@ Sqlite3
 \end_layout
 
 \begin_layout Standard
-Sqlite è una libreria scritta in C, relativamente piccola, che offre la
- possibilità di creare e gestire un database relazionali.
+Sqlite 
+\begin_inset LatexCommand citep
+key "sqlite3_home_page"
+
+\end_inset
+
+ è una libreria scritta in C, relativamente piccola, che offre la possibilità
+ di creare e gestire un database relazionali.
  Un intero database è salvato sotto forma di file, e l'accesso alle funzionalità
  sul database ottenute tramite chiamate a funzione.
 \end_layout
@@ -5094,8 +5020,13 @@ target "http://fuse.sourceforge.net/wiki/index.php/MediaFileSystems"
 \end_inset
 
  sono elencati 24 progetti, anche se solo Offline Media Content Database,
- FUSEPod, TagsFs, fusedaap e pytagsfs sono confrontabili, in toto o in parte,
- con musicmeshfsd
+ FUSEPod, TagsFs, fusedaap e pytagsfs 
+\begin_inset LatexCommand citep
+key "pytagsfs_home_page"
+
+\end_inset
+
+ sono confrontabili, in toto o in parte, con musicmeshfsd
 \end_layout
 
 \end_inset
