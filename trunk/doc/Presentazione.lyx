@@ -4,30 +4,25 @@
 \begin_header
 \textclass beamer
 \begin_preamble
-\usetheme{PaloAlto}
+\usetheme{Dresden}%Ilmenau}%
+
+\setbeamercovered{transparent}	% per avere le slides semi-trasparenti
 
 \AtBeginSection[]{
-  \frame<beamer>{
-    \frametitle{Outline}
-    \tableofcontents[currentsection,currentsubsection]
+  \frame<beamer>{ 
+    \frametitle{Contenuti}   
+    \tableofcontents[currentsection,currentsubsection] 
   }
 }
-
-% \AtBeginSubsection[]{
-% \frame<beamer>{
-% \frametitle{Outline}
-% \tableofcontents[currentsection,currentsubsection]
-% }
-% }
 \end_preamble
 \language italian
-\inputencoding auto
-\font_roman default
-\font_sans default
-\font_typewriter default
+\inputencoding latin1
+\font_roman palatino
+\font_sans helvet
+\font_typewriter cmtl
 \font_default_family default
-\font_sc false
-\font_osf false
+\font_sc true
+\font_osf true
 \font_sf_scale 100
 \font_tt_scale 100
 \graphics default
@@ -57,43 +52,106 @@
 \begin_body
 
 \begin_layout Title
-Principi per un file system configurabile e sua applicazione per dati musicali
+Principi per un file system configurabile
+\newline
+e sua applicazione per dati musicali
 \end_layout
 
-\begin_layout TitleGraphic
-\begin_inset Graphics
-	filename imgs/logo_uniba.png
-	scale 33
+\begin_layout Author
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="2">
+<features>
+<column alignment="right" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row bottomspace="6mm">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Laureando:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Vito De Tullio
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Relatori:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+prof.
+ Salvatore Caporaso
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+ing.
+ Vittoria Cozza
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset OptArg
+status collapsed
+
+\begin_layout Standard
+Vito De Tullio
+\end_layout
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Subtitle
-Tesi di laurea
-\end_layout
-
-\begin_layout Author
-Vito De Tullio
+\begin_layout Institute
+Università degli Studi di Bari
 \end_layout
 
 \begin_layout Date
 Anno Accademico 2006/07
 \end_layout
 
-\begin_layout Institute
-\begin_inset LatexCommand url
-name "Università degli Studi di Bari - Dipartimento di Informatica"
-target "http://www.di.uniba.it"
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout BeginFrame
-Indice generale
+Contenuti
 \end_layout
 
 \begin_layout Standard
@@ -112,30 +170,995 @@ File system e configurabilità in ambito musicale
 File system per dati musicali
 \end_layout
 
+\begin_layout BeginFrame
+MusicMeshFS
+\end_layout
+
+\begin_layout Block
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Scopo della tesi
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Organizzare dati musicali
+\newline
+\InsetSpace ~
+
+\end_layout
+
+\begin_layout Itemize
+In modo automatico mediante un file system
+\newline
+\InsetSpace ~
+
+\end_layout
+
+\begin_layout Itemize
+Facilmente configurabile dall'utente
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+FUSE (File system in USErspace)
+\end_layout
+
+\begin_layout ColumnsTopAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Itemize
+Modulo del kernel linux
+\end_layout
+
+\begin_layout Itemize
+Consente di usare librerie esterne
+\end_layout
+
+\begin_layout Itemize
+Richiede di implementare le funzioni per l'accesso al file system
+\end_layout
+
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename imgs/fuse_structure.png
+	lyxscale 50
+	width 100col%
+	height 100theight%
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Subsection
 Analisi delle librerie e API usate
 \end_layout
 
+\begin_layout BeginFrame
+Sqlite3
+\end_layout
+
+\begin_layout ColumnsTopAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Itemize
+Libreria per gestire database SQL
+\end_layout
+
+\begin_layout Itemize
+Leggera
+\end_layout
+
+\begin_layout Itemize
+Senza l'uso di server
+\end_layout
+
+\begin_layout Itemize
+Permette l'accesso concorrente ai dati
+\end_layout
+
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename imgs/DiagrammaER.eps
+	lyxscale 50
+	width 72col%
+	height 72pheight%
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+Inotify
+\end_layout
+
+\begin_layout ColumnsCenterAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Itemize
+API del kernel linux
+\end_layout
+
+\begin_layout Itemize
+Consente di monitorare file e directory
+\end_layout
+
+\begin_layout Itemize
+Utilizzato per sincronizzare il file system virtuale
+\end_layout
+
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Esempio d'utilizzo
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Se è stato aggiunto un file in una directory
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Aggiungilo al database
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Se un file è stato modificato
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Aggiorna le meta informazioni nel database
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_deeper
+\begin_layout BeginFrame
+Taglib
+\end_layout
+
+\begin_layout ColumnsCenterAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Itemize
+Libreria per la manipolazione di file multimediali
+\end_layout
+
+\begin_layout Itemize
+Consente di estrarre e modificare le meta informazioni
+\end_layout
+
+\begin_layout Itemize
+Supporta un gran numero di formati di file e metadati
+\end_layout
+
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Formati supportati
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Mp3
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+ID3v1, v1.1, v2.x
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Ogg
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Vorbis Comment
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+FLAC, MPC, Speex, ...
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Subsection
 Il file system configurabile MusicMeshFS
 \end_layout
 
+\begin_layout BeginFrame
+MusicMeshFS
+\end_layout
+
+\begin_layout Block
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Architettura
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename imgs/Architettura.eps
+	lyxscale 25
+	width 100col%
+	height 100theight%
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Generalizzazione della configurabilità a file qualsiasi
 \end_layout
 
 \begin_layout Subsection
-File system per l'interrogazione di un database
+File system come interrogazione di database
+\end_layout
+
+\begin_layout BeginFrame
+Astrazione del file system dai dati musicali
+\end_layout
+
+\begin_layout ColumnsTopAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Itemize
+File system come interfaccia verso un database
+\end_layout
+
+\begin_layout Itemize
+L'utente decide quali vincoli usare
+\end_layout
+
+\begin_layout Itemize
+I path equivalgono a SELECT annidate
+\end_layout
+
+\begin_layout Itemize
+Le operazioni su file equivalgono ad aggiornamenti dei campi
+\end_layout
+
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename imgs/SchemaLinguaggio.eps
+	lyxscale 50
+	width 100col%
+	height 100theight%
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+Schema
+\end_layout
+
+\begin_layout ColumnsCenterAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Itemize
+Consente all'utente di impostare i nomi dei file e delle directory generati
+ da MusicMeshFS
+\end_layout
+
+\begin_layout Itemize
+Di facile utilizzo
+\end_layout
+
+\begin_layout Itemize
+Basato sull'uso di keywords
+\end_layout
+
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Esempio
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+%artist/%title.%type
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Organizza la musica creando una directory per ogni artista
+\end_layout
+
+\begin_layout Itemize
+In ogni directory saranno presenti i brani di quell'artista, organizzati
+ usando il titolo e il tipo del file multimediale
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout ColumnsTopAligned
+
+\end_layout
+
+\begin_layout BeginFrame
+Funzioni implementate
+\end_layout
+
+\begin_layout Description
+readdir(
+\begin_inset Formula $\dots$
+\end_inset
+
+) legge il contenuto di una directory
+\end_layout
+
+\begin_layout Description
+getattr(
+\begin_inset Formula $\dots$
+\end_inset
+
+) legge gli attributi di un file (proprietario, gruppo, permessi...)
+\end_layout
+
+\begin_layout Description
+chmod(
+\begin_inset Formula $\dots$
+\end_inset
+
+) modifica gli attributi di un file
+\end_layout
+
+\begin_layout Description
+open(
+\begin_inset Formula $\dots$
+\end_inset
+
+) apre un file in lettura
+\end_layout
+
+\begin_layout Description
+read(
+\begin_inset Formula $\dots$
+\end_inset
+
+) legge il contenuto di un file
+\end_layout
+
+\begin_layout Description
+release(
+\begin_inset Formula $\dots$
+\end_inset
+
+) chiude un file aperto
+\end_layout
+
+\begin_layout Description
+rename(
+\begin_inset Formula $\dots$
+\end_inset
+
+) associa un nuovo nome ad un file
 \end_layout
 
 \begin_layout Subsection
-Compilazione dei sorgenti
+Test e considerazioni finali
+\end_layout
+
+\begin_layout BeginFrame
+Test programma
+\end_layout
+
+\begin_layout AlertBlock
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Schema usato
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\family typewriter
+%autor
+\series bold
+\InsetSpace \thinspace{}
+/\InsetSpace \thinspace{}
+
+\series default
+(%year) %album
+\series bold
+\InsetSpace \thinspace{}
+/\InsetSpace \thinspace{}
+
+\series default
+%track - %title.%type
+\end_layout
+
+\end_deeper
+\begin_layout ColumnsTopAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+5.5cm
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Directory monitorata
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+$ tree
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+.
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|-- Gazze'
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+`-- 03.Siamo come siamo.mp3
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|-- musical_box_genesis.mp3
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+`-- Puff the barbarian.ogg
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+...
+\end_layout
+
+\end_deeper
+\begin_layout Column
+5.5cm
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+File system virtuale
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+$ tree
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+.
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|-- Genesis
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+`-- (1971) Mursery crime
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+`-- 01 - The musical box.mp3
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|-- Max Gazzé
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+`-- (2008) Tra l'aratro e la radio
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+`-- 03 - Siamo come siamo.mp3
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|-- Ty Semaka
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+`-- (2003) OpenBSD 3.3
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+|\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+\InsetSpace ~
+`-- 01 - Puff the barbarian.ogg 
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+\size tiny
+...
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout BeginFrame
+Analisi finali
+\end_layout
+
+\begin_layout ColumnsTopAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+5.5cm
+\end_layout
+
+\begin_layout Block
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Punti di forza
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Alta configurabilità, facile uso
+\end_layout
+
+\begin_layout Itemize
+Più organizzazioni degli stessi dati
+\end_layout
+
+\begin_layout Itemize
+Portabile
+\end_layout
+
+\end_deeper
+\begin_layout Column
+5.5cm
+\end_layout
+
+\begin_layout Block
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Punti di debolezza
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Limiti nell'uso in scrittura sul file system
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Bugs
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Section
+Lavori futuri
 \end_layout
 
 \begin_layout Subsection
-Estensione del fs in ambiente distribuito
+Possibili estensioni
 \end_layout
 
+\begin_layout BeginFrame
+Lavori futuri
+\end_layout
+
+\begin_layout Block
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+Ulteriori sviluppi
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Uso su dispositivi embedded
+\end_layout
+
+\begin_layout Itemize
+Condivisione dati in rete
+\end_layout
+
+\begin_layout Itemize
+Uso in contesti differenti
+\end_layout
+
+\begin_layout Itemize
+Interfaccia grafica per la definizione dello schema
+\end_layout
+
+\end_deeper
 \begin_layout EndFrame
 
 \end_layout
