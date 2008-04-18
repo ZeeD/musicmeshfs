@@ -65,43 +65,6 @@
 
 \begin_body
 
-\begin_layout Standard
-Pagine da stampare a colori
-\end_layout
-
-\begin_layout Itemize
-\begin_inset LatexCommand pageref
-reference "fig:Formato-ID3v1"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset LatexCommand pageref
-reference "fig:musicmeshfsc.c"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset LatexCommand pageref
-reference "fig:Rappresentazione-della-rete"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\newpage
-
-\end_layout
-
 \begin_layout Titlehead
 
 \size footnotesize
@@ -405,7 +368,7 @@ destinazione
  Per permettere all'utente di decidere come organizzare la collezione musicale,
  è stato realizzato un semplice linguaggio tramite il quale descrivere i
  nomi delle directory che conterranno i file musicali.
- In questo modo è stato implementaro un 
+ In questo modo è stato implementato un 
 \begin_inset Quotes eld
 \end_inset
 
@@ -434,7 +397,7 @@ Infatti non esiste uno standard per gestire collezioni di dati musicali:
 
 \begin_layout Standard
 Inoltre tra gli obiettivi di questa tesi vi è anche quello di ridurre al
- minimo le risorse necessarie, per poter permettere realizzare questo file
+ minimo le risorse necessarie, per poter permettere l'uso di questo file
  system anche su dispositivi portatili, UMPC, palmari e simili.
 \end_layout
 
@@ -2473,7 +2436,7 @@ Per quanto leggero e minimalista, sqlite offre quasi tutte le features dello
  standard SQL-92, includendo transazioni Atomiche, Isolate e Durevoli, oltre
  che i trigger.
  Purtroppo non è supportata l'integrità referenziale tra chiavi esterne,
- quindi non è soddisfatta la richiesta di Consistenza per avere un dbms
+ quindi non è soddisfatta la richiesta di Consistenza per avere un RDBMS
  ACID-
 \emph on
 compliant
@@ -2763,11 +2726,11 @@ key "taglib_home_page"
 
 \end_inset
 
- è una libreria per leggere e modificare i meta dati dei formati audio più
+ è una libreria per leggere e modificare i metadati dei formati audio più
  usati.
  Al momento (aprile 2008, versione 1.5) supporta i tag ID3v1.x e ID3v2.x per
- i file .mp3, gli Ogg Vorbis comments e i tag ID3 tags per i Vorbis comments
- per i file flac, mpc, speex, wavpack e trueaudio.
+ i file .mp3, gli Ogg Vorbis comments e i tag ID3 per i file .ogg, e i Vorbis
+ comments per i file .flac, .mpc, .speex, .wavpack e .trueaudio.
 \end_layout
 
 \begin_layout Standard
@@ -2992,7 +2955,7 @@ Id3lib
 
 \begin_layout Standard
 In principio era stata presa in considerazione un'altra libreria per l'estrazion
-e e la manipolazione di meta dati, id3lib
+e e la manipolazione di metadati, id3lib 
 \begin_inset LatexCommand citep
 key "id3lib_home_page"
 
@@ -3198,47 +3161,64 @@ manutenute
 \begin_layout Standard
 In particolare, nel progetto è stato deciso di implementare le due componenti
  come due eseguibili separati: la scelta è stata data dalla possibilità
- di avere, contemporaneamente, più istanze di musicmeshfsc (e quindi più
- tree) ognuno con un ordinameno diverso degli stessi dati.
+ di avere, contemporaneamente, più istanze di 
+\family typewriter
+musicmeshfsc
+\family default
+ (e quindi più 
+\emph on
+tree
+\emph default
+) ognuno con un ordinameno diverso degli stessi dati.
 \end_layout
 
 \begin_layout Standard
-Il file system è implementato in quasi sola lettura, non sarà possibile
- infatti creare o spostare file multimediali esterni, e l'unica modifica
- realizzabile è la rinomina dei file.
+Il file system è implementato in 
+\begin_inset Quotes eld
+\end_inset
+
+quasi sola lettura
+\begin_inset Quotes erd
+\end_inset
+
+; non sarà possibile, infatti, creare o cancellare file virtuali, né spostare
+ file reali nel file system virtuale.
+ L'unica modifica realizzabile è la rinomina dei file e delle directory
+ virtuali.
 \end_layout
 
 \begin_layout Standard
-Innanzitutto dal punto di vista semantico non ha senso cancellare, creare,
+Questo perché, dal punto di vista semantico, non ha senso cancellare o creare
  un file virtuale.
- Il motivo però per cui si permette la rename è che può essere interessante
- modificare i tag.
+ Il motivo, però, per cui si permette la rinomina è che può essere interessante
+ modificare, attraverso i file virtuali, il contenuto dei tag.
 \end_layout
 
 \begin_layout Standard
-Ad esempio non si può spostare un file nel file system virtuale, poiché
- non ci sarebbe alcun luogo fisico (file sorgente) ove spostare il file,
- si ricordi infatti che quali son i files può essere specificato solo aggiungend
-o files alle directory monitorate e quindi modifcando il database.
+Più in dettaglio, non è concesso spostare un file reale nel file system
+ virtuale poiché non ci sarebbe alcun luogo fisico (file sorgente) ove spostare
+ il file.
+ Si ricorda infatti che l'unico modo per elaborare nuovi file consiste nell'aggi
+ungerli alle directory già monitorate.
  Un caso limite è creare un file vuoto (tramite il comando 
 \family typewriter
 touch
 \family default
-, per esempio), poiché si creerebbe solo un nome nel database, senza poterlo
- associare a file veri.
+, per esempio), poiché si creerebbe solo un nome, senza poterlo associare
+ ad alcun file reale.
 \end_layout
 
 \begin_layout Standard
 Riguardo la rinomina, questa è stata permessa al fine di correggere gli
  errori di tagging, o aggiungere eventuali informazioni mancanti.
- La rinomina dei file semplicemente agisce sui tag, è implementata in modo
- è tale per cui è possibile spostare file e directory senza limitazioni,
+ La rinomina dei file semplicemente agisce sui tag, ed è implementata in
+ modo è tale per cui è possibile spostare file e directory senza limitazioni,
  ma in modo che le informazioni tra il nome originario e il nuovo siano
- identiche; ovviamente il file destinazione dovrà rispettare lo schema dell'uten
-te, ma, oltre questo, il livello di profondità tra il vecchio ed il nuovo
- nome dovrà essere uguale, per evitare confusione fra i tipi di tag (ad
- es.
- confondere artista con album), o di avere un database inconsistente.
+ consistenti: ovviamente il file destinazione dovrà rispettare lo schema
+ dell'utente, ma, oltre questo, il livello di profondità tra il vecchio
+ ed il nuovo nome dovrà essere uguale, per evitare confusione fra i tipi
+ di tag (ad es.
+ confondere artista con album).
 \end_layout
 
 \begin_layout Standard
@@ -3297,9 +3277,12 @@ musicmeshfsc
 \family default
  implementa alcune delle funzioni di Fuse, a loro volta astrazioni del Virtual
  File System.
- Dallo stesso layer, tramite inotify, musicmeshfsd monitorizza i file da
- cui verranno poi estratte le meta informazioni tramite Taglib e quindi
- inserite nel database condiviso.
+ Dallo stesso layer, tramite inotify, 
+\family typewriter
+musicmeshfsd
+\family default
+ monitorizza i file da cui verranno poi estratte le meta informazioni tramite
+ Taglib e quindi inserite nel database condiviso.
 \end_layout
 
 \begin_layout Standard
