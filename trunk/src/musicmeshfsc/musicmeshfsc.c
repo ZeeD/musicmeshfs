@@ -20,6 +20,7 @@
 #include "../common/utils.h"     /* errprintf(), dynamic_obj_t, init_obj(),
                                     append_obj() */
 #include <stdlib.h>              /* exit(), EXIT_FAILURE */
+#include <signal.h>              /* signal, SIGINT */
 #include "../db_fuse/parser.h"   /* parse_schema() */
 #include <sqlite3.h>             /* sqlite3, sqlite3_open(), SQLITE_OK,
                                     sqlite3_errmsg(), sqlite3_close() */
@@ -28,6 +29,17 @@
         db_fuse_open(), db_fuse_release(), struct fuse_args, FUSE_ARGS_INIT,
         struct fuse_chan, fuse_parse_cmdline(), fuse_mount(), struct fuse,
         fuse_new(), fuse_loop(), fuse_unmount(), fuse_opt_free_args() */
+
+struct fuse_args args;
+struct fuse_chan* ch;
+char* mountpoint;
+int err = -1;
+
+void chiudi_fuse_prima_di_morire() {
+    fuse_unmount(mountpoint, ch);
+    fuse_opt_free_args(&args);
+    exit(err ? EXIT_FAILURE : EXIT_SUCCESS);
+}
 
 int main(int argc, char** argv) {
     if (argc != 4) {
@@ -50,6 +62,7 @@ int main(int argc, char** argv) {
         errprintf("ERR: MOUNT_SCHEMA `%s' non valido!\n", argv[3]);
         exit(EXIT_FAILURE);
     }
+    signal(SIGINT, chiudi_fuse_prima_di_morire);
     sqlite3* db;
     if (sqlite3_open(argv[1], &db) != SQLITE_OK) {
         errprintf("sqlite3_open: `%s'\n", sqlite3_errmsg(db));
@@ -67,10 +80,8 @@ int main(int argc, char** argv) {
         };
 
         char* tmp_argv[] = { argv[0], argv[2] };
-        struct fuse_args args = FUSE_ARGS_INIT(2, tmp_argv);
-        struct fuse_chan* ch;
-        char* mountpoint;
-        int err = -1;
+        struct fuse_args args2 = FUSE_ARGS_INIT(2, tmp_argv);
+        args = args2;
         dynamic_obj_t parametro;
         init_obj(&parametro);
         append_obj(&parametro, db);
@@ -83,9 +94,5 @@ int main(int argc, char** argv) {
                     sizeof musicmeshfs_op, &parametro)) != NULL)
                 err = fuse_loop(se);
         }
-        fuse_unmount(mountpoint, ch);
-        fuse_opt_free_args(&args);
-
-        return err ? 1 : 0;
     }
 }
