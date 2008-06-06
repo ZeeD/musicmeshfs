@@ -70,7 +70,7 @@ dynamic_str_t get_local_paths(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t
             query = strmalloccat(query, ", ");
         query = strmalloccat(query, tabelle.buf[i]);
     }
-    query = strmalloccat(query, "\nWHERE\n");
+    query = strmalloccat(query, "\nWHERE (1=1)\n");
     // assumo che fissi.size == keywords.size >= dinamici.size
 
     for (int i=0; i<dinamici.size; i++) {
@@ -80,8 +80,8 @@ dynamic_str_t get_local_paths(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t
 
         //assumo che nella directory chiavi.size == valori.size
         for (int j=0; j<chiavi.size; j++) {
-            if (i)
-                query = strmalloccat(query, " AND\n");
+//             if (i)
+            query = strmalloccat(query, " AND\n");
             if (fissi2.size > j+1)          // se è seguito da un elemento fisso
                 query = strmalloccat(query, "\t(REPLACE(");
             else

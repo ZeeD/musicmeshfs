@@ -217,7 +217,7 @@ int keyword(const char* schema, int offset, dynamic_str_t* keywords) {
     \param fissi elementi fissi *già analizzati* tramite parse_schema()
     \param keywords keywords *già analizzate* tramite parse_schema()
     \param dinamici elementi dinamici ottenuti sostituendo le keywords
-            (modificato in-place) NOTA: *deve* essere già inizializzato!
+            (modificato in-place)
     \return
             IS_A_FILE se path è un percorso valido, per un file,
             IS_A_DIR se path è un percorso valido, per una directory,
@@ -227,9 +227,9 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
         dynamic_obj_t* dinamici) {
     if (!path || !path[0])  // dev'essere almeno una stringa non vuota!
         return -1;
-    if (path[0] == '/' && !path[1]) // caso particolare: è "/"
-        return IS_A_DIR;
     init_obj(dinamici);
+    if ((path[0] == '/') && (!path[1])) // caso particolare: è "/"
+        return IS_A_DIR;
     dynamic_str_t nomi = split(path+1, '/');
     for (int i=0; i<nomi.size; i++) {
         /*
@@ -248,9 +248,14 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
             return -1;
         for (int j=1; j<el_fissi.size; j++) {
             int new_offset = -1, size_dinamico = 0;
-            for (; new_offset == -1; size_dinamico += 1)
-                new_offset = startswith(nomi.buf[i]+offset+size_dinamico,
-                        el_fissi.buf[j]);
+            char* b = el_fissi.buf[j];
+            for (; new_offset == -1; size_dinamico += 1) {
+                char* a = nomi.buf[i]+offset+size_dinamico;
+                if (!a[0])
+                    return -1;
+                new_offset = startswith(a, b);
+//                 printf("startswith(`%s', `%s') = %d\n", a, b, new_offset);
+            }
             char tmp[size_dinamico];
             tmp[0] = tmp[size_dinamico-1] = '\0';
             strncpy(tmp, nomi.buf[i]+offset, size_dinamico-1);
@@ -271,22 +276,31 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
     return keywords.size == dinamici->size ? IS_A_FILE : IS_A_DIR;
 }
 
+#ifndef DEBUG
 int _main() {
-    const char* schema = "%artist/(%year) %album/%track - %title.%type";
-    const char* path = "/Fabrizio De André";
+#else
+int main() {
+#endif
+    const char* schema = "%title.%type";
+    const char* path[] = { "/", "/Born to be Abramo (ciao).mp3", "/.directory", NULL };
     dynamic_obj_t fissi, keywords;
     init_obj(&fissi);
     init_obj(&keywords);
     parse_schema(schema, &fissi, &keywords);
     dynamic_obj_t dinamici;
-    int ret = parse_path(path, fissi, keywords, &dinamici);
-    errprintf("parse_path() = `%s'\n\ndinamici.size = %d\n", ret == -1 ? "-1" :
-            ret == IS_A_FILE ? "IS_A_FILE" : "IS_A_DIR", dinamici.size);
-    for (int i=0; i<dinamici.size; i++) {
-        dbgprint_str(*(dynamic_str_t*)fissi.buf[i], "fissi[i]");
-        dbgprint_str(*(dynamic_str_t*)keywords.buf[i], "keywords[i]");
-        dbgprint_str(*(dynamic_str_t*)dinamici.buf[i], "dinamici[i]");
-        errprintf("\n");
+    int ret;
+    for (int jj=0; path[jj]; jj++) {
+        errprintf("parse_path(`%s') = ", path[jj]);
+        ret = parse_path(path[jj], fissi, keywords, &dinamici);
+        errprintf("`%s'\tdinamici.size = %d\n",
+                ret == -1 ? "-1" : ret == IS_A_FILE ? "IS_A_FILE" : "IS_A_DIR",
+                dinamici.size);
+        for (int i=0; i<dinamici.size; i++) {
+            dbgprint_str(*(dynamic_str_t*)fissi.buf[i], "fissi[i]");
+            dbgprint_str(*(dynamic_str_t*)keywords.buf[i], "keywords[i]");
+            dbgprint_str(*(dynamic_str_t*)dinamici.buf[i], "dinamici[i]");
+            errprintf("\n");
+        }
     }
     return EXIT_SUCCESS;
 }
