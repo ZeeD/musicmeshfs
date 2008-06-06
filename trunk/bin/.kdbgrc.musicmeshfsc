@@ -4,14 +4,20 @@ File=../db_fuse/db_fuse.c
 Line=96
 Temporary=false
 
+[Breakpoint 1]
+Enabled=true
+File=../db_fuse/parser.c
+Line=225
+Temporary=false
+
 [General]
 DebuggerCmdStr=
 DriverName=GDB
 FileVersion=1
 OptionsSelected=
-ProgramArgs=DATA destdir '%artist/(%year) %album/%track - %title.%type'
+ProgramArgs=DB MNT '%title.%type'
 TTYLevel=7
-WorkingDirectory=/home/zed/Desktop/Tesi/musicmeshfs
+WorkingDirectory=/home/zed/Desktop/musicmeshfs
 
 [Memory]
 ColumnWidths=80,0

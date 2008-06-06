@@ -4,6 +4,12 @@ File=parser.c
 Line=225
 Temporary=false
 
+[Breakpoint 1]
+Enabled=true
+File=../common/utils.c
+Line=637
+Temporary=false
+
 [General]
 DebuggerCmdStr=
 DriverName=GDB

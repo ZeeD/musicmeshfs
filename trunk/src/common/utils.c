@@ -626,7 +626,7 @@ int max(int a, int b) {
         "ciao mondo".startswith("ciao") -> True
         "ciao mondo".startswith("mondo") -> False
 
-    (ma possibile che dovevo scrivermela io? strncmp lavora in O(2*n) )
+    (ma possibile che dovevo scrivermela io? con strncmp lavorei in O(2*n) )
 
     \param string stringa grande
     \param substr stringa piccola
@@ -636,11 +636,11 @@ int max(int a, int b) {
             codifica! Io faccio solo un controllo char per char!
 */
 int startswith(const char* string, const char* substr) {
-    if (!string || !substr)
+    if ((string == NULL) || (substr == NULL))
         return -1;
     int i = 0;
     for (; substr[i]; i++)
-        if (!string[i] || string[i] != substr[i])
+        if ((!string[i]) || (string[i] != substr[i]))
             return -1;
     return i;
 }
