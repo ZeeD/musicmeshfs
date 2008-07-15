@@ -328,7 +328,7 @@ reali
 \begin_inset Quotes eld
 \end_inset
 
-%author/(%year) %album/%track - %title.%type
+%artist/(%year) %album/%track - %title.%type
 \begin_inset Quotes erd
 \end_inset
 
