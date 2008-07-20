@@ -26,7 +26,7 @@
 extern const char* TABLES[];
 
 /** Numero di elementi in TABLES */
-extern const int TABLES_SIZE;
+extern const unsigned TABLES_SIZE;
 
 /** Parole chiave che il programma deve capire (user unterface) */
 extern const char* KEYWORDS[];
@@ -35,7 +35,7 @@ extern const char* KEYWORDS[];
 extern const char* COLUMNS[];
 
 /** Numero di elementi di KEYWORDS (implicitamente anche di COLUMNS) */
-extern const int KEYWORDS_SIZE;
+extern const unsigned KEYWORDS_SIZE;
 
 /** Tabella.Colonna indicante l'estensione del singolo file */
 extern const char* COLUMN_EXT;
@@ -47,12 +47,12 @@ extern const char* JOINS[];
 extern const char* WHERE[];
 
 /** Numero di elementi di JOINS (implicitamente anche di WHERE) */
-extern const int JOINS_SIZE;
+extern const unsigned JOINS_SIZE;
 
 // *********************** UTILITÀ ***********************
 
 const char* column_from_keyword(const char*);
-int index_of(const char*[], const int, char*);
+unsigned index_of(const char*[], const unsigned, char*);
 const char* where_from_join(const char*);
 
 #endif

@@ -182,7 +182,7 @@ int fisso(const char* schema, int offset, dynamic_str_t* fissi) {
 int keyword(const char* schema, int offset, dynamic_str_t* keywords) {
     if (schema[offset++] != '%')    // le keywords iniziano per '%'
         return -1;
-    for (int i=0; i<KEYWORDS_SIZE; i++) {
+    for (unsigned i=0; i<KEYWORDS_SIZE; i++) {
         int len = strlen(KEYWORDS[i]);
         if (!strncmp(schema+offset, KEYWORDS[i], len)) {
             append_str(keywords, KEYWORDS[i]);
