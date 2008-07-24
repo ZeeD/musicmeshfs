@@ -56,8 +56,73 @@ kernel
 configurazione
 \end_layout
 
+\begin_layout Standard
+il .config finale è
+\end_layout
+
+\begin_layout Standard
+\begin_inset Include \verbatiminput{_CONFIGURE_VANIGLIA_VERSATILE_2.6.25.10}
+preview false
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 output (Image, zImage + compressore)
+\end_layout
+
+\begin_layout Standard
+Da notare come lanciare
+\end_layout
+
+\begin_layout LyX-Code
+$ make
+\end_layout
+
+\begin_layout Standard
+crei una serie di file, in particolare
+\end_layout
+
+\begin_layout Description
+
+\family typewriter
+Image
+\family default
+ immagine del kernel, caricata dal bootloader
+\end_layout
+
+\begin_layout Description
+
+\family typewriter
+zImage
+\family default
+ immagine del kernel, compressa tramite gzip e preceduta da un decompressore
+\end_layout
+
+\begin_layout Description
+
+\family typewriter
+bzImage
+\family default
+ immagine del kernel, compressa tramite gbzip e preceduta da un decompressore
+\end_layout
+
+\begin_layout Description
+
+\family typewriter
+xipImage
+\family default
+ immagine del kernel, ??? (boh, non lo so) [solo se abilitato nel kernel]
+\end_layout
+
+\begin_layout Description
+
+\family typewriter
+vmlinux
+\family default
+ ???
 \end_layout
 
 \begin_layout Section
@@ -84,8 +149,24 @@ qemu
 Come ottenerlo
 \end_layout
 
+\begin_layout Standard
+voglio qemu, 
+\end_layout
+
 \begin_layout Section
 Sistemi emulati
+\end_layout
+
+\begin_layout Standard
+normalmente userò
+\end_layout
+
+\begin_layout LyX-Code
+qemu-system-arm -M versatileab ...
+\end_layout
+
+\begin_layout Standard
+perché qemu non sa ancora emulare l'architettura Samsung S3C2442b (evabé)
 \end_layout
 
 \begin_layout Chapter
@@ -96,12 +177,62 @@ debugger
 A che serve
 \end_layout
 
-\begin_layout Section
-Come usarlo
+\begin_layout Standard
+A seguire il codice passo passo
 \end_layout
 
 \begin_layout Section
 Quale usare
+\end_layout
+
+\begin_layout Standard
+Poiché sto usando gdb su un HOST
+\begin_inset Note Shaded
+status open
+
+\begin_layout Standard
+DA QUALCHE PARTE BISOGNA DEFINIRE HOST E TARGHET CHE SONO!
+\end_layout
+
+\end_inset
+
+ x86, ma con TARGET arm, ho bisogno di usare un debugger 
+\emph on
+compilato per x86
+\emph default
+, che sappia estrarre i simboli ecc da un binario (il kernel) 
+\emph on
+per arm
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Per questo abbiamo scaricato i sorgenti e ricompilato.
+\end_layout
+
+\begin_layout Section
+Come usarlo
+\end_layout
+
+\begin_layout Standard
+Lancio qemu con le opzioni -S -s, e, da un altro terminale, uso
+\end_layout
+
+\begin_layout LyX-Code
+gdb $PATH/$TO/vmlinux ...
+\end_layout
+
+\begin_layout Standard
+quindi scrivo il comando
+\end_layout
+
+\begin_layout LyX-Code
+target remote :1234
+\end_layout
+
+\begin_layout Standard
+da lì in poi il debug è quello classico :)
 \end_layout
 
 \begin_layout Chapter
@@ -110,6 +241,11 @@ haret
 
 \begin_layout Section
 Dove
+\end_layout
+
+\begin_layout Standard
+È un programma fatto da un pazzo furioso, nel progetto di handhelds.org,
+ ed è un boot-loader di 
 \end_layout
 
 \begin_layout Section
