@@ -1,21 +1,9 @@
-[Breakpoint 0]
-Enabled=true
-File=../db_fuse/db_fuse.c
-Line=96
-Temporary=false
-
-[Breakpoint 1]
-Enabled=true
-File=../db_fuse/parser.c
-Line=225
-Temporary=false
-
 [General]
 DebuggerCmdStr=
 DriverName=GDB
 FileVersion=1
 OptionsSelected=
-ProgramArgs=DB MNT '%title.%type'
+ProgramArgs=prova.db mnt  '%artist/%title.%type'
 TTYLevel=7
 WorkingDirectory=/home/zed/Desktop/musicmeshfs
 

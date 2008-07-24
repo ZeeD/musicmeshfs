@@ -95,7 +95,7 @@ dynamic_str_t get_local_paths(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t
             }
             char* tmp = sqlite3_mprintf(" GLOB %Q)", valori.buf[j]);
             query = strmalloccat(query, tmp);
-            free(tmp);
+            sqlite3_free(tmp);
         }
     }
 
