@@ -94,25 +94,31 @@ dynamic_str_t sub_dir(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
 
     dynamic_str_t fissi_file = *(dynamic_str_t*)fissi.buf[dinamici.size];
     dynamic_str_t keywords_file = *(dynamic_str_t*)keywords.buf[dinamici.size];
+//     errprintf("ciao\n");
+//     dbgprint_str(fissi_file, "fissi_file");
+//     dbgprint_str(keywords_file, "keywords_file");
     for (int i=0; i<keywords_file.size; i++) {
         if (i)
             query = strmalloccat(query, " ||");
-        char* tmp = sqlite3_mprintf("\t%Q ||\n", fissi_file.buf[i]);
-        query = strmalloccat(query, tmp);
-        sqlite3_free(tmp);
+        else {
+            char* tmp = sqlite3_mprintf("\t%Q ||\n", fissi_file.buf[i]);
+            query = strmalloccat(query, tmp);
+            sqlite3_free(tmp);
+        }
         if (fissi_file.size > i+1)          // se è seguito da un elemento fisso
             query = strmalloccat(query, "\tREPLACE(");
         else
             query = strmalloccat(query, "\t");
         query = strmalloccat(strmalloccat(strmalloccat(query, "REPLACE("),
                 column_from_keyword(keywords_file.buf[i])), ", '/', '_')");
+//         errprintf("fissi_file.size = %d, i+1 = %d\n", fissi_file.size, i+1);
         if (fissi_file.size > i+1) {        // se è seguito da un elemento fisso
-            char* tmp = sqlite3_mprintf(", %Q, '_')", fissi_file.buf[i+1]);
+            char* tmp = sqlite3_mprintf(", %Q, '_') || %Q\n", fissi_file.buf[i+1], fissi_file.buf[i+1]);
             query = strmalloccat(query, tmp);
             sqlite3_free(tmp);
         }
     }
-
+//     errprintf("sub_dir) query = `%s'\n", query);
     dynamic_str_t tabelle, where;
     init_str(&tabelle);
     for (int i=0; i<keywords.size; i++)
@@ -166,7 +172,7 @@ dynamic_str_t sub_dir(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
             }
             char* tmp = sqlite3_mprintf(" GLOB %Q)", valori.buf[j]);
             query = strmalloccat(query, tmp);
-            free(tmp);
+            sqlite3_free(tmp);
         }
 
     }
