@@ -244,7 +244,7 @@ int get_one_column(void* buf, int n_colonne, char** value, char** header) {
 void cercaPercorso(const char* t1, const char* t2, dynamic_str_t* tabelle,
         dynamic_str_t* where) {
     int done = 0;
-    for (int i=0; i<TABLES_SIZE && !done; i++) {
+    for (unsigned i=0; i<TABLES_SIZE && !done; i++) {
         if (!strcmp(t1, TABLES[i]) || !strcmp(t2, TABLES[i]))
             continue;   // devo scoprire t3 != t1 e t2
         char* t1t3 = strmalloccat(strmalloccat(strmalloccat(calloc(1, 1), t1),

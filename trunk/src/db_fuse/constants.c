@@ -26,7 +26,7 @@
     \sa value_from_key(), where_from_join()
 */
 const char* column_from_keyword(const char* keyword) {
-    for (int i=0; i<KEYWORDS_SIZE; i++)
+    for (unsigned i=0; i<KEYWORDS_SIZE; i++)
         if (!strcmp(KEYWORDS[i], keyword))
             return COLUMNS[i];
     return NULL;
@@ -39,8 +39,8 @@ const char* column_from_keyword(const char* keyword) {
             -1 altrimenti
     \sa index_of_str(), contains_str()
 */
-int index_of(const char* array[], const int size, char* element) {
-    for (int i=0; i<size; i++)
+int index_of(const char* array[], const unsigned size, char* element) {
+    for (unsigned i=0; i<size; i++)
         if (!strcmp(element, array[i]))
             return i;
     return -1;
@@ -53,7 +53,7 @@ int index_of(const char* array[], const int size, char* element) {
     \sa value_from_key(), column_from_keyword()
 */
 const char* where_from_join(const char* join) {
-    for (int i=0; i<JOINS_SIZE; i++)
+    for (unsigned i=0; i<JOINS_SIZE; i++)
         if (!strcmp(JOINS[i], join))
             return WHERE[i];
     return NULL;
