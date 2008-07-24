@@ -52,7 +52,7 @@ extern const unsigned JOINS_SIZE;
 // *********************** UTILITÀ ***********************
 
 const char* column_from_keyword(const char*);
-unsigned index_of(const char*[], const unsigned, char*);
+int index_of(const char*[], const unsigned, char*);
 const char* where_from_join(const char*);
 
 #endif
