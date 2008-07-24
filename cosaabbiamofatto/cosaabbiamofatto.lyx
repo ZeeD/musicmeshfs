@@ -1,0 +1,120 @@
+#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass book
+\language italian
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine natbib_authoryear
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Che abbiamo fatto finora
+\end_layout
+
+\begin_layout Author
+Nicola Corriero
+\newline
+Vito De Tullio
+\end_layout
+
+\begin_layout Chapter
+kernel
+\end_layout
+
+\begin_layout Section
+configurazione
+\end_layout
+
+\begin_layout Section
+output (Image, zImage + compressore)
+\end_layout
+
+\begin_layout Section
+avvio (dal click all'init)
+\end_layout
+
+\begin_layout Chapter
+compilatore
+\end_layout
+
+\begin_layout Section
+Quale
+\end_layout
+
+\begin_layout Section
+Cross-compilazione
+\end_layout
+
+\begin_layout Chapter
+qemu
+\end_layout
+
+\begin_layout Section
+Come ottenerlo
+\end_layout
+
+\begin_layout Section
+Sistemi emulati
+\end_layout
+
+\begin_layout Chapter
+debugger
+\end_layout
+
+\begin_layout Section
+A che serve
+\end_layout
+
+\begin_layout Section
+Come usarlo
+\end_layout
+
+\begin_layout Section
+Quale usare
+\end_layout
+
+\begin_layout Chapter
+haret
+\end_layout
+
+\begin_layout Section
+Dove
+\end_layout
+
+\begin_layout Section
+Come
+\end_layout
+
+\end_body
+\end_document
