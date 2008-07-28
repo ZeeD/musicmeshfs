@@ -34,12 +34,13 @@
 \tracking_changes false
 \output_changes false
 \author "" 
+\author "" 
 \end_header
 
 \begin_body
 
 \begin_layout Title
-Che abbiamo fatto finora
+GNU/Linux su ARM tramite qemu
 \end_layout
 
 \begin_layout Author
@@ -126,19 +127,186 @@ vmlinux
 \end_layout
 
 \begin_layout Section
-avvio (dal click all'init)
+Avvio
+\end_layout
+
+\begin_layout Subsection
+Dal click al bios
+\end_layout
+
+\begin_layout Standard
+C'è poco da dire: fondamentalmente è tutto hardware, quindi 
+\emph on
+black magic
+\emph default
+, e, oltretutto, poco interessante.
+ In sostanza arriva un segnale al trasformatore dal pulsante, che inizia
+ ad alimentare la 
+\noun on
+cpu
+\noun default
+, che esegue il programma contenuto in una 
+\noun on
+rom
+\noun default
+, 
+\noun on
+nvram
+\noun default
+, o 
+\noun on
+cmos ram
+\noun default
+.
+ Viene lanciato il bios, che ha il compito di verificare alcune funzioni
+ fondamentali (che arrivi la corrente alla cpu, alla ram e alle varie periferich
+e...) e di eseguire il contenuto dell'
+\noun on
+mbr.
+\end_layout
+
+\begin_layout Subsection
+Dal bios al bootloader
+\end_layout
+
+\begin_layout Standard
+Anche qui c'è poco da dire
+\end_layout
+
+\begin_layout Subsection
+Dal bootloader a 
+\family typewriter
+init
+\end_layout
+
+\begin_layout Standard
+I primi istanti di 
+\end_layout
+
+\begin_layout Standard
+Il modo più facile per analizzare il comportamento del 
 \end_layout
 
 \begin_layout Chapter
-compilatore
+Compilatore
 \end_layout
 
 \begin_layout Section
 Quale
 \end_layout
 
+\begin_layout Standard
+Per compilare il kernel linux è necessario usare il gcc (cioè, non è che
+ è necessario, ma noi quello avevamo).
+\end_layout
+
 \begin_layout Section
 Cross-compilazione
+\end_layout
+
+\begin_layout Standard
+Per compilare un kernel per ARM ci sono le seguenti opzioni:
+\end_layout
+
+\begin_layout Enumerate
+Avere un sistema operativo + compilatore C su architettura ARM (e parecchio
+ tempo, data la potenza di questi dispositivi)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset LatexCommand label
+name "enu:cross-compilare"
+
+\end_inset
+
+Avere un sistema operativo + compilatore C su architettura x86 + istruire
+ il compilatore C a generare eseguibili per architettura ARM
+\end_layout
+
+\begin_layout Standard
+Si è scelto di approcciarsi al problema tramite la soluzione 
+\begin_inset LatexCommand ref
+reference "enu:cross-compilare"
+
+\end_inset
+
+.
+ D'ora innanzi, quindi, si dirà
+\end_layout
+
+\begin_layout Description
+
+\noun on
+host
+\noun default
+ la macchina x86 su cui sono presenti compilatore e sorgenti
+\end_layout
+
+\begin_layout Description
+
+\noun on
+target
+\noun default
+ la macchina ARM su cui si utilizzerà effettivamente il kernel compilato
+\end_layout
+
+\begin_layout Standard
+Ciò comporta una serie di vantaggi:
+\end_layout
+
+\begin_layout Itemize
+Si può utilizzare come sistema 
+\noun on
+host
+\noun default
+ un sistema linux già funzionante (nel nostro caso, sono stati utilizzati
+ una debian 
+\begin_inset Note Greyedout
+status open
+
+\begin_layout Standard
+QUACCHECCOSA
+\end_layout
+
+\end_inset
+
+ e una OpenSuse 10.3)
+\end_layout
+
+\begin_layout Itemize
+La capacità di calcolo di una macchina 
+\noun on
+target
+\noun default
+ è generalmente limitata, mentre le macchine 
+\noun on
+host
+\noun default
+ sono molto più potenti (minimizzando i tempi morti in attesa del termine
+ della compilazione)
+\end_layout
+
+\begin_layout Itemize
+...BOH?
+\end_layout
+
+\begin_layout Standard
+Ovviamente vi è la difficoltà di avere un compilatore C in grado di generare
+ eseguibili per la macchina 
+\noun on
+target
+\noun default
+.
+ Per fortuna questo è offerto da gcc.
+ Per abilitare questa 
+\emph on
+feature
+\emph default
+, però, è necessario impostare una opzione in fase di compilazione.
+\end_layout
+
+\begin_layout Standard
+Nello specifico 
 \end_layout
 
 \begin_layout Chapter

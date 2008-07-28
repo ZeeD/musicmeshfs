@@ -56,6 +56,10 @@ unsigned parse(FILE* stream, configs_t* configs) {
                 if (!singoli_apici || !doppi_apici)
                     c = fgetc(stream);
                 else {
+                    if (left)
+                        key = append(key, c);
+                    else
+                        value = append(value, c);
                 }
                 break;
             case '=':
@@ -66,11 +70,11 @@ unsigned parse(FILE* stream, configs_t* configs) {
                     doppi_apici = 1;    /* doppi apici                      */
                 else                    /* ho finito una stringa protetta da*/
                     if (left) {         /* doppi apici: la assegno a key    */
-                        key = append(key, '"');
+//                         key = append(key, '"');
                         left = 0;
                     }
                     else {              /* o a value?                       */
-                        value = append(value, '"'); /* ho left = 1 con '\n' */
+//                         value = append(value, '"'); /* ho left = 1 con '\n' */
                     }
                 break;
             case '\'':
@@ -78,11 +82,11 @@ unsigned parse(FILE* stream, configs_t* configs) {
                     singoli_apici = 1;  /* singoli apici                    */
                 else                    /* ho finito una stringa protetta da*/
                     if (left) {         /* singoli apici: la assegnoa a key */
-                        key = append(key, '\'');
+//                         key = append(key, '\'');
                         left = 0;
                     }
                     else {              /* o a value?                       */
-                        value = append(value, '\'');/* ho left = 1 con '\n' */
+//                         value = append(value, '\'');/* ho left = 1 con '\n' */
                     }
                 break;
         }
