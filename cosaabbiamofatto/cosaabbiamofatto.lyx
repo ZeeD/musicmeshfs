@@ -54,7 +54,7 @@ kernel
 \end_layout
 
 \begin_layout Section
-configurazione
+Configurazione
 \end_layout
 
 \begin_layout Standard
@@ -62,7 +62,7 @@ il .config finale è
 \end_layout
 
 \begin_layout Standard
-\begin_inset Include \verbatiminput{_CONFIGURE_VANIGLIA_VERSATILE_2.6.25.10}
+\begin_inset Include \lstinputlisting{_CONFIGURE_VANIGLIA_VERSATILE_2.6.25.10}[basicstyle={\tiny\ttfamily},caption={.config finale utilizzato},captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false]
 preview false
 
 \end_inset
@@ -71,7 +71,7 @@ preview false
 \end_layout
 
 \begin_layout Section
-output (Image, zImage + compressore)
+Output (Image, zImage + compressore)
 \end_layout
 
 \begin_layout Standard
@@ -89,9 +89,32 @@ crei una serie di file, in particolare
 \begin_layout Description
 
 \family typewriter
+vmlinux
+\family default
+ eseguibile 
+\emph on
+non compresso
+\emph default
+ e 
+\emph on
+non bootable
+\emph default
+ del kernel.
+ Usato soprattutto per debug, come vedremo nel capitolo 
+\begin_inset LatexCommand vref
+reference "cha:Debugger"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
+
+\family typewriter
 Image
 \family default
- immagine del kernel, caricata dal bootloader
+ immagine del kernel effettivamente eseguita
 \end_layout
 
 \begin_layout Description
@@ -100,30 +123,43 @@ Image
 zImage
 \family default
  immagine del kernel, compressa tramite gzip e preceduta da un decompressore
+ (obsoleta)
 \end_layout
 
 \begin_layout Description
 
 \family typewriter
-bzImage
-\family default
- immagine del kernel, compressa tramite gbzip e preceduta da un decompressore
-\end_layout
+bzImage\InsetSpace ~
 
-\begin_layout Description
+\family default
+(big\InsetSpace ~
 
 \family typewriter
-xipImage
+zImage
 \family default
- immagine del kernel, ??? (boh, non lo so) [solo se abilitato nel kernel]
-\end_layout
-
-\begin_layout Description
-
+) concatenatzione di 
 \family typewriter
-vmlinux
+bootsect.o
 \family default
- ???
+ + 
+\family typewriter
+setup.o
+\family default
+ + 
+\family typewriter
+misc.o
+\family default
+ + 
+\family typewriter
+piggy.o
+\family default
+.
+\begin_inset LatexCommand citep
+key "vmlinux_zimage,vmlinuz_definition"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -170,7 +206,7 @@ Dal bios al bootloader
 \end_layout
 
 \begin_layout Standard
-Anche qui c'è poco da dire
+Anche qui c'è poco da dire.
 \end_layout
 
 \begin_layout Subsection
@@ -184,7 +220,7 @@ I primi istanti di
 \end_layout
 
 \begin_layout Standard
-Il modo più facile per analizzare il comportamento del 
+Il modo più facile per analizzare il comportamento del kernel è usando un
 \end_layout
 
 \begin_layout Chapter
@@ -367,7 +403,6 @@ status collapsed
 \begin_inset Caption
 
 \begin_layout Standard
-
 Output di 
 \noun on
 qemu
@@ -879,7 +914,7 @@ custom
 \emph default
  modificata e manutenuta dagli sviluppatori del progetto openmoko
 \begin_inset LatexCommand citep
-key "openmoko_under_QEMU"
+key "openmoko_under_qemu"
 
 \end_inset
 
@@ -900,7 +935,58 @@ perché qemu non sa ancora emulare l'architettura Samsung S3C2442b (evabé)
 \end_layout
 
 \begin_layout Chapter
-debugger
+\begin_inset LatexCommand label
+name "cha:Debugger"
+
+\end_inset
+
+Debugger
+\end_layout
+
+\begin_layout Standard
+Poiché abbiamo avuto problemi a far partire il kernel di linux sul dispositivo
+ palmare, abbiamo cercato di trovare un modo per avere feedback sull'esecuzione
+ del codice e sugli eventuali errori riscontrati sulla piattaforma.
+\end_layout
+
+\begin_layout Standard
+Poiché vorremmo analizzare il comportamento di un kernel, però, non è possibile
+ utilizzare lo stdout / stderr come canali di comunicazione, né loggare
+ il comportamento su file, in quanto non è ancora disponibile un'interfaccia
+ verso queste strutture ad alto livello.
+\end_layout
+
+\begin_layout Standard
+Per questo motivo abbiamo considerato l'idea di usare un debugger.
+ Per poterla applicare, però, avremmo avuto bisogno di un eseguibile per
+ la piattaforma windows Mobile Edition (
+\noun on
+ME
+\noun default
+
+\begin_inset Note Greyedout
+status open
+
+\begin_layout Standard
+RICORDARSI DI DEFINIRLO LA PRIMA VOLTA CHE SI USA
+\end_layout
+
+\end_inset
+
+) che si integrasse con haret (vedi capitolo 
+\begin_inset LatexCommand vref
+reference "cha:Haret"
+
+\end_inset
+
+).
+ L'alternativa scelta è stata quella di usare un emulatore per l'architettura,
+ e di usare il classico gdb per il debug.
+\end_layout
+
+\begin_layout Standard
+Questa scelta ha semplificato l'analisi e il debug dell'esecuzione delle
+ singole istruzioni del codice.
 \end_layout
 
 \begin_layout Section
@@ -908,7 +994,37 @@ A che serve
 \end_layout
 
 \begin_layout Standard
-A seguire il codice passo passo
+Usare un debugger col kernel è stato utile soprattutto per scoprire 
+\begin_inset Quotes eld
+\end_inset
+
+qual è la prima funzione invocata
+\begin_inset Quotes erd
+\end_inset
+
+ dal kernel stesso.
+\end_layout
+
+\begin_layout Standard
+Su architettura x86, infatti, vi è la funzione 
+\family typewriter
+main.c
+\family default
+ in 
+\family typewriter
+$KERNEL_SRC/arch/x86/boot/main.c
+\family default
+ che identifica la prima funzione invocata, su architettura arm questo non
+ succede.
+ Al contrario vi sono una serie di cartelle per raggruppare l'implementazione
+ delle funzioni per piattaforma e per singolo modello, in quanto il modello
+ di arm è diverso dal modello di intel
+\begin_inset LatexCommand citep
+key "arm_intel_mobile"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -916,17 +1032,8 @@ Quale usare
 \end_layout
 
 \begin_layout Standard
-Poiché sto usando gdb su un HOST
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-DA QUALCHE PARTE BISOGNA DEFINIRE HOST E TARGHET CHE SONO!
-\end_layout
-
-\end_inset
-
- x86, ma con TARGET arm, ho bisogno di usare un debugger 
+Poiché sto usando gdb su un HOST x86, ma con TARGET arm, ho bisogno di usare
+ un debugger 
 \emph on
 compilato per x86
 \emph default
@@ -966,7 +1073,12 @@ da lì in poi il debug è quello classico :)
 \end_layout
 
 \begin_layout Chapter
-haret
+\begin_inset LatexCommand label
+name "cha:Haret"
+
+\end_inset
+
+Haret
 \end_layout
 
 \begin_layout Section
