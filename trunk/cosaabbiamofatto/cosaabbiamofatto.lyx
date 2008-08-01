@@ -3,6 +3,9 @@
 \begin_document
 \begin_header
 \textclass book
+\begin_preamble
+\usepackage{hyperref}
+\end_preamble
 \language italian
 \inputencoding auto
 \font_roman default
@@ -44,13 +47,51 @@ GNU/Linux su ARM tramite qemu
 \end_layout
 
 \begin_layout Author
-Nicola Corriero
+Vito De Tullio 
+\hfill
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+href{mailto:vito.detullio@gmail.com}{vito.detullio@gmail.com}
+\end_layout
+
+\end_inset
+
+
 \newline
-Vito De Tullio
+Nicola Corriero 
+\hfill
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+href{mailto:ncorriero@uniba.it}{ncorriero@uniba.it}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand tableofcontents
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
-kernel
+Kernel
 \end_layout
 
 \begin_layout Section
@@ -90,6 +131,13 @@ crei una serie di file, in particolare
 
 \family typewriter
 vmlinux
+\begin_inset LatexCommand nomenclature
+symbol "vmlinux"
+description "Eseguibile non compresso e non bootable del kernel."
+
+\end_inset
+
+
 \family default
  eseguibile 
 \emph on
@@ -113,6 +161,13 @@ reference "cha:Debugger"
 
 \family typewriter
 Image
+\begin_inset LatexCommand nomenclature
+symbol "Image"
+description "Immagine del kernel effettivamente eseguita"
+
+\end_inset
+
+
 \family default
  immagine del kernel effettivamente eseguita
 \end_layout
@@ -121,6 +176,13 @@ Image
 
 \family typewriter
 zImage
+\begin_inset LatexCommand nomenclature
+symbol "zImage"
+description "Immagine del kernel compressa preceduta da un decompressore (obsoleta)"
+
+\end_inset
+
+
 \family default
  immagine del kernel, compressa tramite gzip e preceduta da un decompressore
  (obsoleta)
@@ -129,10 +191,23 @@ zImage
 \begin_layout Description
 
 \family typewriter
+\begin_inset LatexCommand nomenclature
+symbol "bzImage"
+description "Immagine del kernel compressa ed eseguibile, ma composta da tre parti separate"
+
+\end_inset
+
 bzImage\InsetSpace ~
 
 \family default
-(big\InsetSpace ~
+(
+\begin_inset LatexCommand nomenclature
+symbol "big zImage"
+description "vedi bzImage"
+
+\end_inset
+
+big\InsetSpace ~
 
 \family typewriter
 zImage
@@ -154,8 +229,49 @@ misc.o
 piggy.o
 \family default
 .
+ 
 \begin_inset LatexCommand citep
-key "vmlinux_zimage,vmlinuz_definition"
+key "vmlinuz_definition,vmlinux_zimage"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Anatomy-of-bzimage.png
+	lyxscale 50
+	width 100col%
+	height 100pheight%
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Anatomia di bzImage (da en.wikipedia.org)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
 
 \end_inset
 
@@ -274,6 +390,13 @@ reference "enu:cross-compilare"
 
 \noun on
 host
+\begin_inset LatexCommand nomenclature
+symbol "host"
+description "In ambiente di emulazione, la macchina reale che ospita l'emulatore.\\\\In ambiente di cross-compilazione, la macchina che ospita il compilatore.\\\\Vedi: target"
+
+\end_inset
+
+
 \noun default
  la macchina x86 su cui sono presenti compilatore e sorgenti
 \end_layout
@@ -282,6 +405,13 @@ host
 
 \noun on
 target
+\begin_inset LatexCommand nomenclature
+symbol "target"
+description "In ambiente di emulazione, la macchina virtuale generata dall'emulatore.\\\\In ambiente di cross-compilazione, la macchina su cui verranno utilizzati i programmi compilati.\\\\Vedi: host"
+
+\end_inset
+
+
 \noun default
  la macchina ARM su cui si utilizzerà effettivamente il kernel compilato
 \end_layout
@@ -959,21 +1089,8 @@ Poiché vorremmo analizzare il comportamento di un kernel, però, non è possibi
 \begin_layout Standard
 Per questo motivo abbiamo considerato l'idea di usare un debugger.
  Per poterla applicare, però, avremmo avuto bisogno di un eseguibile per
- la piattaforma windows Mobile Edition (
-\noun on
-ME
-\noun default
-
-\begin_inset Note Greyedout
-status open
-
-\begin_layout Standard
-RICORDARSI DI DEFINIRLO LA PRIMA VOLTA CHE SI USA
-\end_layout
-
-\end_inset
-
-) che si integrasse con haret (vedi capitolo 
+ il sistema operativo Windows Mobile® che si integrasse con haret (vedi
+ capitolo 
 \begin_inset LatexCommand vref
 reference "cha:Haret"
 
@@ -1081,13 +1198,30 @@ name "cha:Haret"
 Haret
 \end_layout
 
+\begin_layout Standard
+Haret
+\begin_inset LatexCommand citep*
+key "haret_home_page"
+
+\end_inset
+
+ è un boot-loader scritto in c per Windows Mobile®
+\begin_inset LatexCommand nomenclature
+symbol "Windows Mobile®"
+description "Microsoft® Windows Mobile®, sistema operativo concepito per palmari, telefoni cellulari e Pocket PC"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Dove
 \end_layout
 
 \begin_layout Standard
 È un programma fatto da un pazzo furioso, nel progetto di handhelds.org,
- ed è un boot-loader di 
+ ed è un boot-loader implementato come programma per Windows Mobile®
 \end_layout
 
 \begin_layout Section
@@ -1096,7 +1230,7 @@ Come
 
 \begin_layout Standard
 \begin_inset LatexCommand bibtex
-options "bibtotoc,plain"
+options "bibtotoc,alpha"
 bibfiles "web-o-grafia"
 
 \end_inset
@@ -1105,6 +1239,10 @@ bibfiles "web-o-grafia"
 \end_layout
 
 \begin_layout Standard
+\begin_inset LatexCommand printnomenclature
+
+\end_inset
+
 
 \end_layout
 
