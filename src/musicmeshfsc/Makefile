@@ -10,10 +10,6 @@ musicmeshfsc: ../common/utils.o ../db_fuse/parser.o ../db_fuse/db_fuse.o\
  ../common/sqlite.o configurazione.o
 	$(CC) $(CFLAGS) $(@:=.c) $? $(LDFLAGS) -o ../../bin/$@
 
-../common/sqlite.c: ../common/sqlite.pre_c ../common/schema.sql
-	../../sostituisci.py ../common/sqlite.pre_c ../common/sqlite.c\
- ../common/schema.sql
-
 clean:
 	rm -rf *.o *~ ../../bin/musicmeshfsc
 	$(MAKE) -C ../common clean
