@@ -35,6 +35,7 @@
 #include <string.h>  /* strcmp() */
 #include "utils.h"   /* dynamic_obj_t */
 
+int path_is_a_db(const char*);
 sqlite3* crea_db_vuoto(char*);
 int callback_print(void*, int, char**, char**);
 int esegui_query(sqlite3*, char*, ...);
