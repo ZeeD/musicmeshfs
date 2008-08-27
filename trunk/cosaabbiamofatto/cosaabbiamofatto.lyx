@@ -34,6 +34,7 @@
 \papercolumns 1
 \papersides 2
 \paperpagestyle default
+\listings_params "basicstyle={\tiny\ttfamily},captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false"
 \tracking_changes false
 \output_changes false
 \author "" 
@@ -43,7 +44,7 @@
 \begin_body
 
 \begin_layout Title
-GNU/Linux su ARM tramite qemu
+GNU/Linux su ARM
 \end_layout
 
 \begin_layout Author
@@ -51,7 +52,7 @@ Vito De Tullio
 \hfill
  
 \begin_inset ERT
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -74,7 +75,7 @@ status open
 
 
 \backslash
-href{mailto:ncorriero@uniba.it}{ncorriero@uniba.it}
+href{mailto:ncorriero@di.uniba.it}{ncorriero@di.uniba.it}
 \end_layout
 
 \end_inset
@@ -94,16 +95,124 @@ href{mailto:ncorriero@uniba.it}{ncorriero@uniba.it}
 Kernel
 \end_layout
 
+\begin_layout Standard
+È stato usata la versione 2.6.25.10 del kernel vanilla (versione di default,
+ non patchata) reperibile presso 
+\begin_inset LatexCommand htmlurl
+target "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Section
 Configurazione
 \end_layout
 
 \begin_layout Standard
-il .config finale è
+Dopo aver estratto il kernel, lo dobbiamo configurare per l'architettura
+ arm utilizzando un x86, e per questo, prima del solito 
+\family typewriter
+make [x|menu]config
+\family default
+, è necessario associare alla variabile 
+\family typewriter
+ARCH
+\family default
+ il valore 
+\family typewriter
+arm
+\family default
+:
+\end_layout
+
+\begin_layout LyX-Code
+$ tar xjf kernel-2.6.25.10.tar.bz2
+\end_layout
+
+\begin_layout LyX-Code
+$ cd kernel-2.6.25.10
+\end_layout
+
+\begin_layout LyX-Code
+$ export ARCH=arm
+\end_layout
+
+\begin_layout LyX-Code
+$ make menuconfig
 \end_layout
 
 \begin_layout Standard
-\begin_inset Include \lstinputlisting{_CONFIGURE_VANIGLIA_VERSATILE_2.6.25.10}[basicstyle={\tiny\ttfamily},caption={.config finale utilizzato},captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false]
+È necessario prestare attenzione soprattutto al modello di palmare su cui
+ vogliamo eseguire il kernel, più altre minuzie per far funzionare i vari
+ dispositivi; in particolare
+\end_layout
+
+\begin_layout Itemize
+Dal menù 
+\noun on
+System Type \SpecialChar \menuseparator
+ Arm System Type
+\noun default
+ scegliamo il tipo di sistema base (nel nostro caso 
+\noun on
+Samsung S3C2410, S3C2412, S3C2413, S3C2440, S3C2442, S3C2443
+\noun default
+).
+\end_layout
+
+\begin_layout Itemize
+Dal menù 
+\noun on
+Boot options 
+\noun default
+impostiamo 
+\series bold
+\noun on
+console=ttyAMA0
+\series default
+\noun default
+ alla voce 
+\noun on
+Default kernel command string
+\noun default
+ (per poter avere in output i messaggi di comunicazione); per avere informazioni
+ il prima possibile, inoltre, conviene impostare, dal menù 
+\noun on
+General setup
+\noun default
+ 
+\series bold
+\noun on
+12
+\series default
+\noun default
+ come valore della voce 
+\noun on
+Kernel log buffer size
+\noun default
+.
+\end_layout
+
+\begin_layout Itemize
+Dal menù 
+\noun on
+Device Drivers
+\noun default
+ selezioniamo 
+\noun on
+MMC/SD card support
+\noun default
+ (per poter accedere al supporto fisico per il file system).
+\end_layout
+
+\begin_layout Standard
+Dopo anche altre personalizzazioni minori, si giunge al .config finale:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Include \lstinputlisting{_CONFIGURE_VANIGLIA_VERSATILE_2.6.25.10_no_comments}[caption={.config finale utilizzato (le voci commentate sono state rimosse)}]
 preview false
 
 \end_inset
@@ -116,7 +225,7 @@ Output (Image, zImage + compressore)
 \end_layout
 
 \begin_layout Standard
-Da notare come lanciare
+È da notare come lanciare
 \end_layout
 
 \begin_layout LyX-Code
