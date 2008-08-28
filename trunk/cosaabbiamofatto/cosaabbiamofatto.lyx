@@ -1,4 +1,4 @@
-#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -34,7 +34,7 @@
 \papercolumns 1
 \papersides 2
 \paperpagestyle default
-\listings_params "basicstyle={\tiny\ttfamily},captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false"
+\listings_params "basicstyle={\normalsize\ttfamily},captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false"
 \tracking_changes false
 \output_changes false
 \author "" 
@@ -1789,7 +1789,7 @@ key "haret_home_page"
 
 \end_inset
 
- è un boot-loader scritto in c per Windows Mobile®
+ è un boot-loader scritto in C/C++ per Windows Mobile®
 \begin_inset LatexCommand nomenclature
 symbol "Windows Mobile®"
 description "Microsoft® Windows Mobile®, sistema operativo concepito per palmari, telefoni cellulari e Pocket PC"
@@ -1797,6 +1797,40 @@ description "Microsoft® Windows Mobile®, sistema operativo concepito per palma
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Perché
+\end_layout
+
+\begin_layout Standard
+Esistono due modi per far partire linux su un comune palmare.
+\end_layout
+
+\begin_layout Itemize
+Invasivo
+\end_layout
+
+\begin_layout Itemize
+Non invasivo
+\end_layout
+
+\begin_layout Standard
+Nel modo invasivo viene modificato la memoria interna del palmare installandoci
+ sopra un bootloader universale Uboot il quale permette di far partire kernel
+ anche da remoto sin dall'avvio.
+ Con questa modalità però si perde tutto il software preinstallato sulla
+ macchina dal momento che si sovrascrive la memoria stessa.
+\end_layout
+
+\begin_layout Standard
+Nel modo non invasivo viene avviato un programma sotto Windows CE (haret)
+ per lanciare il kernel dopo aver disabilitato l'hardware in modo da non
+ danneggiarlo.
+ Questa è, in effetti, una modalità abbastanza utilizzata anche se vi sono
+ problemi di compatibilità tra l'hardware e Haret.
+ sul wiki di Haret è possibili trovare la lista dei dispositivi testati
+ ed in fase di testing.
 \end_layout
 
 \begin_layout Section
@@ -1810,6 +1844,977 @@ Dove
 
 \begin_layout Section
 Come
+\end_layout
+
+\begin_layout Standard
+Il suo obbiettivo è di preparare il dispositivo al lancio del kernel linux.
+\end_layout
+
+\begin_layout Standard
+Il programma viene copiato all'interno di una scheda di memoria (miniSD)
+ con alcuni file di configurazione e il kernel stesso.
+ Il file di configurazione startup.txt:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Include \verbatiminput{startup.txt}
+preview false
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+indica all'eseguibile haret.exe come settare alcuni parametri (variabili
+ globali all'interno del codice di haret) quali KERNEL, MTYPE, INITRD, CMDLINE
+ ed infine avvia la funzione (interna al codice di haret quindi scritta
+ in C) 
+\emph on
+bootlinux.
+\end_layout
+
+\begin_layout Section
+Codice
+\end_layout
+
+\begin_layout Standard
+Il codice del programma prevede parti scritte in C/C++ e parti scritte in
+ Assembly.
+ Le funzioni più interessanti sono presenti all'interno del file linboot.cpp.
+\end_layout
+
+\begin_layout Standard
+La funzione 
+\emph on
+launchKernel
+\emph default
+ ad esempio è responsabile di inibire l'hardware e lanciare il kernel
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
+inline false
+status open
+
+\begin_layout Standard
+
+static void
+\end_layout
+
+\begin_layout Standard
+
+launchKernel(struct bootmem *bm)
+\end_layout
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\begin_layout Standard
+
+// Prep the trampoline.
+\end_layout
+
+\begin_layout Standard
+
+uint32 physAddrTram = setupTrampoline();
+\end_layout
+
+\begin_layout Standard
+
+if (! physAddrTram)
+\end_layout
+
+\begin_layout Standard
+
+return;
+\end_layout
+
+\begin_layout Standard
+
+// Cache an mmu pointer for the trampoline
+\end_layout
+
+\begin_layout Standard
+
+uint8 *virtAddrMmu = memPhysMap(cpuGetMMU());
+\end_layout
+
+\begin_layout Standard
+
+Output("MMU setup: mmu=%p/%08x", virtAddrMmu, cpuGetMMU());
+\end_layout
+
+\begin_layout Standard
+
+// Call per-arch setup.
+\end_layout
+
+\begin_layout Standard
+
+int ret = Mach->preHardwareShutdown();
+\end_layout
+
+\begin_layout Standard
+
+if (ret) {
+\end_layout
+
+\begin_layout Standard
+
+Output(C_ERROR "Setup for machine shutdown failed");
+\end_layout
+
+\begin_layout Standard
+
+return;
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+Screen("Go Go Go...");
+\end_layout
+
+\begin_layout Standard
+
+// Disable interrupts
+\end_layout
+
+\begin_layout Standard
+
+take_control();
+\end_layout
+
+\begin_layout Standard
+
+fb_clear(&bm->pd->fbi);
+\end_layout
+
+\begin_layout Standard
+
+fb_printf(&bm->pd->fbi, "HaRET boot
+\backslash
+nShutting down hardware
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+// Call per-arch boot prep function.
+\end_layout
+
+\begin_layout Standard
+
+Mach->hardwareShutdown(&bm->pd->fbi);
+\end_layout
+
+\begin_layout Standard
+
+fb_printf(&bm->pd->fbi, "Turning off MMU...
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+// Disable MMU and launch linux.
+\end_layout
+
+\begin_layout Standard
+
+mmu_trampoline(physAddrTram, virtAddrMmu, bm->physExec, Mach->flushCache);
+\end_layout
+
+\begin_layout Standard
+
+// The above should not ever return, but we attempt recovery here.
+\end_layout
+
+\begin_layout Standard
+
+return_control();
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout Standard
+mentre la funzione 
+\emph on
+preloader
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
+inline false
+status open
+
+\begin_layout Standard
+
+// Code to launch kernel.
+\end_layout
+
+\begin_layout Standard
+
+static void __preload
+\end_layout
+
+\begin_layout Standard
+
+preloader(struct preloadData *data)
+\end_layout
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\begin_layout Standard
+
+    data->fbi.fb = (uint16 *)data->physFB;
+\end_layout
+
+\begin_layout Standard
+
+    data->fbi.fonts = (unsigned char *)data->physFonts;
+\end_layout
+
+\begin_layout Standard
+
+    FB_PRINTF(&data->fbi, "In preloader
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+    uint32 psr = do_cpuGetPSR();
+\end_layout
+
+\begin_layout Standard
+
+    FB_PRINTF(&data->fbi, "PSR=%%x
+\backslash
+
+\backslash
+n", psr);
+\end_layout
+
+\begin_layout Standard
+
+    if ((psr & 0xc0) != 0xc0)
+\end_layout
+
+\begin_layout Standard
+
+        FB_PRINTF(&data->fbi, "ERROR: IRQS not off
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+    if (fbOverlaps(data)) {
+\end_layout
+
+\begin_layout Standard
+
+        FB_PRINTF(&data->fbi, "Disabling framebuffer feedback
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+        data->fbi.fb = 0;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    // Copy tags to beginning of ram.
+\end_layout
+
+\begin_layout Standard
+
+    char *destTags = (char *)data->startRam + PHYSOFFSET_TAGS;
+\end_layout
+
+\begin_layout Standard
+
+    do_copy(destTags, data->tags, TAGSIZE);
+\end_layout
+
+\begin_layout Standard
+
+    FB_PRINTF(&data->fbi, "Tags relocated
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+    // Copy kernel image
+\end_layout
+
+\begin_layout Standard
+
+    char *destKernel = (char *)data->startRam + PHYSOFFSET_KERNEL;
+\end_layout
+
+\begin_layout Standard
+
+    int kernelCount = PAGE_ALIGN(data->kernelSize) / PAGE_SIZE;
+\end_layout
+
+\begin_layout Standard
+
+    do_copyPages((char *)destKernel, data->indexPages, 0, kernelCount);
+\end_layout
+
+\begin_layout Standard
+
+    FB_PRINTF(&data->fbi, "Kernel relocated
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+    // Copy initrd (if applicable)
+\end_layout
+
+\begin_layout Standard
+
+    char *destInitrd = (char *)data->startRam + PHYSOFFSET_INITRD;
+\end_layout
+
+\begin_layout Standard
+
+    int initrdCount = PAGE_ALIGN(data->initrdSize) / PAGE_SIZE;
+\end_layout
+
+\begin_layout Standard
+
+    do_copyPages(destInitrd, data->indexPages, kernelCount, initrdCount);
+\end_layout
+
+\begin_layout Standard
+
+    FB_PRINTF(&data->fbi, "Initrd relocated
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+    // Do CRC check (if enabled).
+\end_layout
+
+\begin_layout Standard
+
+    if (data->doCRC) {
+\end_layout
+
+\begin_layout Standard
+
+        FB_PRINTF(&data->fbi, "Checking tags crc...");
+\end_layout
+
+\begin_layout Standard
+
+        uint32 crc = crc32_be(0, destTags, TAGSIZE);
+\end_layout
+
+\begin_layout Standard
+
+        crc = crc32_be_finish(crc, TAGSIZE);
+\end_layout
+
+\begin_layout Standard
+
+        if (crc == data->tagsCRC)
+\end_layout
+
+\begin_layout Standard
+
+            FB_PRINTF(&data->fbi, "okay
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+        else
+\end_layout
+
+\begin_layout Standard
+
+            FB_PRINTF(&data->fbi, "FAIL FAIL FAIL
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+        FB_PRINTF(&data->fbi, "Checking kernel crc...");
+\end_layout
+
+\begin_layout Standard
+
+        crc = crc32_be(0, destKernel, data->kernelSize);
+\end_layout
+
+\begin_layout Standard
+
+        crc = crc32_be_finish(crc, data->kernelSize);
+\end_layout
+
+\begin_layout Standard
+
+        if (crc == data->kernelCRC)
+\end_layout
+
+\begin_layout Standard
+
+            FB_PRINTF(&data->fbi, "okay
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+        else
+\end_layout
+
+\begin_layout Standard
+
+            FB_PRINTF(&data->fbi, "FAIL FAIL FAIL
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+        if (data->initrdSize) {
+\end_layout
+
+\begin_layout Standard
+
+            FB_PRINTF(&data->fbi, "Checking initrd crc...");
+\end_layout
+
+\begin_layout Standard
+
+            crc = crc32_be(0, destInitrd, data->initrdSize);
+\end_layout
+
+\begin_layout Standard
+
+            crc = crc32_be_finish(crc, data->initrdSize);
+\end_layout
+
+\begin_layout Standard
+
+            if (crc == data->initrdCRC)
+\end_layout
+
+\begin_layout Standard
+
+                FB_PRINTF(&data->fbi, "okay
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+            else
+\end_layout
+
+\begin_layout Standard
+
+                FB_PRINTF(&data->fbi, "FAIL FAIL FAIL
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    FB_PRINTF(&data->fbi, "Jumping to Kernel...
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+    // Boot
+\end_layout
+
+\begin_layout Standard
+
+    typedef void (*lin_t)(uint32 zero, uint32 mach, char *tags);
+\end_layout
+
+\begin_layout Standard
+
+    lin_t startfunc = (lin_t)destKernel;
+\end_layout
+
+\begin_layout Standard
+
+    startfunc(0, data->machtype, destTags);
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+è sicuramente la più importante dal momento che nelle ultime tre righe passa
+ il controllo al kernel terminando l'esecuzione di haret stesso quindi.
+\end_layout
+
+\begin_layout LyX-Code
+typedef void (*lin_t)(uint32 zero, uint32 mach, char *tags);
+\end_layout
+
+\begin_layout Standard
+viene definita un prototipo di funzione di tipo puntatore a lin_t
+\end_layout
+
+\begin_layout LyX-Code
+lin_t startfunc = (lin_t)destKernel;
+\end_layout
+
+\begin_layout Standard
+è definita una variabile startfunc di tipo lin_t come cast della variabile
+ destKernel, buffer di memoria contenente il kernel in ram
+\end_layout
+
+\begin_layout LyX-Code
+startfunc(0, data->machtype, destTags);
+\end_layout
+
+\begin_layout Standard
+è lanciata la funzione startfunc con in input uno 0, il valore della variabile
+ Mtype passata in precedenza e il valore di destTags, buffer di memoria
+ contenenti i tags in ram.
+\end_layout
+
+\begin_layout Standard
+La programmazione in C/C++ è suddivisa in due fasi dal momento che dopo
+ lo shutdown dell'hardware il programma accede direttamente alla memoria
+ e non riesce a tradurre le funzioni e librerie tipiche del C con conseguente
+ uso di funzion ad-hoc.
+ Ad esempio nella funzione preloader vi è
+\end_layout
+
+\begin_layout LyX-Code
+FB_PRINTF(&data->fbi, "In preloader
+\backslash
+
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+la quale risulta una macro definita nel codice in modo seguente
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
+inline false
+status open
+
+\begin_layout Standard
+
+#define STR_IN_CODE(sec,str) ({                 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+    const char *__str;                          
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+    asm(".section " #sec ", 1
+\backslash
+n"                
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+        "1:      .asciz 
+\backslash
+"" str "
+\backslash
+"
+\backslash
+n"          
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+        "        .balign 4
+\backslash
+n"                   
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+        "        .section " #sec ", 0
+\backslash
+n"        
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+        "        add %0, pc, #( 1b - .
+ - 8 )
+\backslash
+n" 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+        : "=r" (__str));                        
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+    __str;                                      
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+})
+\end_layout
+
+\begin_layout Standard
+
+#define FB_PRINTF(fbi,fmt,args...) fb_printf((fbi), STR_IN_CODE(.text.preload,
+ fmt) , ##args )
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In haret esistono due tipologie di output
+\end_layout
+
+\begin_layout Itemize
+File di log
+\end_layout
+
+\begin_layout Itemize
+Stampa a video
+\end_layout
+
+\begin_layout Standard
+Per abilitare l'output su file di log è necessario creare un file vuoto
+ all'interno della cartella dove è presente l'eseguibile haret.exe e rinominarlo
+ 
+\emph on
+earlyharetlog.txt
+\emph default
+.
+ Il file di log haretlog.txt verrà creato nella stessa cartella.
+ All'interno del codice la funzione 
+\emph on
+Output
+\emph default
+ è la responsabile della scrittura su file.
+\end_layout
+
+\begin_layout Standard
+La seconda tipologia di output si rende necessaria quando avviene lo shutdown
+ dell'hardware dal momento che non si ha più accesso alla memoria della
+ miniSd.
+ All'interno del codice la funzione 
+\emph on
+fb_printf
+\emph default
+ stampa a video ove previsto.
+\end_layout
+
+\begin_layout Standard
+Questo rappresenta la parte finale di un file di log.
+ Nella prima parte vi è il riconoscimento della macchina da parte del sistema.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+Welcome, this is HaRET pre-0.5.2-20080711_124633 running on WindowsCE v5.1
+\end_layout
+
+\begin_layout Standard
+
+Minimal virtual address: 00010000, maximal virtual address: 7FFFFFFF
+\end_layout
+
+\begin_layout Standard
+
+Detected machine Panda/s3c2442 (Plat='PocketPC' OEM='PAND100')
+\end_layout
+
+\begin_layout Standard
+
+CPU is ARM ARM arch 4T stepping 0 running in system mode
+\end_layout
+
+\begin_layout Standard
+
+Enter 'HELP' for a short command summary.
+\end_layout
+
+\begin_layout Standard
+
+Running WSAStartup
+\end_layout
+
+\begin_layout Standard
+
+Starting gui
+\end_layout
+
+\begin_layout Standard
+
+In initdialog
+\end_layout
+
+\begin_layout Standard
+
+Found machine Panda
+\end_layout
+
+\begin_layout Standard
+
+executing startup.txt
+\end_layout
+
+\begin_layout Standard
+
+HaRET(1)# set MTYPE 1806
+\end_layout
+
+\begin_layout Standard
+
+HaRET(2)# set KERNEL "zImage"
+\end_layout
+
+\begin_layout Standard
+
+HaRET(3)# set CMDLINE "root=/dev/mmcblk0p2 console=tty0 mem=128M rootdelay=5"
+\end_layout
+
+\begin_layout Standard
+
+HaRET(4)# bootlinux
+\end_layout
+
+\begin_layout Standard
+
+boot KERNEL=zImage INITRD=
+\end_layout
+
+\begin_layout Standard
+
+Opening file zImage
+\end_layout
+
+\begin_layout Standard
+
+boot params: RAMADDR=30000000 RAMSIZE=08000000 MTYPE=1806 CMDLINE='root=/dev/mmc
+blk0p2 console=tty0 mem=128M rootdelay=5'
+\end_layout
+
+\begin_layout Standard
+
+Boot FB feedback: 1
+\end_layout
+
+\begin_layout Standard
+
+Built virtual to physical page mapping
+\end_layout
+
+\begin_layout Standard
+
+Allocated 265 pages (tags=4FB00000/36b4e000 kernel=4FB01000/36b4f000 initrd=4FC0
+5000/36a47000 index=4FC05000/36a47000)
+\end_layout
+
+\begin_layout Standard
+
+Built kernel tags area
+\end_layout
+
+\begin_layout Standard
+
+Built page index
+\end_layout
+
+\begin_layout Standard
+
+Video buffer at 52800000 sx=240 sy=320 mx=60 my=53
+\end_layout
+
+\begin_layout Standard
+
+Video Phys FB=10800000 Fonts=36a45064
+\end_layout
+
+\begin_layout Standard
+
+preload=2260@4FC08000/36a44000 sj=4FC08000 stack=4FC06000/36a46000 data=4FC07000
+/36a45000 exec=36a44128
+\end_layout
+
+\begin_layout Standard
+
+Reading 1062116 bytes...
+\end_layout
+
+\begin_layout Standard
+
+Read complete
+\end_layout
+
+\begin_layout Standard
+
+Launching to physical address 36a44010
+\end_layout
+
+\begin_layout Standard
+
+Trampoline setup (tram=136@00024AEC/1c024aec/30882aec)
+\end_layout
+
+\begin_layout Standard
+
+MMU setup: mmu=A0250000/30550000
+\end_layout
+
+\begin_layout Standard
+
+Go Go Go...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Si noti come al terzo rigo avvisa dell'avvenuto riconoscimento della macchina
+ e della tipologia di cpu.
+ Poi parte nell'esecuzione del contenuto di startup.txt come fossero comandi
+ separati tra loro (si noti il carattere # indicatore della pseudo-shell).
+ L'ultimo comando è appunto bootlinux il quale fa partire l'esecuzione del
+ codice visto in precedenza.
+ Alla fine del log vi è la scritta Go Go Go ...
+ che è l'ultimo messaggio previsto dal codice prima di lasciare spegnere
+ l'hardware e lasciare l'esecuzione del kernel.
+ La presenza di questo messaggio quindi implica il successo nell'esecuzione
+ di haret.
+ Tutti gli eventuali problemi successivi saranno dovuti al kernel non più
+ ad haret.
 \end_layout
 
 \begin_layout Standard
