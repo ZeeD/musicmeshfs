@@ -19,7 +19,7 @@
 \graphics default
 \paperfontsize default
 \spacing single
-\papersize default
+\papersize a4paper
 \use_geometry false
 \use_amsmath 1
 \use_esint 1
@@ -69,7 +69,7 @@ Nicola Corriero
 \hfill
  
 \begin_inset ERT
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -96,7 +96,7 @@ Kernel
 \end_layout
 
 \begin_layout Standard
-È stato usata la versione 2.6.25.10 del kernel vanilla (versione di default,
+Abbiamo lavorato con la versione 2.6.25.10 del kernel vanilla (versione generica,
  non patchata) reperibile presso 
 \begin_inset LatexCommand htmlurl
 target "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2"
@@ -106,15 +106,36 @@ target "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2"
 .
 \end_layout
 
+\begin_layout Standard
+Esistono versioni modificate da singoli per supportare questa o quell'architettu
+ra (in particolare è da notare la versione del kernel mantenuta da 
+\begin_inset LatexCommand htmlurl
+target "http://www.handhelds.org"
+
+\end_inset
+
+), ma non abbiamo trovato nessuna versione che già supportasse nativamente
+ il nostro palmare (un 
+\noun on
+HTC 
+\noun default
+P6300
+\noun on
+) 
+\noun default
+e quindi abbiamo preferito utilizzare la versione di default.
+\end_layout
+
 \begin_layout Section
-Configurazione
+Configurazione e compilazione
 \end_layout
 
 \begin_layout Standard
 Dopo aver estratto il kernel, lo dobbiamo configurare per l'architettura
  arm utilizzando un x86, e per questo, prima del solito 
 \family typewriter
-make [x|menu]config
+make\InsetSpace ~
+[x|menu]config
 \family default
 , è necessario associare alla variabile 
 \family typewriter
@@ -150,7 +171,7 @@ $ make menuconfig
 \end_layout
 
 \begin_layout Itemize
-Dal menù 
+dal menù 
 \noun on
 System Type \SpecialChar \menuseparator
  Arm System Type
@@ -159,11 +180,11 @@ System Type \SpecialChar \menuseparator
 \noun on
 Samsung S3C2410, S3C2412, S3C2413, S3C2440, S3C2442, S3C2443
 \noun default
-).
+);
 \end_layout
 
 \begin_layout Itemize
-Dal menù 
+dal menù 
 \noun on
 Boot options 
 \noun default
@@ -177,12 +198,15 @@ console=ttyAMA0
 \noun on
 Default kernel command string
 \noun default
- (per poter avere in output i messaggi di comunicazione); per avere informazioni
- il prima possibile, inoltre, conviene impostare, dal menù 
+ (per poter avere in output i messaggi di comunicazione);
+\end_layout
+
+\begin_layout Itemize
+dal menù 
 \noun on
 General setup
 \noun default
- 
+ impostiamo 
 \series bold
 \noun on
 12
@@ -192,11 +216,11 @@ General setup
 \noun on
 Kernel log buffer size
 \noun default
-.
+ (per avere informazioni il prima possibile);
 \end_layout
 
 \begin_layout Itemize
-Dal menù 
+dal menù 
 \noun on
 Device Drivers
 \noun default
@@ -208,7 +232,11 @@ MMC/SD card support
 \end_layout
 
 \begin_layout Standard
-Dopo anche altre personalizzazioni minori, si giunge al .config finale:
+Dopo anche altre personalizzazioni minori, si giunge al 
+\noun on
+.config
+\noun default
+ finale:
 \end_layout
 
 \begin_layout Standard
@@ -220,12 +248,8 @@ preview false
 
 \end_layout
 
-\begin_layout Section
-Output (Image, zImage + compressore)
-\end_layout
-
 \begin_layout Standard
-È da notare come lanciare
+Alla fine della fase di configurazione, basterà lanciare
 \end_layout
 
 \begin_layout LyX-Code
@@ -233,7 +257,58 @@ $ make
 \end_layout
 
 \begin_layout Standard
-crei una serie di file, in particolare
+per dare il via alla fase di compilazione vera e propria dei sorgenti.
+\end_layout
+
+\begin_layout Section
+Output (Image, zImage + compressore)
+\end_layout
+
+\begin_layout Standard
+Terminata la fase di compilazione, verranno generati, oltre ad una serie
+ di file temporanei / di supporto, i seguenti file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Anatomy-of-bzimage.png
+	lyxscale 50
+	width 100col%
+	height 100pheight%
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:Anatomia-di-bzImage"
+
+\end_inset
+
+Anatomia di bzImage (da en.wikipedia.org)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -269,7 +344,7 @@ reference "cha:Debugger"
 \begin_layout Description
 
 \family typewriter
-Image
+arch/arm/boot/Image
 \begin_inset LatexCommand nomenclature
 symbol "Image"
 description "Immagine del kernel effettivamente eseguita"
@@ -284,7 +359,7 @@ description "Immagine del kernel effettivamente eseguita"
 \begin_layout Description
 
 \family typewriter
-zImage
+arch/arm/boot/zImage
 \begin_inset LatexCommand nomenclature
 symbol "zImage"
 description "Immagine del kernel compressa preceduta da un decompressore (obsoleta)"
@@ -300,27 +375,28 @@ description "Immagine del kernel compressa preceduta da un decompressore (obsole
 \begin_layout Description
 
 \family typewriter
+arch/arm/boot/bzImage
 \begin_inset LatexCommand nomenclature
 symbol "bzImage"
 description "Immagine del kernel compressa ed eseguibile, ma composta da tre parti separate"
 
 \end_inset
 
-bzImage\InsetSpace ~
+\InsetSpace ~
 
 \family default
-(
+(big\InsetSpace ~
+
+\family typewriter
+zImage
+\family default
+
 \begin_inset LatexCommand nomenclature
 symbol "big zImage"
 description "vedi bzImage"
 
 \end_inset
 
-big\InsetSpace ~
-
-\family typewriter
-zImage
-\family default
 ) concatenatzione di 
 \family typewriter
 bootsect.o
@@ -337,54 +413,19 @@ misc.o
 \family typewriter
 piggy.o
 \family default
-.
- 
+
 \begin_inset LatexCommand citep
 key "vmlinuz_definition,vmlinux_zimage"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status collapsed
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Anatomy-of-bzimage.png
-	lyxscale 50
-	width 100col%
-	height 100pheight%
-	keepAspectRatio
+, come si può vedere in figura 
+\begin_inset LatexCommand vref
+reference "fig:Anatomia-di-bzImage"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Caption
-
-\begin_layout Standard
-Anatomia di bzImage (da en.wikipedia.org)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\end_inset
-
-
+.
 \end_layout
 
 \begin_layout Section
@@ -457,8 +498,17 @@ Quale
 \end_layout
 
 \begin_layout Standard
-Per compilare il kernel linux è necessario usare il gcc (cioè, non è che
- è necessario, ma noi quello avevamo).
+Per compilare il kernel linux è necessario usare il gcc, a causa delle varie
+ estensioni del compilatore utilizzate dai 
+\emph on
+kernel
+\emph default
+ 
+\emph on
+hackers
+\emph default
+.
+ 
 \end_layout
 
 \begin_layout Section
@@ -470,8 +520,15 @@ Per compilare un kernel per ARM ci sono le seguenti opzioni:
 \end_layout
 
 \begin_layout Enumerate
-Avere un sistema operativo + compilatore C su architettura ARM (e parecchio
- tempo, data la potenza di questi dispositivi)
+Avere un sistema operativo + compilatore C su architettura ARM (e 
+\emph on
+parecchio
+\emph default
+ 
+\emph on
+tempo
+\emph default
+, data la potenza di questi dispositivi).
 \end_layout
 
 \begin_layout Enumerate
@@ -481,7 +538,7 @@ name "enu:cross-compilare"
 \end_inset
 
 Avere un sistema operativo + compilatore C su architettura x86 + istruire
- il compilatore C a generare eseguibili per architettura ARM
+ il compilatore C a generare eseguibili per architettura ARM.
 \end_layout
 
 \begin_layout Standard
@@ -535,17 +592,7 @@ Si può utilizzare come sistema
 host
 \noun default
  un sistema linux già funzionante (nel nostro caso, sono stati utilizzati
- una debian 
-\begin_inset Note Greyedout
-status open
-
-\begin_layout Standard
-QUACCHECCOSA
-\end_layout
-
-\end_inset
-
- e una OpenSuse 10.3)
+ una debian Lenny e una OpenSuse 10.3)
 \end_layout
 
 \begin_layout Itemize
@@ -559,10 +606,6 @@ host
 \noun default
  sono molto più potenti (minimizzando i tempi morti in attesa del termine
  della compilazione)
-\end_layout
-
-\begin_layout Itemize
-...BOH?
 \end_layout
 
 \begin_layout Standard
@@ -622,7 +665,7 @@ Come ottenerlo
 
 \begin_layout Standard
 Qemu è libero, e già installato nella maggior parte delle distribuzioni.
- La versione da noi usata è stata la 0.9.0 e la 0.9.1.
+ La versioni da noi usata è stata la 0.9.0 e la 0.9.1.
 \end_layout
 
 \begin_layout Standard
