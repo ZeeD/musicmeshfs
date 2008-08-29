@@ -97,7 +97,7 @@ Kernel
 
 \begin_layout Standard
 È stato usata la versione 2.6.25.10 del kernel vanilla (versione di default,
- non patchata) reperibile presso
+ non patchata) reperibile presso 
 \begin_inset LatexCommand htmlurl
 target "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2"
 
@@ -125,7 +125,11 @@ Configurazione e compilazione
 
 \begin_layout Standard
 Dopo aver estratto il kernel, lo dobbiamo configurare per l'architettura
- ARM utilizzando un x86, e per questo, prima del solito
+ 
+\noun on
+ARM
+\noun default
+ utilizzando un x86, e per questo, prima del solito
 \family typewriter
  make [x|menu]config
 \family default
@@ -140,24 +144,35 @@ Dopo aver estratto il kernel, lo dobbiamo configurare per l'architettura
 :
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
 $ wget ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
 $ tar xjf kernel-2.6.25.10.tar.bz2
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
 $ cd kernel-2.6.25.10
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
 $ export ARCH=arm
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
 $ make menuconfig
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -184,7 +199,7 @@ Dal menù
 \noun on
  Boot options
 \noun default
-impostiamo
+ impostiamo
 \series bold
 \noun on
  console=ttyAMA0
@@ -222,14 +237,10 @@ Dal menù
 \end_layout
 
 \begin_layout Standard
-Dopo anche altre personalizzazioni minori, si giunge al .config finale, che
- si può notare per essere abbastanza minimale: la maggior parte dei moduli,
- infatti, è stata disabilitata, tranne quelli necessari a riconoscere cpu,
- tastiera e monitor.
-\end_layout
-
-\begin_layout Standard
-Dopo anche altre personalizzazioni minori, si giunge al .config finale:
+Dopo anche altre personalizzazioni minori, si giunge al .config finale, che,
+ nel nostro caso, è abbastanza minimale: la maggior parte dei moduli, infatti,
+ è stata disabilitata, tranne quelli necessari a riconoscere cpu, tastiera
+ e monitor:
 \end_layout
 
 \begin_layout Standard
@@ -245,8 +256,19 @@ preview false
 Alla fine della fase di configurazione, basterà lanciare
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,language=bash,showstringspaces=false"
+inline false
+status open
+
+\begin_layout Standard
 $ make
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -276,11 +298,11 @@ description "Eseguibile non compresso e non bootable del kernel."
 \family default
  eseguibile
 \emph on
-non compresso
+ non compresso
 \emph default
  e
 \emph on
-non bootable
+ non bootable
 \emph default
  del kernel.
  Usato soprattutto per debug, come vedremo nel capitolo
@@ -349,19 +371,19 @@ zImage
 \family default
 ) concatenatzione di
 \family typewriter
-bootsect.o
+ bootsect.o
 \family default
  +
 \family typewriter
-setup.o
+ setup.o
 \family default
  +
 \family typewriter
-misc.o
+ misc.o
 \family default
  +
 \family typewriter
-piggy.o
+ piggy.o
 \family default
 .
 \begin_inset LatexCommand citep
@@ -379,12 +401,11 @@ sideways false
 status collapsed
 
 \begin_layout Standard
+\align center
 \begin_inset Graphics
 	filename Anatomy-of-bzimage.png
 	lyxscale 50
-	width 100col%
-	height 100pheight%
-	keepAspectRatio
+	width 80col%
 
 \end_inset
 
@@ -395,7 +416,13 @@ status collapsed
 \begin_inset Caption
 
 \begin_layout Standard
-Anatomia di bzImage (da en.wikipedia.org)
+Anatomia di bzImage (da 
+\begin_inset LatexCommand htmlurl
+target "en.wikipedia.org"
+
+\end_inset
+
+)
 \end_layout
 
 \end_inset
@@ -425,7 +452,11 @@ description "Letteralmente la fascetta di cuoio cucita sul bordo posteriore degl
 
 \end_inset
 
- che, nell'architettura ARM, è implementata per la maggior parte in assembly.
+ che, nell'architettura 
+\noun on
+ARM
+\noun default
+, è implementata per la maggior parte in assembly.
 \end_layout
 
 \begin_layout Subsection
@@ -434,28 +465,62 @@ Sorgenti
 
 \begin_layout Standard
 Il codice che si prende carico del boot del sistema è presente nelle directory
- arch/arm/boot/compressed e arch/arm/kernel ove sono presenti, oltre a del
- codice d'appoggio per comprimere e decomprimere l'eseguibile, anche una
- serie di file .S (scritti in assembly per ARM) tra i quali sono degni di
- nota i 2 file head.S.
+ 
+\noun on
+arch/arm/boot/compressed
+\noun default
+ e 
+\noun on
+arch/arm/kernel
+\noun default
+ ove sono presenti, oltre a del codice d'appoggio per comprimere e decomprimere
+ l'eseguibile, anche una serie di file 
+\noun on
+.S
+\noun default
+ (scritti in assembly per 
+\noun on
+ARM
+\noun default
+) tra i quali sono degni di nota i 2 file 
+\noun on
+head.S
+\noun default
+.
 \end_layout
 
 \begin_layout Standard
-arch/arm/kernel/head.S, in particolare, contiene la parte di codice che,
- di fatto, è il punto di partenza del kernel.
+
+\noun on
+arch/arm/kernel/head.S
+\noun default
+, in particolare, contiene la parte di codice che, di fatto, è il punto
+ di partenza del kernel.
  In effetti questo codice, compilato, corrisponde alle prime istruzioni
- presenti in nel file Image già descritto;
+ presenti in nel file 
+\noun on
+Image
+\noun default
+ già descritto;
 \end_layout
 
 \begin_layout Standard
-Ovviamente nel caso si decida di usare i file zImage e bzImage, questo codice
- sarà quello invocato al termine della decompressione del kernel stesso.
+Ovviamente nel caso si decida di usare i file 
+\noun on
+zImage
+\noun default
+ e 
+\noun on
+bzImage
+\noun default
+, questo codice sarà quello invocato al termine della decompressione del
+ kernel stesso.
 \end_layout
 
 \begin_layout Standard
 Ciò si evince anche dai commenti presenti nel file, come si può vedere:
 \begin_inset listings
-lstparams "breaklines=true,extendedchars=true,firstnumber=59,language={[x86masm]Assembler},numbers=left,showstringspaces=false"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=59,language=C,numbers=left,showstringspaces=false"
 inline false
 status collapsed
 
@@ -531,8 +596,11 @@ status collapsed
 \end_layout
 
 \begin_layout Standard
-In particolare, viene fatto riferimento al file arch/arm/tools/mach-types:
- questi altro non è che un 
+In particolare, viene fatto riferimento al file 
+\noun on
+arch/arm/tools/mach-types
+\noun default
+: questi altro non è che un 
 \begin_inset Quotes eld
 \end_inset
 
@@ -541,8 +609,12 @@ database
 \end_inset
 
  in cui si associa ad ogni modello supportato dal kernel che implementa
- le specifiche dell'ARM, una serie di codici univoci usati per poter generare
- delle guardie per implementare codice dipendente da macchina a macchina.
+ le specifiche dell'
+\noun on
+ARM
+\noun default
+, una serie di codici univoci usati per poter generare delle guardie per
+ implementare codice dipendente da macchina a macchina.
  Questo file è mantenuto dal 
 \begin_inset Quotes eld
 \end_inset
@@ -561,10 +633,16 @@ key "mach_types_home_page"
 \end_layout
 
 \begin_layout Standard
-In aggiunta a questo file vi è uno script awk (arch/arm/tools/gen-mach-types)
- capace di trasformare questo file di configurazione nel file include/asm-arm/ma
-ch-types.h, pieno di macro usate in fase di compilazione per abilitare o
- meno il codice specifico della macchina target.
+In aggiunta a questo file vi è uno script awk (
+\noun on
+arch/arm/tools/gen-mach-types
+\noun default
+) capace di trasformare questo file di configurazione nel file 
+\noun on
+include/asm-arm/mach-types.h
+\noun default
+, pieno di macro usate in fase di compilazione per abilitare o meno il codice
+ specifico della macchina target.
 \end_layout
 
 \begin_layout Subsection
@@ -575,7 +653,7 @@ Boot
 Tornando alla sequenza di boot, analizziamo un attimo le prime istruzioni
  presenti in
 \noun on
-arch/arm/kernel/head.S
+ arch/arm/kernel/head.S
 \noun default
 :
 \end_layout
@@ -740,7 +818,11 @@ In caso d'errore vengono invocate delle funzioni per avvisare l'utente -
 \end_layout
 
 \begin_layout Standard
-Una volta superati i controlli l'esecuzione continua ri-abilitando la MMU
+Una volta superati i controlli l'esecuzione continua ri-abilitando la 
+\noun on
+MMU
+\noun default
+
 \begin_inset LatexCommand nomenclature
 symbol "MMU"
 description "Memory Management Unit"
@@ -865,12 +947,23 @@ Cross-compilazione
 \end_layout
 
 \begin_layout Standard
-Per compilare un kernel per ARM ci sono le seguenti opzioni:
+Per compilare un kernel per 
+\noun on
+ARM
+\noun default
+ ci sono le seguenti opzioni:
 \end_layout
 
 \begin_layout Enumerate
-Avere un sistema operativo + compilatore C su architettura ARM (e parecchio
- tempo, data la potenza di questi dispositivi).
+Avere un sistema operativo + compilatore 
+\noun on
+C
+\noun default
+ su architettura 
+\noun on
+ARM
+\noun default
+ (e parecchio tempo, data la potenza di questi dispositivi).
 \end_layout
 
 \begin_layout Enumerate
@@ -879,12 +972,23 @@ name "enu:cross-compilare"
 
 \end_inset
 
-Avere un sistema operativo + compilatore C su architettura x86 + istruire
- il compilatore C a generare eseguibili per architettura ARM.
+Avere un sistema operativo + compilatore 
+\noun on
+C
+\noun default
+ su architettura x86 + istruire il compilatore 
+\noun on
+C
+\noun default
+ a generare eseguibili per architettura 
+\noun on
+ARM
+\noun default
+.
 \end_layout
 
 \begin_layout Standard
-Si è scelto di approcciarsi al problema tramite la soluzione
+Si è scelto di approcciarsi al problema tramite la soluzione 
 \begin_inset LatexCommand ref
 reference "enu:cross-compilare"
 
@@ -929,7 +1033,7 @@ Ciò comporta una serie di vantaggi:
 \end_layout
 
 \begin_layout Itemize
-Si può utilizzare come sistema
+Si può utilizzare come 
 \noun on
 host
 \noun default
@@ -940,23 +1044,35 @@ host
 \begin_layout Itemize
 La capacità di calcolo di una macchina
 \noun on
-target
+ target
 \noun default
  è generalmente limitata, mentre le macchine
 \noun on
-host
+ host
 \noun default
  sono molto più potenti (minimizzando i tempi morti in attesa del termine
  della compilazione)
 \end_layout
 
 \begin_layout Itemize
-...BOH?
+\begin_inset Note Shaded
+status open
+
+\begin_layout Standard
+TROVARE ALTRI VANTAGGI??
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Ovviamente vi è la difficoltà di avere un compilatore C in grado di generare
- eseguibili per la macchina
+Ovviamente vi è la difficoltà di avere un compilatore 
+\noun on
+C
+\noun default
+ in grado di generare eseguibili per la macchina
 \noun on
  target
 \noun default
@@ -970,8 +1086,8 @@ Ovviamente vi è la difficoltà di avere un compilatore C in grado di generare
 \end_layout
 
 \begin_layout Standard
-Nello specifico è stata utilizzata una versione pre-compilata di gcc da
- 
+Nel nostro caso si è evitato di ri-compilare il compilatore, ed è stata
+ utilizzata una versione pre-compilata di gcc da 
 \begin_inset LatexCommand htmlurl
 name "handhelds.org"
 target "http://www.handhelds.org/download/projects/toolchain/"
@@ -994,7 +1110,11 @@ qemu
 \begin_layout Standard
 Qemu è un emulatore e virtualizzatore generico e open source.
  Nello specifico è stato usato per emulare un'architettura basata su cpu
- ARM (Versatile
+ 
+\noun on
+ARM
+\noun default
+ (Versatile
 \noun on
  AB
 \noun default
@@ -1011,18 +1131,29 @@ Come ottenerlo
 
 \begin_layout Standard
 Qemu è libero, e già installato nella maggior parte delle distribuzioni.
- La versione da noi usata è stata la 0.9.0 e la 0.9.1.
+ Le versioni da noi usate sono state la 0.9.0 e la 0.9.1.
 \end_layout
 
 \begin_layout Standard
-Se non è installato, usate il vostro package manager preferito (YaST, apt-get,
- installpkg, smart...).
- Al termine avrete accesso all'applicazione da terminale.
+Se non è già installato sarà sufficiente usare il package manager della
+ distribuzione (YaST per OpenSuSE, apt-get per Debian e derivate, installpkg
+ per Slackware, eccetera); nella (improbabile) ipotesi che non sia disponibile,
+ i sorgenti sono disponibili presso 
+\begin_inset LatexCommand htmlurl
+target "http://bellard.org/qemu/qemu-0.9.1.tar.gz"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In ogni caso si avrà accesso all'applicazione tramite terminale.
 \end_layout
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\tiny\ttfamily},captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false"
+lstparams "basicstyle={\tiny\ttfamily},breaklines=true,captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false"
 inline false
 status collapsed
 
@@ -1033,7 +1164,7 @@ status collapsed
 \begin_layout Standard
 Output di
 \noun on
-qemu
+ qemu
 \noun default
  lanciato senza parametri
 \end_layout
@@ -1534,11 +1665,11 @@ $
 \begin_layout Standard
 Per poter emulare anche il chip Samsung
 \noun on
-S3C2442B
+ S3C2442B
 \noun default
  è stata utilizzata anche una versione di qemu
 \emph on
-custom
+ custom
 \emph default
  modificata e manutenuta dagli sviluppatori del progetto openmoko
 \begin_inset LatexCommand citep
@@ -1546,7 +1677,7 @@ key "openmoko_under_qemu"
 
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Section
@@ -1571,22 +1702,30 @@ Debugger
 \end_layout
 
 \begin_layout Standard
-Poiché abbiamo avuto problemi a far partire il kernel di linux sul dispositivo
- palmare, abbiamo cercato di trovare un modo per avere feedback sull'esecuzione
- del codice e sugli eventuali errori riscontrati sulla piattaforma.
+Abbiamo avuto problemi a far partire il kernel di linux sul dispositivo
+ palmare, quindi abbiamo cercato di trovare un modo per avere feedback sull'esec
+uzione del codice e sugli eventuali errori riscontrati sulla piattaforma.
 \end_layout
 
 \begin_layout Standard
 Poiché vorremmo analizzare il comportamento di un kernel, però, non è possibile
- utilizzare lo stdout / stderr come canali di comunicazione, né loggare
- il comportamento su file, in quanto non è ancora disponibile un'interfaccia
- verso queste strutture ad alto livello.
+ utilizzare né 
+\noun on
+stdout
+\noun default
+ / 
+\noun on
+stderr
+\noun default
+ come canali di comunicazione, né è possibile loggare il comportamento su
+ file, in quanto non è ancora disponibile un'interfaccia verso queste strutture
+ ad alto livello.
 \end_layout
 
 \begin_layout Standard
 Per questo motivo abbiamo considerato l'idea di usare un debugger.
  Per poterla applicare, però, avremmo avuto bisogno di un eseguibile per
- il sistema operativo Windows Mobile® che si integrasse con haret (vedi
+ il sistema operativo Windows Mobile® che si integrasse con Haret (vedi
  capitolo
 \begin_inset LatexCommand vref
 reference "cha:Haret"
@@ -1595,7 +1734,11 @@ reference "cha:Haret"
 
 ).
  L'alternativa scelta è stata quella di usare un emulatore per l'architettura,
- e di usare il classico gdb per il debug.
+ e di usare il classico 
+\noun on
+gdb
+\noun default
+ per il debug.
 \end_layout
 
 \begin_layout Standard
@@ -1608,7 +1751,7 @@ A che serve
 \end_layout
 
 \begin_layout Standard
-Usare un debugger col kernel è stato utile soprattutto per scoprire
+Usare un debugger col kernel è stato utile soprattutto per scoprire 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1620,19 +1763,32 @@ qual è la prima funzione invocata
 \end_layout
 
 \begin_layout Standard
-Su architettura x86, infatti, vi è la funzione
+Se è vero che su architettura x86 vi è la funzione
 \family typewriter
-main.c
+ main()
 \family default
  in
 \family typewriter
-$KERNEL_SRC/arch/x86/boot/main.c
+ 
 \family default
- che identifica la prima funzione invocata, su architettura arm questo non
- succede.
- Al contrario vi sono una serie di cartelle per raggruppare l'implementazione
+\noun on
+arch/x86/boot/main.c
+\noun default
+ che identifica la prima funzione invocata, su architettura 
+\noun on
+ARM
+\noun default
+ questo non succede.
+\end_layout
+
+\begin_layout Standard
+Al contrario, vi sono una serie di cartelle per raggruppare l'implementazione
  delle funzioni per piattaforma e per singolo modello, in quanto il modello
- di arm è diverso dal modello di intel
+ di distribuzione delle specifiche di 
+\noun on
+ARM
+\noun default
+ è diverso dal modello di sviluppo intel
 \begin_inset LatexCommand citep
 key "arm_intel_mobile"
 
@@ -1646,20 +1802,104 @@ Quale usare
 \end_layout
 
 \begin_layout Standard
-Poiché sto usando gdb su un HOST x86, ma con TARGET arm, ho bisogno di usare
- un debugger
+Poiché vogliamo usare gdb su un 
+\noun on
+host
+\noun default
+ x86, ma con 
+\noun on
+target
+\noun default
+ 
+\noun on
+ARM
+\noun default
+, abbiamo bisogno di usare un debugger
 \emph on
-compilato per x86
+ compilato per x86
 \emph default
-, che sappia estrarre i simboli ecc da un binario (il kernel)
+, che sappia tracciare le istruzioni ed estrarre i simboli da un binario
+ (il kernel)
 \emph on
-per arm
+ compilato per 
+\noun on
+ARM
 \emph default
+\noun default
 .
 \end_layout
 
 \begin_layout Standard
-Per questo abbiamo scaricato i sorgenti e ricompilato.
+Per questo abbiamo scaricato i sorgenti, li abbiamo estratti e compilati,
+ facendo attenzione a impostare 
+\noun on
+--target=arm-linux
+\noun default
+ nella fase di configurazione per analizzare binari per ARM.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ wget http://ftp.gnu.org/gnu/gdb/gdb-6.8.tar.gz
+\end_layout
+
+\begin_layout Standard
+
+$ tar xzf gdb-6.8.tar.gz
+\end_layout
+
+\begin_layout Standard
+
+$ cd gdb-6.8
+\end_layout
+
+\begin_layout Standard
+
+$ ./configure --target=arm-linux
+\end_layout
+
+\begin_layout Standard
+
+$ make && su -c 'make install'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Alla fine della fase di compilazione, in 
+\noun on
+/usr/local/bin
+\noun default
+ (o dovunque sia stato definito il 
+\noun on
+PREFIX
+\noun default
+ in fase di configurazione), saranno stati generati i file 
+\noun on
+arm-linux-gdb
+\noun default
+ (il debugger vero e proprio), 
+\noun on
+arm-linux-gdbtui
+\noun default
+ (frontend semi-grafico) e 
+\noun on
+arm-linux-run
+\noun default
+ (simulatore in grado di eseguire i programmi per 
+\noun on
+ARM
+\noun default
+ su x86).
 \end_layout
 
 \begin_layout Section
@@ -1670,8 +1910,12 @@ Come usarlo
 Usare un debugger per monitorare processi utente è ragionevolmente facile.
  Le cose si complicano parecchio in caso si voglia debuggare il kernel stesso!
  Questo perché l'attività di debugging altro non è che eseguire un processo
- (il debugger) che, tramite chiamate di sistema (tipo ptrace) analizza il
- comportamento di un altro processo (il programma da controllare).
+ (il debugger) che, tramite chiamate di sistema (ad esempio tipo la funzione
+ 
+\noun on
+ptrace
+\noun default
+()) analizza il comportamento di un altro processo (il programma da controllare).
 \end_layout
 
 \begin_layout Standard
@@ -1845,7 +2089,7 @@ launchKernel
 \begin_inset listings
 lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -2003,10 +2247,6 @@ return_control();
 
 \end_layout
 
-\begin_layout LyX-Code
-
-\end_layout
-
 \begin_layout Standard
 mentre la funzione
 \emph on
@@ -2017,7 +2257,7 @@ preloader
 \begin_inset listings
 lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
