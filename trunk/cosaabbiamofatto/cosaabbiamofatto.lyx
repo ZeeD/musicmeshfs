@@ -2065,12 +2065,15 @@ preview false
 \end_layout
 
 \begin_layout Standard
-indica all'eseguibile haret.exe come settare alcuni parametri (variabili
- globali all'interno del codice di haret) quali KERNEL, MTYPE, INITRD, CMDLINE
- ed infine avvia la funzione (interna al codice di haret quindi scritta
- in C)
+indica all'eseguibile 
 \emph on
-bootlinux.
+haret.exe
+\emph default
+ come settare alcuni parametri (variabili globali all'interno del codice
+ di haret) quali KERNEL, MTYPE, INITRD, CMDLINE ed infine avvia la funzione
+ (interna al codice di haret quindi scritta in C)
+\emph on
+ bootlinux.
 \end_layout
 
 \begin_layout Section
@@ -2086,7 +2089,7 @@ Il codice del programma prevede parti scritte in C/C++ e parti scritte in
 \begin_layout Standard
 La funzione
 \emph on
-launchKernel
+ launchKernel
 \emph default
  ad esempio è responsabile di inibire l'hardware e lanciare il kernel
 \end_layout
@@ -2256,7 +2259,7 @@ return_control();
 \begin_layout Standard
 mentre la funzione
 \emph on
-preloader
+ preloader
 \end_layout
 
 \begin_layout Standard
@@ -2837,15 +2840,23 @@ Stampa a video
 
 \begin_layout Standard
 Per abilitare l'output su file di log è necessario creare un file vuoto
- all'interno della cartella dove è presente l'eseguibile haret.exe e rinominarlo
+ all'interno della cartella dove è presente l'eseguibile 
 \emph on
-earlyharetlog.txt
+haret.exe
+\emph default
+ e rinominarlo
+\emph on
+ earlyharetlog.txt
 \emph default
 .
- Il file di log haretlog.txt verrà creato nella stessa cartella.
+ Il file di log 
+\emph on
+haretlog.txt
+\emph default
+ verrà creato nella stessa cartella.
  All'interno del codice la funzione
 \emph on
-Output
+ Output
 \emph default
  è la responsabile della scrittura su file.
 \end_layout
@@ -2856,7 +2867,7 @@ La seconda tipologia di output si rende necessaria quando avviene lo shutdown
  miniSd.
  All'interno del codice la funzione
 \emph on
-fb_printf
+ fb_printf
 \emph default
  stampa a video ove previsto.
 \end_layout
@@ -3040,18 +3051,18 @@ Si noti come al terzo rigo avvisa dell'avvenuto riconoscimento della macchina
  e della tipologia di cpu.
  Poi parte nell'esecuzione del contenuto di
 \emph on
-startup.txt
+ startup.txt
 \emph default
  come fossero comandi separati tra loro (si noti il carattere # indicatore
  della pseudo-shell).
  L'ultimo comando è appunto
 \emph on
-bootlinux
+ bootlinux
 \emph default
  il quale fa partire l'esecuzione del codice visto in precedenza.
  Alla fine del file di log vi è la scritta
 \emph on
-Go Go Go ...
+ Go Go Go ...
 
 \emph default
  che è l'ultimo messaggio previsto dal codice prima di spegnere l'hardware
@@ -3072,7 +3083,11 @@ Abbiamo constatato delle difficoltà a debuggare su un sistema embedded.
 
 \begin_layout Standard
 Nel nostro caso avevamo problemi dal momento che ci appariva la scritta
- Go Go Go...
+ 
+\emph on
+Go Go Go...
+
+\emph default
  ma il kernel non partiva.
 \end_layout
 
