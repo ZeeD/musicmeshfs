@@ -1,4 +1,4 @@
-#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -37,8 +37,8 @@
 \listings_params "basicstyle={\normalsize\ttfamily},captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false"
 \tracking_changes false
 \output_changes false
-\author ""
-\author ""
+\author "" 
+\author "" 
 \end_header
 
 \begin_body
@@ -69,7 +69,7 @@ Nicola Corriero
 \hfill
 
 \begin_inset ERT
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -181,10 +181,7 @@ Default kernel command string
  il prima possibile, inoltre, conviene impostare, dal menù
 \noun on
 General setup
-\noun default
-
 \series bold
-\noun on
 12
 \series default
 \noun default
@@ -212,7 +209,7 @@ Dopo anche altre personalizzazioni minori, si giunge al .config finale:
 \end_layout
 
 \begin_layout Standard
-\begin_inset Include \lstinputlisting{_CONFIGURE_VANIGLIA_VERSATILE_2.6.25.10_no_comments}[caption={.config finale utilizzato (le voci commentate sono state rimosse)}]
+\begin_inset Include \lstinputlisting{_CONFIGURE_VANIGLIA_VERSATILE_2.6.25.10_no_comments}[basicstyle={\tiny\ttfamily},caption={.config finale utilizzato (le voci commentate sono state rimosse)}]
 preview false
 
 \end_inset
@@ -338,7 +335,6 @@ misc.o
 piggy.o
 \family default
 .
-
 \begin_inset LatexCommand citep
 key "vmlinuz_definition,vmlinux_zimage"
 
@@ -382,9 +378,15 @@ Anatomia di bzImage (da en.wikipedia.org)
 
 \end_layout
 
-<<<<<<< .mine
-=======
-<<<<<<< .mine
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Avvio
+\end_layout
+
 \begin_layout Subsection
 Boot
 \end_layout
@@ -400,9 +402,9 @@ arch/arm/kernel/head.S
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "breaklines=true,extendedchars=true,firstnumber=77,language={[x86masm]Assembler},numbers=left,showstringspaces=false"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=77,language={[x86masm]Assembler},numbers=left,showstringspaces=false"
 inline false
-status collapsed
+status open
 
 \begin_layout Standard
 
@@ -513,7 +515,7 @@ ENTRY(stext)
 
 \begin_layout Standard
 
-         */
+        */
 \end_layout
 
 \begin_layout Standard
@@ -540,17 +542,14 @@ ENTRY(stext)
 
 \end_layout
 
-=======
->>>>>>> .r53
->>>>>>> .r55
 \end_inset
 
 
 \end_layout
 
-\begin_layout Section
-Avvio
-\end_layout
+\begin_layout Standard
+\begin_inset Note Note
+status collapsed
 
 \begin_layout Subsection
 Dal click al bios
@@ -607,6 +606,11 @@ I primi istanti di
 
 \begin_layout Standard
 Il modo più facile per analizzare il comportamento del kernel è usando un
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
@@ -743,7 +747,6 @@ feature
 
 \begin_layout Standard
 Nello specifico è stata utilizzata una versione pre-compilata di gcc da
-
 \begin_inset LatexCommand htmlurl
 name "handhelds.org"
 target "http://www.handhelds.org/download/projects/toolchain/"
@@ -1331,7 +1334,6 @@ qemu-system-arm -M versatileab ...
 
 \begin_layout Standard
 perché qemu non sa ancora emulare l'architettura Samsung S3C2442b (evabé)
-
 \end_layout
 
 \begin_layout Chapter
@@ -1432,67 +1434,47 @@ per arm
 \end_layout
 
 \begin_layout Standard
-<<<<<<< .mine
 Per questo abbiamo scaricato i sorgenti e ricompilato.
-=======
-Per questo abbiamo scaricato i sorgenti, li abbiamo estratti e compilati,
- facendo attenzione a impostare
-\noun on
---target=arm-linux
-\noun default
- per analizzare binari per ARM.
->>>>>>> .r55
 \end_layout
 
-<<<<<<< .mine
-=======
-\begin_layout LyX-Code
-$ wget http://ftp.gnu.org/gnu/gdb/gdb-6.8.tar.gz
-\end_layout
-
-\begin_layout LyX-Code
-$ tar xzf gdb-6.8.tar.gz
-\end_layout
-
-\begin_layout LyX-Code
-$ cd gdb-6.8
-\end_layout
-
-\begin_layout LyX-Code
-$ ./configure --target=arm-linux
-\end_layout
-
-\begin_layout LyX-Code
-$ make && su -c 'make install'
+\begin_layout Section
+Come usarlo
 \end_layout
 
 \begin_layout Standard
-alla fine della fase di compilazione, in
-\noun on
-/usr/local/bin
-\noun default
- (o dovunque sia stato definito il
-\noun on
-PREFIX
-\noun default
- in fase di configurazione), saranno stati generati i file
-\noun on
-arm-linux-gdb
-\noun default
- (il debugger vero e proprio),
-\noun on
-arm-linux-gdbtui
-\noun default
- (frontend semi-grafico) e
-\noun on
-arm-linux-run
-\noun default
- (simulatore in grado di eseguire i programmi per ARM su x86)
+Usare un debugger per monitorare processi utente è ragionevolmente facile.
+ Le cose si complicano parecchio in caso si voglia debuggare il kernel stesso!
+ Questo perché l'attività di debugging altro non è che eseguire un processo
+ (il debugger) che, tramite chiamate di sistema (tipo ptrace) analizza il
+ comportamento di un altro processo (il programma da controllare).
 \end_layout
 
->>>>>>> .r55
-\begin_layout Section
-Come usarlo
+\begin_layout Standard
+Tuttavia nel caso si voglia controllare il kernel, non è possibile avere
+ accesso alle chiamate di sistema stesse (visto che riguardano il programma
+ da controllare).
+\end_layout
+
+\begin_layout Standard
+Tuttavia una soluzione esiste.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Shaded
+status open
+
+\begin_layout Standard
+TROVARE - SCOPIAZZARE immagine debug remoto fatto con qemu!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Lavorando con qemu è possibile impostare l'emulatore (che è un programma
+ utente, sulla macchina host) per offrire una connessione a gdb.
 \end_layout
 
 \begin_layout Standard
@@ -1559,26 +1541,8 @@ Non invasivo
 
 \begin_layout Standard
 Nel modo invasivo viene modificato la memoria interna del palmare installandoci
-<<<<<<< .mine
  sopra un bootloader universale Uboot il quale permette di far partire kernel
  anche da remoto sin dall'avvio.
-=======
- sopra un bootloader universale
-\begin_inset Quotes eld
-\end_inset
-
-Das U-Boot
-\begin_inset Quotes erd
-\end_inset
-
-
-\begin_inset LatexCommand citep
-key "das_u_boot_home_page"
-
-\end_inset
-
- il quale permette di far partire kernel anche da remoto sin dall'avvio.
->>>>>>> .r55
  Con questa modalità però si perde tutto il software preinstallato sulla
  macchina dal momento che si sovrascrive la memoria stessa.
 \end_layout
@@ -2363,7 +2327,6 @@ Stampa a video
 \begin_layout Standard
 Per abilitare l'output su file di log è necessario creare un file vuoto
  all'interno della cartella dove è presente l'eseguibile haret.exe e rinominarlo
-
 \emph on
 earlyharetlog.txt
 \emph default
@@ -2390,7 +2353,6 @@ fb_printf
 \begin_layout Standard
 Questo rappresenta la parte finale di un file di log.
  Nella prima parte vi è il riconoscimento della macchina da parte del sistema.
-
 \end_layout
 
 \begin_layout Standard
