@@ -1,4 +1,4 @@
-#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -382,6 +382,164 @@ Anatomia di bzImage (da en.wikipedia.org)
 
 \end_layout
 
+<<<<<<< .mine
+\begin_layout Subsection
+Boot
+\end_layout
+
+\begin_layout Standard
+Tornando alla sequenza di boot, analizziamo un attimo le prime istruzioni
+ presenti in 
+\noun on
+arch/arm/kernel/head.S
+\noun default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,firstnumber=77,language={[x86masm]Assembler},numbers=left,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+        .section ".text.head", "ax"
+\end_layout
+
+\begin_layout Standard
+
+        .type   stext, %function
+\end_layout
+
+\begin_layout Standard
+
+ENTRY(stext)
+\end_layout
+
+\begin_layout Standard
+
+        msr     cpsr_c, #PSR_F_BIT | PSR_I_BIT | SVC_MODE @ ensure svc mode
+\end_layout
+
+\begin_layout Standard
+
+                                                @ and irqs disabled
+\end_layout
+
+\begin_layout Standard
+
+        mrc     p15, 0, r9, c0, c0              @ get processor id
+\end_layout
+
+\begin_layout Standard
+
+        bl      __lookup_processor_type         @ r5=procinfo r9=cpuid
+\end_layout
+
+\begin_layout Standard
+
+        movs    r10, r5                         @ invalid processor (r5=0)?
+\end_layout
+
+\begin_layout Standard
+
+        beq     __error_p                       @ yes, error 'p'
+\end_layout
+
+\begin_layout Standard
+
+        bl      __lookup_machine_type           @ r5=machinfo
+\end_layout
+
+\begin_layout Standard
+
+        movs    r8, r5                          @ invalid machine (r5=0)?
+\end_layout
+
+\begin_layout Standard
+
+        beq     __error_a                       @ yes, error 'a'
+\end_layout
+
+\begin_layout Standard
+
+        bl      __vet_atags
+\end_layout
+
+\begin_layout Standard
+
+        bl      __create_page_tables
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        /*
+\end_layout
+
+\begin_layout Standard
+
+         * The following calls CPU specific code in a position independent
+\end_layout
+
+\begin_layout Standard
+
+         * manner.
+  See arch/arm/mm/proc-*.S for details.
+  r10 = base of
+\end_layout
+
+\begin_layout Standard
+
+         * xxx_proc_info structure selected by __lookup_machine_type
+\end_layout
+
+\begin_layout Standard
+
+         * above.
+  On return, the CPU will be ready for the MMU to be
+\end_layout
+
+\begin_layout Standard
+
+         * turned on, and r0 will hold the CPU control register value.
+\end_layout
+
+\begin_layout Standard
+
+         */
+\end_layout
+
+\begin_layout Standard
+
+        ldr     r13, __switch_data              @ address to jump to after
+\end_layout
+
+\begin_layout Standard
+
+                                                @ mmu has been enabled
+\end_layout
+
+\begin_layout Standard
+
+        adr     lr, __enable_mmu                @ return (PIC) address
+\end_layout
+
+\begin_layout Standard
+
+        add     pc, r10, #PROCINFO_INITFUNC
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+=======
+>>>>>>> .r53
 \end_inset
 
 
@@ -1250,7 +1408,7 @@ key "arm_intel_mobile"
 
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Section
@@ -1265,17 +1423,96 @@ compilato per x86
 \emph default
 , che sappia estrarre i simboli ecc da un binario (il kernel) 
 \emph on
-per arm
+per ARM
 \emph default
 .
 \end_layout
 
 \begin_layout Standard
-Per questo abbiamo scaricato i sorgenti e ricompilato.
+Per questo abbiamo scaricato i sorgenti, li abbiamo estratti e compilati,
+ facendo attenzione a impostare 
+\noun on
+--target=arm-linux
+\noun default
+ per analizzare binari per ARM.
+\end_layout
+
+\begin_layout LyX-Code
+$ wget http://ftp.gnu.org/gnu/gdb/gdb-6.8.tar.gz
+\end_layout
+
+\begin_layout LyX-Code
+$ tar xzf gdb-6.8.tar.gz
+\end_layout
+
+\begin_layout LyX-Code
+$ cd gdb-6.8
+\end_layout
+
+\begin_layout LyX-Code
+$ ./configure --target=arm-linux
+\end_layout
+
+\begin_layout LyX-Code
+$ make && su -c 'make install'
+\end_layout
+
+\begin_layout Standard
+alla fine della fase di compilazione, in 
+\noun on
+/usr/local/bin
+\noun default
+ (o dovunque sia stato definito il 
+\noun on
+PREFIX
+\noun default
+ in fase di configurazione), saranno stati generati i file 
+\noun on
+arm-linux-gdb
+\noun default
+ (il debugger vero e proprio), 
+\noun on
+arm-linux-gdbtui
+\noun default
+ (frontend semi-grafico) e 
+\noun on
+arm-linux-run
+\noun default
+ (simulatore in grado di eseguire i programmi per ARM su x86)
 \end_layout
 
 \begin_layout Section
 Come usarlo
+\end_layout
+
+\begin_layout Standard
+Usare un debugger per monitorare processi utente è ragionevolmente facile.
+ Le cose si complicano parecchio in caso si voglia debuggare il kernel stesso!
+ Questo perché l'attività di debugging altro non è che eseguire un processo
+ (il debugger) che, tramite chiamate di sistema (tipo ptrace) analizza il
+ comportamento di un altro processo (il programma da controllare).
+ Tuttavia nel caso si voglia controllare il kernel, non è possibile avere
+ accesso alle chiamate di sistema stesse (visto che riguardano il programma
+ da controllare).
+ Tuttavia una soluzione esiste.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Shaded
+status open
+
+\begin_layout Standard
+TROVARE - SCOPIAZZARE immagine debug remoto fatto con qemu!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Lavorando con qemu è possibile impostare l'emulatore (che è un programma
+ utente, sulla macchina host) per offrire una connessione a gdb.
 \end_layout
 
 \begin_layout Standard
@@ -1342,8 +1579,21 @@ Non invasivo
 
 \begin_layout Standard
 Nel modo invasivo viene modificato la memoria interna del palmare installandoci
- sopra un bootloader universale Uboot il quale permette di far partire kernel
- anche da remoto sin dall'avvio.
+ sopra un bootloader universale 
+\begin_inset Quotes eld
+\end_inset
+
+Das U-Boot
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset LatexCommand citep
+key "das_u_boot_home_page"
+
+\end_inset
+
+ il quale permette di far partire kernel anche da remoto sin dall'avvio.
  Con questa modalità però si perde tutto il software preinstallato sulla
  macchina dal momento che si sovrascrive la memoria stessa.
 \end_layout
@@ -1421,7 +1671,7 @@ launchKernel
 \begin_inset listings
 lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -1579,10 +1829,6 @@ return_control();
 
 \end_layout
 
-\begin_layout LyX-Code
-
-\end_layout
-
 \begin_layout Standard
 mentre la funzione 
 \emph on
@@ -1593,7 +1839,7 @@ preloader
 \begin_inset listings
 lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -2017,7 +2263,7 @@ la quale risulta una macro definita nel codice in modo seguente
 \begin_inset listings
 lstparams "basicstyle={\normalsize\ttfamily},breaklines=true"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -2162,7 +2408,7 @@ Questo rappresenta la parte finale di un file di log.
 \begin_inset listings
 lstparams "basicstyle={\normalsize\ttfamily},breaklines=true"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
