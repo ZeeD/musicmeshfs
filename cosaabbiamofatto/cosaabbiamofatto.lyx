@@ -1,4 +1,4 @@
-#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -48,7 +48,7 @@ GNU/Linux su ARM
 \end_layout
 
 \begin_layout Author
-Vito De Tullio
+Vito De Tullio 
 \hfill
 
 \begin_inset ERT
@@ -65,7 +65,7 @@ href{mailto:vito.detullio@gmail.com}{vito.detullio@gmail.com}
 
 
 \newline
-Nicola Corriero
+Nicola Corriero 
 \hfill
 
 \begin_inset ERT
