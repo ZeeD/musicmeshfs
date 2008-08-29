@@ -151,22 +151,27 @@ inline false
 status collapsed
 
 \begin_layout Standard
+
 $ wget ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2
 \end_layout
 
 \begin_layout Standard
+
 $ tar xjf kernel-2.6.25.10.tar.bz2
 \end_layout
 
 \begin_layout Standard
+
 $ cd kernel-2.6.25.10
 \end_layout
 
 \begin_layout Standard
+
 $ export ARCH=arm
 \end_layout
 
 \begin_layout Standard
+
 $ make menuconfig
 \end_layout
 
@@ -260,9 +265,10 @@ Alla fine della fase di configurazione, basterà lanciare
 \begin_inset listings
 lstparams "breaklines=true,language=bash,showstringspaces=false"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
+
 $ make
 \end_layout
 
@@ -660,7 +666,7 @@ Tornando alla sequenza di boot, analizziamo un attimo le prime istruzioni
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=77,language={[x86masm]Assembler},numbers=left,showstringspaces=false"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=77,language=C,numbers=left,showstringspaces=false"
 inline false
 status collapsed
 
@@ -2630,16 +2636,36 @@ n");
  il controllo al kernel terminando l'esecuzione di haret stesso quindi.
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Standard
 typedef void (*lin_t)(uint32 zero, uint32 mach, char *tags);
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 viene definita un prototipo di funzione di tipo puntatore a lin_t
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Standard
 lin_t startfunc = (lin_t)destKernel;
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2647,8 +2673,18 @@ lin_t startfunc = (lin_t)destKernel;
  destKernel, buffer di memoria contenente il kernel in ram
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Standard
 startfunc(0, data->machtype, destTags);
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2665,12 +2701,22 @@ La programmazione in C/C++ è suddivisa in due fasi dal momento che dopo
  Ad esempio nella funzione preloader vi è
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Standard
 FB_PRINTF(&data->fbi, "In preloader
 \backslash
 
 \backslash
 n");
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2679,9 +2725,9 @@ la quale risulta una macro definita nel codice in modo seguente
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\normalsize\ttfamily},breaklines=true"
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -2822,9 +2868,9 @@ Questo rappresenta la parte finale di un file di log.
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\normalsize\ttfamily},breaklines=true"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,numbers=left,showstringspaces=false"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
