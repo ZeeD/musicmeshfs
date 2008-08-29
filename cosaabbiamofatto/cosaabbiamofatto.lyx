@@ -1,4 +1,4 @@
-#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -2083,7 +2083,11 @@ Codice
 \begin_layout Standard
 Il codice del programma prevede parti scritte in C/C++ e parti scritte in
  Assembly.
- Le funzioni più interessanti sono presenti all'interno del file linboot.cpp.
+ Le funzioni più interessanti sono presenti all'interno del file 
+\noun on
+linboot.cpp
+\noun default
+.
 \end_layout
 
 \begin_layout Standard
@@ -2096,7 +2100,7 @@ La funzione
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,language=C,showstringspaces=false"
 inline false
 status collapsed
 
@@ -2264,7 +2268,7 @@ mentre la funzione
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,language=C,showstringspaces=false"
 inline false
 status collapsed
 
@@ -2641,10 +2645,12 @@ n");
 
 \begin_layout Standard
 \begin_inset listings
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
 inline false
 status collapsed
 
 \begin_layout Standard
+
 typedef void (*lin_t)(uint32 zero, uint32 mach, char *tags);
 \end_layout
 
@@ -2659,10 +2665,12 @@ viene definita un prototipo di funzione di tipo puntatore a lin_t
 
 \begin_layout Standard
 \begin_inset listings
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
 inline false
 status collapsed
 
 \begin_layout Standard
+
 lin_t startfunc = (lin_t)destKernel;
 \end_layout
 
@@ -2678,10 +2686,12 @@ lin_t startfunc = (lin_t)destKernel;
 
 \begin_layout Standard
 \begin_inset listings
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
 inline false
 status collapsed
 
 \begin_layout Standard
+
 startfunc(0, data->machtype, destTags);
 \end_layout
 
@@ -2706,10 +2716,12 @@ La programmazione in C/C++ è suddivisa in due fasi dal momento che dopo
 
 \begin_layout Standard
 \begin_inset listings
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
 inline false
 status collapsed
 
 \begin_layout Standard
+
 FB_PRINTF(&data->fbi, "In preloader
 \backslash
 
@@ -2867,7 +2879,7 @@ La seconda tipologia di output si rende necessaria quando avviene lo shutdown
  miniSd.
  All'interno del codice la funzione
 \emph on
- fb_printf
+fb_printf
 \emph default
  stampa a video ove previsto.
 \end_layout
@@ -3051,18 +3063,18 @@ Si noti come al terzo rigo avvisa dell'avvenuto riconoscimento della macchina
  e della tipologia di cpu.
  Poi parte nell'esecuzione del contenuto di
 \emph on
- startup.txt
+startup.txt
 \emph default
  come fossero comandi separati tra loro (si noti il carattere # indicatore
  della pseudo-shell).
  L'ultimo comando è appunto
 \emph on
- bootlinux
+bootlinux
 \emph default
  il quale fa partire l'esecuzione del codice visto in precedenza.
  Alla fine del file di log vi è la scritta
 \emph on
- Go Go Go ...
+Go Go Go ...
 
 \emph default
  che è l'ultimo messaggio previsto dal codice prima di spegnere l'hardware
