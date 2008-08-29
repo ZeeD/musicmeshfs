@@ -1,4 +1,4 @@
-#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -383,6 +383,8 @@ Anatomia di bzImage (da en.wikipedia.org)
 \end_layout
 
 <<<<<<< .mine
+=======
+<<<<<<< .mine
 \begin_layout Subsection
 Boot
 \end_layout
@@ -540,6 +542,7 @@ ENTRY(stext)
 
 =======
 >>>>>>> .r53
+>>>>>>> .r55
 \end_inset
 
 
@@ -1408,7 +1411,7 @@ key "arm_intel_mobile"
 
 \end_inset
 
-.
+
 \end_layout
 
 \begin_layout Section
@@ -1423,20 +1426,26 @@ compilato per x86
 \emph default
 , che sappia estrarre i simboli ecc da un binario (il kernel)
 \emph on
-per ARM
+per arm
 \emph default
 .
 \end_layout
 
 \begin_layout Standard
+<<<<<<< .mine
+Per questo abbiamo scaricato i sorgenti e ricompilato.
+=======
 Per questo abbiamo scaricato i sorgenti, li abbiamo estratti e compilati,
  facendo attenzione a impostare
 \noun on
 --target=arm-linux
 \noun default
  per analizzare binari per ARM.
+>>>>>>> .r55
 \end_layout
 
+<<<<<<< .mine
+=======
 \begin_layout LyX-Code
 $ wget http://ftp.gnu.org/gnu/gdb/gdb-6.8.tar.gz
 \end_layout
@@ -1481,38 +1490,9 @@ arm-linux-run
  (simulatore in grado di eseguire i programmi per ARM su x86)
 \end_layout
 
+>>>>>>> .r55
 \begin_layout Section
 Come usarlo
-\end_layout
-
-\begin_layout Standard
-Usare un debugger per monitorare processi utente è ragionevolmente facile.
- Le cose si complicano parecchio in caso si voglia debuggare il kernel stesso!
- Questo perché l'attività di debugging altro non è che eseguire un processo
- (il debugger) che, tramite chiamate di sistema (tipo ptrace) analizza il
- comportamento di un altro processo (il programma da controllare).
- Tuttavia nel caso si voglia controllare il kernel, non è possibile avere
- accesso alle chiamate di sistema stesse (visto che riguardano il programma
- da controllare).
- Tuttavia una soluzione esiste.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TROVARE - SCOPIAZZARE immagine debug remoto fatto con qemu!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Lavorando con qemu è possibile impostare l'emulatore (che è un programma
- utente, sulla macchina host) per offrire una connessione a gdb.
 \end_layout
 
 \begin_layout Standard
@@ -1579,6 +1559,10 @@ Non invasivo
 
 \begin_layout Standard
 Nel modo invasivo viene modificato la memoria interna del palmare installandoci
+<<<<<<< .mine
+ sopra un bootloader universale Uboot il quale permette di far partire kernel
+ anche da remoto sin dall'avvio.
+=======
  sopra un bootloader universale
 \begin_inset Quotes eld
 \end_inset
@@ -1594,6 +1578,7 @@ key "das_u_boot_home_page"
 \end_inset
 
  il quale permette di far partire kernel anche da remoto sin dall'avvio.
+>>>>>>> .r55
  Con questa modalità però si perde tutto il software preinstallato sulla
  macchina dal momento che si sovrascrive la memoria stessa.
 \end_layout
@@ -1671,7 +1656,7 @@ launchKernel
 \begin_inset listings
 lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
 inline false
-status collapsed
+status open
 
 \begin_layout Standard
 
@@ -1829,6 +1814,10 @@ return_control();
 
 \end_layout
 
+\begin_layout LyX-Code
+
+\end_layout
+
 \begin_layout Standard
 mentre la funzione
 \emph on
@@ -1839,7 +1828,7 @@ preloader
 \begin_inset listings
 lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
 inline false
-status collapsed
+status open
 
 \begin_layout Standard
 
@@ -2263,7 +2252,7 @@ la quale risulta una macro definita nel codice in modo seguente
 \begin_inset listings
 lstparams "basicstyle={\normalsize\ttfamily},breaklines=true"
 inline false
-status collapsed
+status open
 
 \begin_layout Standard
 
@@ -2408,7 +2397,7 @@ Questo rappresenta la parte finale di un file di log.
 \begin_inset listings
 lstparams "basicstyle={\normalsize\ttfamily},breaklines=true"
 inline false
-status collapsed
+status open
 
 \begin_layout Standard
 
