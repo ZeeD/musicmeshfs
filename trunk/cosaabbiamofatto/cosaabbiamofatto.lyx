@@ -1,4 +1,4 @@
-#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -114,15 +114,15 @@ Configurazione
 Dopo aver estratto il kernel, lo dobbiamo configurare per l'architettura
  arm utilizzando un x86, e per questo, prima del solito
 \family typewriter
-make [x|menu]config
+ make [x|menu]config
 \family default
 , è necessario associare alla variabile
 \family typewriter
-ARCH
+ ARCH
 \family default
  il valore
 \family typewriter
-arm
+ arm
 \family default
 :
 \end_layout
@@ -152,12 +152,12 @@ $ make menuconfig
 \begin_layout Itemize
 Dal menù
 \noun on
-System Type \SpecialChar \menuseparator
+ System Type \SpecialChar \menuseparator
  Arm System Type
 \noun default
  scegliamo il tipo di sistema base (nel nostro caso
 \noun on
-Samsung S3C2410, S3C2412, S3C2413, S3C2440, S3C2442, S3C2443
+ Samsung S3C2410, S3C2412, S3C2413, S3C2440, S3C2442, S3C2443
 \noun default
 ).
 \end_layout
@@ -165,29 +165,29 @@ Samsung S3C2410, S3C2412, S3C2413, S3C2440, S3C2442, S3C2443
 \begin_layout Itemize
 Dal menù
 \noun on
-Boot options
+ Boot options
 \noun default
-impostiamo
+ impostiamo
 \series bold
 \noun on
-console=ttyAMA0
+ console=ttyAMA0
 \series default
 \noun default
  alla voce
 \noun on
-Default kernel command string
+ Default kernel command string
 \noun default
  (per poter avere in output i messaggi di comunicazione); per avere informazioni
  il prima possibile, inoltre, conviene impostare, dal menù
 \noun on
-General setup
+ General setup
 \series bold
-12
+ 12
 \series default
 \noun default
  come valore della voce
 \noun on
-Kernel log buffer size
+ Kernel log buffer size
 \noun default
 .
 \end_layout
@@ -195,7 +195,7 @@ Kernel log buffer size
 \begin_layout Itemize
 Dal menù
 \noun on
-Device Drivers
+ Device Drivers
 \noun default
  selezioniamo
 \noun on
@@ -247,11 +247,11 @@ description "Eseguibile non compresso e non bootable del kernel."
 \family default
  eseguibile
 \emph on
-non compresso
+ non compresso
 \emph default
  e
 \emph on
-non bootable
+ non bootable
 \emph default
  del kernel.
  Usato soprattutto per debug, come vedremo nel capitolo
@@ -395,7 +395,7 @@ Boot
 Tornando alla sequenza di boot, analizziamo un attimo le prime istruzioni
  presenti in
 \noun on
-arch/arm/kernel/head.S
+ arch/arm/kernel/head.S
 \noun default
 :
 \end_layout
@@ -697,10 +697,10 @@ Ciò comporta una serie di vantaggi:
 \begin_layout Itemize
 Si può utilizzare come sistema
 \noun on
-host
+ host
 \noun default
  un sistema linux già funzionante (nel nostro caso, sono stati utilizzati
- una debian
+ una debian 
 \begin_inset Note Greyedout
 status open
 
@@ -716,11 +716,11 @@ QUACCHECCOSA
 \begin_layout Itemize
 La capacità di calcolo di una macchina
 \noun on
-target
+ target
 \noun default
  è generalmente limitata, mentre le macchine
 \noun on
-host
+ host
 \noun default
  sono molto più potenti (minimizzando i tempi morti in attesa del termine
  della compilazione)
@@ -734,13 +734,13 @@ host
 Ovviamente vi è la difficoltà di avere un compilatore C in grado di generare
  eseguibili per la macchina
 \noun on
-target
+ target
 \noun default
 .
  Per fortuna questo è offerto da gcc.
  Per abilitare questa
 \emph on
-feature
+ feature
 \emph default
 , però, è necessario impostare una opzione in fase di compilazione.
 \end_layout
@@ -775,7 +775,7 @@ AB
 \noun default
  prima, Samsung
 \noun on
-S3C2442B
+ S3C2442B
 \noun default
  dopo) per semplificare le procedure di testing e debugging del kernel
 \end_layout
@@ -1313,7 +1313,7 @@ S3C2442B
 \noun default
  è stata utilizzata anche una versione di qemu
 \emph on
-custom
+ custom
 \emph default
  modificata e manutenuta dagli sviluppatori del progetto openmoko
 \begin_inset LatexCommand citep
@@ -1401,7 +1401,7 @@ main.c
 \family default
  in
 \family typewriter
-$KERNEL_SRC/arch/x86/boot/main.c
+ $KERNEL_SRC/arch/x86/boot/main.c
 \family default
  che identifica la prima funzione invocata, su architettura arm questo non
  succede.
@@ -1424,11 +1424,11 @@ Quale usare
 Poiché sto usando gdb su un HOST x86, ma con TARGET arm, ho bisogno di usare
  un debugger
 \emph on
-compilato per x86
+ compilato per x86
 \emph default
 , che sappia estrarre i simboli ecc da un binario (il kernel)
 \emph on
-per arm
+ per arm
 \emph default
 .
 \end_layout
@@ -1558,15 +1558,6 @@ Nel modo non invasivo viene avviato un programma sotto Windows CE (haret)
 \end_layout
 
 \begin_layout Section
-Dove
-\end_layout
-
-\begin_layout Standard
-È un programma fatto da un pazzo furioso, nel progetto di handhelds.org,
- ed è un boot-loader implementato come programma per Windows Mobile®
-\end_layout
-
-\begin_layout Section
 Come
 \end_layout
 
@@ -1595,7 +1586,7 @@ indica all'eseguibile haret.exe come settare alcuni parametri (variabili
  ed infine avvia la funzione (interna al codice di haret quindi scritta
  in C)
 \emph on
-bootlinux.
+ bootlinux.
 \end_layout
 
 \begin_layout Section
@@ -1611,7 +1602,7 @@ Il codice del programma prevede parti scritte in C/C++ e parti scritte in
 \begin_layout Standard
 La funzione
 \emph on
-launchKernel
+ launchKernel
 \emph default
  ad esempio è responsabile di inibire l'hardware e lanciare il kernel
 \end_layout
@@ -1785,7 +1776,7 @@ return_control();
 \begin_layout Standard
 mentre la funzione
 \emph on
-preloader
+ preloader
 \end_layout
 
 \begin_layout Standard
@@ -2328,13 +2319,13 @@ Stampa a video
 Per abilitare l'output su file di log è necessario creare un file vuoto
  all'interno della cartella dove è presente l'eseguibile haret.exe e rinominarlo
 \emph on
-earlyharetlog.txt
+ earlyharetlog.txt
 \emph default
 .
  Il file di log haretlog.txt verrà creato nella stessa cartella.
  All'interno del codice la funzione
 \emph on
-Output
+ Output
 \emph default
  è la responsabile della scrittura su file.
 \end_layout
@@ -2345,7 +2336,7 @@ La seconda tipologia di output si rende necessaria quando avviene lo shutdown
  miniSd.
  All'interno del codice la funzione
 \emph on
-fb_printf
+ fb_printf
 \emph default
  stampa a video ove previsto.
 \end_layout
