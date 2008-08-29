@@ -8,18 +8,18 @@
 \end_preamble
 \language italian
 \inputencoding auto
-\font_roman default
+\font_roman bookman
 \font_sans default
 \font_typewriter default
-\font_default_family default
+\font_default_family rmdefault
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
 \graphics default
-\paperfontsize default
+\paperfontsize 12
 \spacing single
-\papersize a4paper
+\papersize default
 \use_geometry false
 \use_amsmath 1
 \use_esint 1
@@ -69,7 +69,7 @@ Nicola Corriero
 \hfill
  
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Standard
 
@@ -96,7 +96,7 @@ Kernel
 \end_layout
 
 \begin_layout Standard
-Abbiamo lavorato con la versione 2.6.25.10 del kernel vanilla (versione generica,
+È stato usata la versione 2.6.25.10 del kernel vanilla (versione di default,
  non patchata) reperibile presso 
 \begin_inset LatexCommand htmlurl
 target "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2"
@@ -106,36 +106,15 @@ target "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2"
 .
 \end_layout
 
-\begin_layout Standard
-Esistono versioni modificate da singoli per supportare questa o quell'architettu
-ra (in particolare è da notare la versione del kernel mantenuta da 
-\begin_inset LatexCommand htmlurl
-target "http://www.handhelds.org"
-
-\end_inset
-
-), ma non abbiamo trovato nessuna versione che già supportasse nativamente
- il nostro palmare (un 
-\noun on
-HTC 
-\noun default
-P6300
-\noun on
-) 
-\noun default
-e quindi abbiamo preferito utilizzare la versione di default.
-\end_layout
-
 \begin_layout Section
-Configurazione e compilazione
+Configurazione
 \end_layout
 
 \begin_layout Standard
-Dopo aver scaricato ed estratto il kernel, lo dobbiamo configurare per l'archite
-ttura ARM utilizzando un x86, e per questo, prima del solito 
+Dopo aver estratto il kernel, lo dobbiamo configurare per l'architettura
+ arm utilizzando un x86, e per questo, prima del solito 
 \family typewriter
-make\InsetSpace ~
-[x|menu]config
+make [x|menu]config
 \family default
 , è necessario associare alla variabile 
 \family typewriter
@@ -146,10 +125,6 @@ ARCH
 arm
 \family default
 :
-\end_layout
-
-\begin_layout LyX-Code
-$ wget ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2
 \end_layout
 
 \begin_layout LyX-Code
@@ -175,7 +150,7 @@ $ make menuconfig
 \end_layout
 
 \begin_layout Itemize
-dal menù 
+Dal menù 
 \noun on
 System Type \SpecialChar \menuseparator
  Arm System Type
@@ -184,11 +159,11 @@ System Type \SpecialChar \menuseparator
 \noun on
 Samsung S3C2410, S3C2412, S3C2413, S3C2440, S3C2442, S3C2443
 \noun default
-);
+).
 \end_layout
 
 \begin_layout Itemize
-dal menù 
+Dal menù 
 \noun on
 Boot options 
 \noun default
@@ -202,15 +177,12 @@ console=ttyAMA0
 \noun on
 Default kernel command string
 \noun default
- (per poter avere in output i messaggi di comunicazione);
-\end_layout
-
-\begin_layout Itemize
-dal menù 
+ (per poter avere in output i messaggi di comunicazione); per avere informazioni
+ il prima possibile, inoltre, conviene impostare, dal menù 
 \noun on
 General setup
 \noun default
- impostiamo 
+ 
 \series bold
 \noun on
 12
@@ -220,11 +192,11 @@ General setup
 \noun on
 Kernel log buffer size
 \noun default
- (per avere informazioni il prima possibile);
+.
 \end_layout
 
 \begin_layout Itemize
-dal menù 
+Dal menù 
 \noun on
 Device Drivers
 \noun default
@@ -236,13 +208,7 @@ MMC/SD card support
 \end_layout
 
 \begin_layout Standard
-Dopo anche altre personalizzazioni minori, si giunge al 
-\noun on
-.config
-\noun default
- finale, che si può notare per essere abbastanza minimale: la maggior parte
- dei moduli, infatti, è stata disabilitata, tranne quelli necessari a riconoscer
-e cpu, tastiera e monitor.
+Dopo anche altre personalizzazioni minori, si giunge al .config finale:
 \end_layout
 
 \begin_layout Standard
@@ -254,8 +220,12 @@ preview false
 
 \end_layout
 
+\begin_layout Section
+Output (Image, zImage + compressore)
+\end_layout
+
 \begin_layout Standard
-Alla fine della fase di configurazione, basterà lanciare
+È da notare come lanciare
 \end_layout
 
 \begin_layout LyX-Code
@@ -263,58 +233,7 @@ $ make
 \end_layout
 
 \begin_layout Standard
-per dare il via alla fase di compilazione vera e propria dei sorgenti.
-\end_layout
-
-\begin_layout Section
-Output (Image, zImage + compressore)
-\end_layout
-
-\begin_layout Standard
-Terminata la fase di compilazione, verranno generati, oltre ad una serie
- di file temporanei / di supporto, i seguenti file.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status collapsed
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename Anatomy-of-bzimage.png
-	lyxscale 50
-	width 100col%
-	height 100pheight%
-	keepAspectRatio
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Caption
-
-\begin_layout Standard
-\begin_inset LatexCommand label
-name "fig:Anatomia-di-bzImage"
-
-\end_inset
-
-Anatomia di bzImage (da en.wikipedia.org)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
+crei una serie di file, in particolare
 \end_layout
 
 \begin_layout Description
@@ -350,7 +269,7 @@ reference "cha:Debugger"
 \begin_layout Description
 
 \family typewriter
-arch/arm/boot/Image
+Image
 \begin_inset LatexCommand nomenclature
 symbol "Image"
 description "Immagine del kernel effettivamente eseguita"
@@ -365,7 +284,7 @@ description "Immagine del kernel effettivamente eseguita"
 \begin_layout Description
 
 \family typewriter
-arch/arm/boot/zImage
+zImage
 \begin_inset LatexCommand nomenclature
 symbol "zImage"
 description "Immagine del kernel compressa preceduta da un decompressore (obsoleta)"
@@ -381,28 +300,27 @@ description "Immagine del kernel compressa preceduta da un decompressore (obsole
 \begin_layout Description
 
 \family typewriter
-arch/arm/boot/bzImage
 \begin_inset LatexCommand nomenclature
 symbol "bzImage"
 description "Immagine del kernel compressa ed eseguibile, ma composta da tre parti separate"
 
 \end_inset
 
-\InsetSpace ~
+bzImage\InsetSpace ~
 
 \family default
-(big\InsetSpace ~
-
-\family typewriter
-zImage
-\family default
-
+(
 \begin_inset LatexCommand nomenclature
 symbol "big zImage"
 description "vedi bzImage"
 
 \end_inset
 
+big\InsetSpace ~
+
+\family typewriter
+zImage
+\family default
 ) concatenatzione di 
 \family typewriter
 bootsect.o
@@ -419,423 +337,58 @@ misc.o
 \family typewriter
 piggy.o
 \family default
-
+.
+ 
 \begin_inset LatexCommand citep
 key "vmlinuz_definition,vmlinux_zimage"
 
 \end_inset
 
-, come si può vedere in figura 
-\begin_inset LatexCommand vref
-reference "fig:Anatomia-di-bzImage"
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Anatomy-of-bzimage.png
+	lyxscale 50
+	width 100col%
+	height 100pheight%
+	keepAspectRatio
 
 \end_inset
 
-.
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Anatomia di bzImage (da en.wikipedia.org)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
 Avvio
-\end_layout
-
-\begin_layout Standard
-Una volta che il bootloader ha caricato il kernel in memoria e l'ha eseguito,
- vi è la fase di bootstrap
-\begin_inset LatexCommand nomenclature
-symbol "bootstrap"
-description "Letteralmente la fascetta di cuoio cucita sul bordo posteriore degli stivali per aiutarsi a calzarli, fa riferimento alla leggenda del Barone di Münchhausen e alla sua capacità di sollevarsi in aria \"tirandosi per gli stivali\".\\\\Indica la fase di avvio di un pc"
-
-\end_inset
-
- che, nell'architettura ARM, è implementata per la maggior parte in assembly.
-\end_layout
-
-\begin_layout Subsection
-Sorgenti
-\end_layout
-
-\begin_layout Standard
-Il codice che si prende carico del boot del sistema è presente nelle directory
- 
-\noun on
-arch/arm/boot/compressed
-\noun default
- e 
-\noun on
-arch/arm/kernel 
-\noun default
-ove sono presenti, oltre a del codice d'appoggio per comprimere e decomprimere
- l'eseguibile, anche una serie di file 
-\noun on
-.S
-\noun default
- (scritti in assembly per ARM) tra i quali sono degni di nota i 2 file 
-\noun on
-head.S
-\noun default
-.
-\end_layout
-
-\begin_layout Standard
-
-\noun on
-arch/arm/kernel/head.S
-\noun default
-, in particolare, contiene la parte di codice che, di fatto, è il punto
- di partenza del kernel.
- In effetti questo codice, compilato, corrisponde alle prime istruzioni
- presenti in nel file 
-\series bold
-\noun on
-Image
-\series default
-\noun default
- già descritto;
-\end_layout
-
-\begin_layout Standard
-Ovviamente nel caso si decida di usare i file 
-\series bold
-\noun on
-zImage
-\series default
-\noun default
- e 
-\series bold
-\noun on
-bzImage
-\series default
-\noun default
-, questo codice sarà quello invocato al termine della decompressione del
- kernel stesso.
-\end_layout
-
-\begin_layout Standard
-Ciò si evince anche dai commenti presenti nel file, come si può vedere:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true,extendedchars=true,firstnumber=59,language={[x86masm]Assembler},numbers=left,showstringspaces=false"
-inline false
-status collapsed
-
-\begin_layout Standard
-
-/*
-\end_layout
-
-\begin_layout Standard
-
- * Kernel startup entry point.
-\end_layout
-
-\begin_layout Standard
-
- * ---------------------------
-\end_layout
-
-\begin_layout Standard
-
- *
-\end_layout
-
-\begin_layout Standard
-
- * This is normally called from the decompressor code.
-  The requirements
-\end_layout
-
-\begin_layout Standard
-
- * are: MMU = off, D-cache = off, I-cache = dont care, r0 = 0,
-\end_layout
-
-\begin_layout Standard
-
- * r1 = machine nr, r2 = atags pointer.
-\end_layout
-
-\begin_layout Standard
-
- *
-\end_layout
-
-\begin_layout Standard
-
- * This code is mostly position independent, so if you link the kernel at
-\end_layout
-
-\begin_layout Standard
-
- * 0xc0008000, you call this at __pa(0xc0008000).
-\end_layout
-
-\begin_layout Standard
-
- *
-\end_layout
-
-\begin_layout Standard
-
- * See linux/arch/arm/tools/mach-types for the complete list of machine
-\end_layout
-
-\begin_layout Standard
-
- * numbers for r1.
-\end_layout
-
-\begin_layout Standard
-
- *
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In particolare, viene fatto riferimento al file 
-\noun on
-arch/arm/tools/mach-types
-\noun default
-: questi altro non è che un 
-\begin_inset Quotes eld
-\end_inset
-
-database
-\begin_inset Quotes erd
-\end_inset
-
- in cui si associa ad ogni modello supportato dal kernel che implementa
- le specifiche dell'ARM, una serie di codici univoci usati per poter generare
- delle guardie per implementare codice dipendente da macchina a macchina.
- Questo file è mantenuto dal 
-\begin_inset Quotes eld
-\end_inset
-
-The ARM Linux Project
-\begin_inset Quotes erd
-\end_inset
-
-
-\begin_inset LatexCommand citep
-key "mach_types_home_page"
-
-\end_inset
-
-, che assicura l'univocità degli identificatori usati per i vari palmari.
- In aggiunta a questo file vi è uno script awk (
-\noun on
-arch/arm/tools/gen-mach-types
-\noun default
-) capace di trasformare questo file di configurazione nel file 
-\noun on
-include/asm-arm/mach-types.h
-\noun default
-, pieno di macro usate in fase di compilazione per abilitare o meno il codice
- specifico della macchina target.
-\end_layout
-
-\begin_layout Subsection
-Boot
-\end_layout
-
-\begin_layout Standard
-Tornando alla sequenza di boot, analizziamo un attimo le prime istruzioni
- presenti in 
-\noun on
-arch/arm/kernel/head.S
-\noun default
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true,extendedchars=true,firstnumber=77,language={[x86masm]Assembler},numbers=left,showstringspaces=false"
-inline false
-status open
-
-\begin_layout Standard
-
-        .section ".text.head", "ax"
-\end_layout
-
-\begin_layout Standard
-
-        .type   stext, %function
-\end_layout
-
-\begin_layout Standard
-
-ENTRY(stext)
-\end_layout
-
-\begin_layout Standard
-
-        msr     cpsr_c, #PSR_F_BIT | PSR_I_BIT | SVC_MODE @ ensure svc mode
-\end_layout
-
-\begin_layout Standard
-
-                                                @ and irqs disabled
-\end_layout
-
-\begin_layout Standard
-
-        mrc     p15, 0, r9, c0, c0              @ get processor id
-\end_layout
-
-\begin_layout Standard
-
-        bl      __lookup_processor_type         @ r5=procinfo r9=cpuid
-\end_layout
-
-\begin_layout Standard
-
-        movs    r10, r5                         @ invalid processor (r5=0)?
-\end_layout
-
-\begin_layout Standard
-
-        beq     __error_p                       @ yes, error 'p'
-\end_layout
-
-\begin_layout Standard
-
-        bl      __lookup_machine_type           @ r5=machinfo
-\end_layout
-
-\begin_layout Standard
-
-        movs    r8, r5                          @ invalid machine (r5=0)?
-\end_layout
-
-\begin_layout Standard
-
-        beq     __error_a                       @ yes, error 'a'
-\end_layout
-
-\begin_layout Standard
-
-        bl      __vet_atags
-\end_layout
-
-\begin_layout Standard
-
-        bl      __create_page_tables
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\begin_layout Standard
-
-        /*
-\end_layout
-
-\begin_layout Standard
-
-         * The following calls CPU specific code in a position independent
-\end_layout
-
-\begin_layout Standard
-
-         * manner.
-  See arch/arm/mm/proc-*.S for details.
-  r10 = base of
-\end_layout
-
-\begin_layout Standard
-
-         * xxx_proc_info structure selected by __lookup_machine_type
-\end_layout
-
-\begin_layout Standard
-
-         * above.
-  On return, the CPU will be ready for the MMU to be
-\end_layout
-
-\begin_layout Standard
-
-         * turned on, and r0 will hold the CPU control register value.
-\end_layout
-
-\begin_layout Standard
-
-         */
-\end_layout
-
-\begin_layout Standard
-
-        ldr     r13, __switch_data              @ address to jump to after
-\end_layout
-
-\begin_layout Standard
-
-                                                @ mmu has been enabled
-\end_layout
-
-\begin_layout Standard
-
-        adr     lr, __enable_mmu                @ return (PIC) address
-\end_layout
-
-\begin_layout Standard
-
-        add     pc, r10, #PROCINFO_INITFUNC
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-All'inizio degni di nota sono soprattutto i controlli effettuati dal kernel
- sulla possibilità di supportare processore e macchina.
- In caso d'errore vengono invocate delle funzioni per avvisare l'utente
- e terminare l'esecuzione del programma.
-\end_layout
-
-\begin_layout Standard
-Una volta superati i controlli l'esecuzione continua ri-abilitando la 
-\noun on
-MMU
-\begin_inset LatexCommand nomenclature
-symbol "MMU"
-description "Memory Management Unit"
-
-\end_inset
-
-
-\noun default
- e eseguendo il codice specifico della cpu.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Greyedout
-status collapsed
-
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-DA CANCELLARE?
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsection
@@ -895,18 +448,8 @@ I primi istanti di
 Il modo più facile per analizzare il comportamento del kernel è usando un
 \end_layout
 
-\end_inset
-
-
-\end_layout
-
 \begin_layout Chapter
 Compilatore
-\end_layout
-
-\begin_layout Standard
-L'altra componente necessaria per compilare un kernel è, ovviamente, un
- compilatore :)
 \end_layout
 
 \begin_layout Section
@@ -914,33 +457,8 @@ Quale
 \end_layout
 
 \begin_layout Standard
-Per compilare il kernel linux è necessario usare il gcc, a causa delle varie
- estensioni del compilatore utilizzate dai 
-\emph on
-kernel
-\emph default
- 
-\emph on
-hackers
-\emph default
-.
- Sulla versione da utilizzare non ci sono preferenze, e, in genere, più
- nuovo è, meglio è.
-\end_layout
-
-\begin_layout Standard
-In effetti ci potrebbero essere problemi in caso di versioni del kernel
- e del compilatore particolarmente differenti tra di loro, a causa dell'uso
- (e spesso dell'abuso) che viene fatto delle varie estensioni 
-\emph on
-non standard
-\emph default
-.
-\end_layout
-
-\begin_layout Standard
-Nel nostro caso sono state usate varie versioni, principalmente 4.2.3 e 3.4.1,
- senza riscontrare particolari problemi.
+Per compilare il kernel linux è necessario usare il gcc (cioè, non è che
+ è necessario, ma noi quello avevamo).
 \end_layout
 
 \begin_layout Section
@@ -952,15 +470,8 @@ Per compilare un kernel per ARM ci sono le seguenti opzioni:
 \end_layout
 
 \begin_layout Enumerate
-Avere un sistema operativo + compilatore C su architettura ARM (e 
-\emph on
-parecchio
-\emph default
- 
-\emph on
-tempo
-\emph default
-, data la potenza di questi dispositivi).
+Avere un sistema operativo + compilatore C su architettura ARM (e parecchio
+ tempo, data la potenza di questi dispositivi)
 \end_layout
 
 \begin_layout Enumerate
@@ -970,7 +481,7 @@ name "enu:cross-compilare"
 \end_inset
 
 Avere un sistema operativo + compilatore C su architettura x86 + istruire
- il compilatore C a generare eseguibili per architettura ARM.
+ il compilatore C a generare eseguibili per architettura ARM
 \end_layout
 
 \begin_layout Standard
@@ -1024,7 +535,17 @@ Si può utilizzare come sistema
 host
 \noun default
  un sistema linux già funzionante (nel nostro caso, sono stati utilizzati
- una debian Lenny e una OpenSuse 10.3)
+ una debian 
+\begin_inset Note Greyedout
+status open
+
+\begin_layout Standard
+QUACCHECCOSA
+\end_layout
+
+\end_inset
+
+ e una OpenSuse 10.3)
 \end_layout
 
 \begin_layout Itemize
@@ -1038,6 +559,10 @@ host
 \noun default
  sono molto più potenti (minimizzando i tempi morti in attesa del termine
  della compilazione)
+\end_layout
+
+\begin_layout Itemize
+...BOH?
 \end_layout
 
 \begin_layout Standard
@@ -1097,7 +622,7 @@ Come ottenerlo
 
 \begin_layout Standard
 Qemu è libero, e già installato nella maggior parte delle distribuzioni.
- La versioni da noi usata è stata la 0.9.0 e la 0.9.1.
+ La versione da noi usata è stata la 0.9.0 e la 0.9.1.
 \end_layout
 
 \begin_layout Standard
@@ -2490,7 +2015,7 @@ la quale risulta una macro definita nel codice in modo seguente
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\normalsize\ttfamily},breaklines=true,language=C"
+lstparams "basicstyle={\normalsize\ttfamily},breaklines=true"
 inline false
 status open
 
@@ -2635,6 +2160,7 @@ Questo rappresenta la parte finale di un file di log.
 
 \begin_layout Standard
 \begin_inset listings
+lstparams "basicstyle={\normalsize\ttfamily},breaklines=true"
 inline false
 status open
 
@@ -2804,17 +2330,65 @@ Go Go Go...
 \begin_layout Standard
 Si noti come al terzo rigo avvisa dell'avvenuto riconoscimento della macchina
  e della tipologia di cpu.
- Poi parte nell'esecuzione del contenuto di startup.txt come fossero comandi
- separati tra loro (si noti il carattere # indicatore della pseudo-shell).
- L'ultimo comando è appunto bootlinux il quale fa partire l'esecuzione del
- codice visto in precedenza.
- Alla fine del log vi è la scritta Go Go Go ...
- che è l'ultimo messaggio previsto dal codice prima di lasciare spegnere
- l'hardware e lasciare l'esecuzione del kernel.
+ Poi parte nell'esecuzione del contenuto di 
+\emph on
+startup.txt
+\emph default
+ come fossero comandi separati tra loro (si noti il carattere # indicatore
+ della pseudo-shell).
+ L'ultimo comando è appunto 
+\emph on
+bootlinux
+\emph default
+ il quale fa partire l'esecuzione del codice visto in precedenza.
+ Alla fine del file di log vi è la scritta 
+\emph on
+Go Go Go ...
+
+\emph default
+ che è l'ultimo messaggio previsto dal codice prima di spegnere l'hardware
+ e lasciare l'esecuzione al kernel.
  La presenza di questo messaggio quindi implica il successo nell'esecuzione
  di haret.
  Tutti gli eventuali problemi successivi saranno dovuti al kernel non più
  ad haret.
+\end_layout
+
+\begin_layout Section
+Problemi
+\end_layout
+
+\begin_layout Standard
+Abbiamo constatato delle difficoltà a debuggare su un sistema embedded.
+\end_layout
+
+\begin_layout Standard
+Nel nostro caso avevamo problemi dal momento che ci appariva la scritta
+ Go Go Go...
+ ma il kernel non partiva.
+\end_layout
+
+\begin_layout Standard
+Eravamo quindi davanti una serie di possibili cause da dimostrare.
+\end_layout
+
+\begin_layout Standard
+Il primo dubbio risolto riguardava errori presenti all'interno del codice
+ di haret.
+ Con un'attento debug tramite stringhe stampate sullo schermo ci siamo accertati
+ che effettivamente il controllo passava al kernel (tre righe finali viste
+ in precedenza).
+\end_layout
+
+\begin_layout Standard
+Il dubbio immediatamente successivo riguardava un problema di errato passaggio
+ del file del kernel.
+\end_layout
+
+\begin_layout Standard
+Anche in questo caso abbiamo stampato a video e confrontato bit a bit il
+ file del kernel che passavamo all'interno di startup.txt e il contenuto
+ del buffer di memoria che veniva avviato da haret.
 \end_layout
 
 \begin_layout Standard
