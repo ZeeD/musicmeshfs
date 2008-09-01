@@ -120,6 +120,11 @@ HTC P6300
 \end_layout
 
 \begin_layout Section
+\begin_inset LatexCommand label
+name "sec:Configurazione-e-compilazione"
+
+\end_inset
+
 Configurazione e compilazione
 \end_layout
 
@@ -258,27 +263,20 @@ preview false
 \end_layout
 
 \begin_layout Standard
-Alla fine della fase di configurazione, basterà lanciare
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true,language=bash,showstringspaces=false"
-inline false
-status collapsed
-
-\begin_layout Standard
-
-$ make
-\end_layout
+Alla fine della fase di configurazione, si dovrà iniziare a compilare i
+ sorgenti.
+ Poiché vogliamo generare un kernel (quindi un eseguibile) per 
+\noun on
+ARM
+\noun default
+.
+ Per questo motivo si rimanda alla sezione 
+\begin_inset LatexCommand vref
+reference "sec:Cross-compilazione"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-per dare il via alla fase di compilazione vera e propria dei sorgenti.
+ per le problematiche della cross-compilazione.
 \end_layout
 
 \begin_layout Section
@@ -668,7 +666,7 @@ Tornando alla sequenza di boot, analizziamo un attimo le prime istruzioni
 \begin_inset listings
 lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=77,language=C,numbers=left,showstringspaces=false"
 inline false
-status collapsed
+status open
 
 \begin_layout Standard
 
@@ -802,10 +800,6 @@ ENTRY(stext)
         add     pc, r10, #PROCINFO_INITFUNC
 \end_layout
 
-\begin_layout Standard
-
-\end_layout
-
 \end_inset
 
 
@@ -814,94 +808,911 @@ ENTRY(stext)
 \begin_layout Standard
 All'inizio degni di nota sono soprattutto i controlli effettuati dal kernel
  sulla possibilità di supportare processore e macchina.
- 
 \end_layout
 
 \begin_layout Standard
 In caso d'errore vengono invocate delle funzioni per avvisare l'utente -
  e terminare l'esecuzione del programma.
- 
+ Altrimenti vengono 
+\begin_inset Quotes eld
+\end_inset
+
+salvati
+\begin_inset Quotes erd
+\end_inset
+
+ nel registro 10 il processore e nel registro 8 il tipo di macchina.
 \end_layout
 
 \begin_layout Standard
-Una volta superati i controlli l'esecuzione continua ri-abilitando la 
-\noun on
-MMU
-\noun default
+Una volta superati i controlli l'esecuzione continua con il codice specifico
+ della cpu.
+ Ma vengono salvate alcune funzioni da eseguire in seguito.
+\end_layout
 
+\begin_layout Standard
+Nelle ultime tre righe, infatti, si istruisce il programma a salvare nel
+ registro 13 il codice di __switch_data e a salvare nel 
+\begin_inset Quotes eld
+\end_inset
+
+last register
+\begin_inset Quotes erd
+\end_inset
+
+ (lr) il codice per abilitare l'MMU
 \begin_inset LatexCommand nomenclature
 symbol "MMU"
 description "Memory Management Unit"
 
 \end_inset
 
- e eseguendo il codice specifico della cpu.
+.
+ Questi dovrà essere eseguito dopo il codice specifico della macchina: l'ultima
+ riga, infatti, altro non fa che scrivere sul program counter (pc) la somma
+ del registro 10 (indirizzo di memoria che contiene le informazioni sulla
+ cpu riconosciuta) col valore di PROCINFO_INITFUNC, definito in 
+\noun on
+arch/arm/kernel/asm-offsets.c 
+\noun default
+come
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
+\begin_inset listings
+lstparams "basicstyle={\tiny\ttfamily},breaklines=true,extendedchars=true,language=C,showstringspaces=false"
+inline false
 status collapsed
 
-\begin_layout Subsection
-Dal click al bios
-\end_layout
-
 \begin_layout Standard
-C'è poco da dire: fondamentalmente è tutto hardware, quindi
-\emph on
-black magic
-\emph default
-, e, oltretutto, poco interessante.
- In sostanza arriva un segnale al trasformatore dal pulsante, che inizia
- ad alimentare la
-\noun on
-cpu
-\noun default
-, che esegue il programma contenuto in una
-\noun on
-rom
-\noun default
-,
-\noun on
-nvram
-\noun default
-, o
-\noun on
-cmos ram
-\noun default
-.
- Viene lanciato il bios, che ha il compito di verificare alcune funzioni
- fondamentali (che arrivi la corrente alla cpu, alla ram e alle varie periferich
-e...) e di eseguire il contenuto dell'
-\noun on
-mbr.
-\end_layout
-
-\begin_layout Subsection
-Dal bios al bootloader
-\end_layout
-
-\begin_layout Standard
-Anche qui c'è poco da dire.
-\end_layout
-
-\begin_layout Subsection
-Dal bootloader a
-\family typewriter
-init
-\end_layout
-
-\begin_layout Standard
-I primi istanti di
-\end_layout
-
-\begin_layout Standard
-Il modo più facile per analizzare il comportamento del kernel è usando un
+DEFINE(PROCINFO_INITFUNC, offsetof(struct proc_info_list, __cpu_flush));
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+dove 
+\noun on
+proc_info_list
+\noun default
+ altro non è che la struttura della variabile contenente le informazioni
+ del processore, e __cpu_flush è un suo campo.
+ Nel nostro caso verrà eseguito il codice presente nel file arch/arm/mm/proc-arm
+926.S.
+ (è la cpu per la quale stiamo compilando il kernel)
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=471,language=C,numbers=left,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+        .type   __arm926_proc_info,#object
+\end_layout
+
+\begin_layout Standard
+
+__arm926_proc_info:
+\end_layout
+
+\begin_layout Standard
+
+        .long   0x41069260                      @ ARM926EJ-S (v5TEJ)
+\end_layout
+
+\begin_layout Standard
+
+        .long   0xff0ffff0
+\end_layout
+
+\begin_layout Standard
+
+        .long   PMD_TYPE_SECT | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                PMD_SECT_BUFFERABLE | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                PMD_SECT_CACHEABLE | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                PMD_BIT4 | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                PMD_SECT_AP_WRITE | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                PMD_SECT_AP_READ
+\end_layout
+
+\begin_layout Standard
+
+        .long   PMD_TYPE_SECT | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                PMD_BIT4 | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                PMD_SECT_AP_WRITE | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                PMD_SECT_AP_READ
+\end_layout
+
+\begin_layout Standard
+
+        b       __arm926_setup
+\end_layout
+
+\begin_layout Standard
+
+        .long   cpu_arch_name
+\end_layout
+
+\begin_layout Standard
+
+        .long   cpu_elf_name
+\end_layout
+
+\begin_layout Standard
+
+        .long   HWCAP_SWP|HWCAP_HALF|HWCAP_THUMB|HWCAP_FAST_MULT|HWCAP_EDSP|HWCAP
+_JAVA
+\end_layout
+
+\begin_layout Standard
+
+        .long   cpu_arm926_name
+\end_layout
+
+\begin_layout Standard
+
+        .long   arm926_processor_functions
+\end_layout
+
+\begin_layout Standard
+
+        .long   v4wbi_tlb_fns
+\end_layout
+
+\begin_layout Standard
+
+        .long   v4wb_user_fns
+\end_layout
+
+\begin_layout Standard
+
+        .long   arm926_cache_fns
+\end_layout
+
+\begin_layout Standard
+
+        .size   __arm926_proc_info, .
+ - __arm926_proc_info
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Quindi in pratica andremo ad eseguire il codice presente nel quinto campo
+ della struttura, cioé __arm926_setup, definita nello stesso file
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=395,language=C,numbers=left,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+        .type   __arm926_setup, #function
+\end_layout
+
+\begin_layout Standard
+
+__arm926_setup:
+\end_layout
+
+\begin_layout Standard
+
+        mov     r0, #0
+\end_layout
+
+\begin_layout Standard
+
+        mcr     p15, 0, r0, c7, c7              @ invalidate I,D caches
+ on v4
+\end_layout
+
+\begin_layout Standard
+
+        mcr     p15, 0, r0, c7, c10, 4          @ drain write buffer on
+ v4
+\end_layout
+
+\begin_layout Standard
+
+#ifdef CONFIG_MMU
+\end_layout
+
+\begin_layout Standard
+
+        mcr     p15, 0, r0, c8, c7              @ invalidate I,D TLBs on
+ v4
+\end_layout
+
+\begin_layout Standard
+
+#endif
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+#ifdef CONFIG_CPU_DCACHE_WRITETHROUGH
+\end_layout
+
+\begin_layout Standard
+
+        mov     r0, #4                          @ disable write-back on
+ caches explicitly
+\end_layout
+
+\begin_layout Standard
+
+        mcr     p15, 7, r0, c15, c0, 0
+\end_layout
+
+\begin_layout Standard
+
+#endif
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        adr     r5, arm926_crval
+\end_layout
+
+\begin_layout Standard
+
+        ldmia   r5, {r5, r6}
+\end_layout
+
+\begin_layout Standard
+
+        mrc     p15, 0, r0, c1, c0              @ get control register v4
+\end_layout
+
+\begin_layout Standard
+
+        bic     r0, r0, r5
+\end_layout
+
+\begin_layout Standard
+
+        orr     r0, r0, r6
+\end_layout
+
+\begin_layout Standard
+
+#ifdef CONFIG_CPU_CACHE_ROUND_ROBIN
+\end_layout
+
+\begin_layout Standard
+
+        orr     r0, r0, #0x4000                 @ .1..
+ ....
+ ....
+ ....
+\end_layout
+
+\begin_layout Standard
+
+#endif
+\end_layout
+
+\begin_layout Standard
+
+        mov     pc, lr
+\end_layout
+
+\begin_layout Standard
+
+        .size   __arm926_setup, .
+ - __arm926_setup
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A parte il codice specifico, è da notare come termini scrivendo sul program
+ counter il valore del last register, cioè l'indirizzo di __enable_mmu.
+ Essa è definita in head.S.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=149,language=C,numbers=left,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * Setup common bits before finally enabling the MMU.
+  Essentially
+\end_layout
+
+\begin_layout Standard
+
+ * this is just loading the page table pointer and domain access
+\end_layout
+
+\begin_layout Standard
+
+ * registers.
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+        .type   __enable_mmu, %function
+\end_layout
+
+\begin_layout Standard
+
+__enable_mmu:
+\end_layout
+
+\begin_layout Standard
+
+#ifdef CONFIG_ALIGNMENT_TRAP
+\end_layout
+
+\begin_layout Standard
+
+        orr     r0, r0, #CR_A
+\end_layout
+
+\begin_layout Standard
+
+#else
+\end_layout
+
+\begin_layout Standard
+
+        bic     r0, r0, #CR_A
+\end_layout
+
+\begin_layout Standard
+
+#endif
+\end_layout
+
+\begin_layout Standard
+
+#ifdef CONFIG_CPU_DCACHE_DISABLE
+\end_layout
+
+\begin_layout Standard
+
+        bic     r0, r0, #CR_C
+\end_layout
+
+\begin_layout Standard
+
+#endif
+\end_layout
+
+\begin_layout Standard
+
+#ifdef CONFIG_CPU_BPREDICT_DISABLE
+\end_layout
+
+\begin_layout Standard
+
+        bic     r0, r0, #CR_Z
+\end_layout
+
+\begin_layout Standard
+
+#endif
+\end_layout
+
+\begin_layout Standard
+
+#ifdef CONFIG_CPU_ICACHE_DISABLE
+\end_layout
+
+\begin_layout Standard
+
+        bic     r0, r0, #CR_I
+\end_layout
+
+\begin_layout Standard
+
+#endif
+\end_layout
+
+\begin_layout Standard
+
+        mov     r5, #(domain_val(DOMAIN_USER, DOMAIN_MANAGER) | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                      domain_val(DOMAIN_KERNEL, DOMAIN_MANAGER) | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                      domain_val(DOMAIN_TABLE, DOMAIN_MANAGER) | 
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+                      domain_val(DOMAIN_IO, DOMAIN_CLIENT))
+\end_layout
+
+\begin_layout Standard
+
+        mcr     p15, 0, r5, c3, c0, 0           @ load domain access register
+\end_layout
+
+\begin_layout Standard
+
+        mcr     p15, 0, r4, c2, c0, 0           @ load page table pointer
+\end_layout
+
+\begin_layout Standard
+
+        b       __turn_mmu_on
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+L'ultima riga invoca la funzione __turn_mmu_on, definita subito dopo.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=178,language=C,numbers=left,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * Enable the MMU.
+  This completely changes the structure of the visible
+\end_layout
+
+\begin_layout Standard
+
+ * memory space.
+  You will not be able to trace execution through this.
+\end_layout
+
+\begin_layout Standard
+
+ * If you have an enquiry about this, *please* check the linux-arm-kernel
+\end_layout
+
+\begin_layout Standard
+
+ * mailing list archives BEFORE sending another post to the list.
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ *  r0  = cp#15 control register
+\end_layout
+
+\begin_layout Standard
+
+ *  r13 = *virtual* address to jump to upon completion
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * other registers depend on the function called upon completion
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+        .align  5
+\end_layout
+
+\begin_layout Standard
+
+        .type   __turn_mmu_on, %function
+\end_layout
+
+\begin_layout Standard
+
+__turn_mmu_on:
+\end_layout
+
+\begin_layout Standard
+
+        mov     r0, r0
+\end_layout
+
+\begin_layout Standard
+
+        mcr     p15, 0, r0, c1, c0, 0           @ write control reg
+\end_layout
+
+\begin_layout Standard
+
+        mrc     p15, 0, r3, c0, c0, 0           @ read id reg
+\end_layout
+
+\begin_layout Standard
+
+        mov     r3, r3
+\end_layout
+
+\begin_layout Standard
+
+        mov     r3, r3
+\end_layout
+
+\begin_layout Standard
+
+        mov     pc, r13
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al termine della funzione, viene modificato il program counter per eseguire
+ il contenuto del registro 13, contenente l'oggetto __switch_data.
+ Questo è definito nel file 
+\noun on
+arch/arm/kernel/head-common.S
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=17,language=C,numbers=left,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+        .type   __switch_data, %object
+\end_layout
+
+\begin_layout Standard
+
+__switch_data:
+\end_layout
+
+\begin_layout Standard
+
+        .long   __mmap_switched
+\end_layout
+
+\begin_layout Standard
+
+        .long   __data_loc                      @ r4
+\end_layout
+
+\begin_layout Standard
+
+        .long   __data_start                    @ r5
+\end_layout
+
+\begin_layout Standard
+
+        .long   __bss_start                     @ r6
+\end_layout
+
+\begin_layout Standard
+
+        .long   _end                            @ r7
+\end_layout
+
+\begin_layout Standard
+
+        .long   processor_id                    @ r4
+\end_layout
+
+\begin_layout Standard
+
+        .long   __machine_arch_type             @ r5
+\end_layout
+
+\begin_layout Standard
+
+        .long   __atags_pointer                 @ r6
+\end_layout
+
+\begin_layout Standard
+
+        .long   cr_alignment                    @ r7
+\end_layout
+
+\begin_layout Standard
+
+        .long   init_thread_union + THREAD_START_SP @ sp
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * The following fragment of code is executed with the MMU on in MMU mode,
+\end_layout
+
+\begin_layout Standard
+
+ * and uses absolute addresses; this is not position independent.
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ *  r0  = cp#15 control register
+\end_layout
+
+\begin_layout Standard
+
+ *  r1  = machine ID
+\end_layout
+
+\begin_layout Standard
+
+ *  r2  = atags pointer
+\end_layout
+
+\begin_layout Standard
+
+ *  r9  = processor ID
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+        .type   __mmap_switched, %function
+\end_layout
+
+\begin_layout Standard
+
+__mmap_switched:
+\end_layout
+
+\begin_layout Standard
+
+        adr     r3, __switch_data + 4
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        ldmia   r3!, {r4, r5, r6, r7}
+\end_layout
+
+\begin_layout Standard
+
+        cmp     r4, r5                          @ Copy data segment if needed
+\end_layout
+
+\begin_layout Standard
+
+1:      cmpne   r5, r6
+\end_layout
+
+\begin_layout Standard
+
+        ldrne   fp, [r4], #4
+\end_layout
+
+\begin_layout Standard
+
+        strne   fp, [r5], #4
+\end_layout
+
+\begin_layout Standard
+
+        bne     1b
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        mov     fp, #0                          @ Clear BSS (and zero fp)
+\end_layout
+
+\begin_layout Standard
+
+1:      cmp     r6, r7
+\end_layout
+
+\begin_layout Standard
+
+        strcc   fp, [r6],#4
+\end_layout
+
+\begin_layout Standard
+
+        bcc     1b
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        ldmia   r3, {r4, r5, r6, r7, sp}
+\end_layout
+
+\begin_layout Standard
+
+        str     r9, [r4]                        @ Save processor ID
+\end_layout
+
+\begin_layout Standard
+
+        str     r1, [r5]                        @ Save machine type
+\end_layout
+
+\begin_layout Standard
+
+        str     r2, [r6]                        @ Save atags pointer
+\end_layout
+
+\begin_layout Standard
+
+        bic     r4, r0, #CR_A                   @ Clear 'A' bit
+\end_layout
+
+\begin_layout Standard
+
+        stmia   r7, {r0, r4}                    @ Save control register
+ values
+\end_layout
+
+\begin_layout Standard
+
+        b       start_kernel
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Il primo campo dell'oggetto __switch_data è la funzione __mmap_switched
+ che, eseguita, termina invocando start_kernel, la funzione 
+\begin_inset Quotes eld
+\end_inset
+
+ad alto livello
+\begin_inset Quotes erd
+\end_inset
+
+ implementata in C nel file init/main.c.
 \end_layout
 
 \begin_layout Chapter
@@ -949,6 +1760,11 @@ Nel nostro caso sono state usate varie versioni, principalmente 4.2.3 e 3.4.1,
 \end_layout
 
 \begin_layout Section
+\begin_inset LatexCommand label
+name "sec:Cross-compilazione"
+
+\end_inset
+
 Cross-compilazione
 \end_layout
 
@@ -1107,6 +1923,79 @@ key "handhelds_toolchain"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+Tuttavia è necessario istruire il kernel del fatto che vogliamo compilare
+ i sorgenti (già configurati) con un compilatore diverso (ed un diverso
+ linker, assembler, ecc).
+\end_layout
+
+\begin_layout Standard
+Per questo viene in aiuto la variabile d'ambiente 
+\noun on
+CROSS_COMPILER
+\noun default
+, che istruisce il make su dove andare a cercare la 
+\emph on
+toolchain
+\begin_inset LatexCommand nomenclature
+symbol "toolchain"
+description "Insieme di tutti gli strumenti (tra gli altri preprocessore, assembler, compilatore, linker...) necessari alla generazione di codice eseguibile a partire da sorgenti."
+
+\end_inset
+
+
+\emph default
+ adatta.
+\end_layout
+
+\begin_layout Standard
+Terminata la parte di configurazione del kernel, come già fatto nella sezione
+ 
+\begin_inset LatexCommand vref
+reference "sec:Configurazione-e-compilazione"
+
+\end_inset
+
+, non resta che compilare e testare :)
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ export CROSS_COMPILE=/usr/local/arm/3.4.1/bin/arm-linux-
+\end_layout
+
+\begin_layout Standard
+
+$ make
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+È da notare come 
+\noun on
+CROSS_COMPILE
+\noun default
+ indichi il prefisso comune a tutti gli eseguibili necessari (
+\noun on
+arm-linux-gcc
+\noun default
+, 
+\noun on
+arm-linux-ld
+\noun default
+...).
 \end_layout
 
 \begin_layout Chapter
@@ -1949,15 +2838,67 @@ TROVARE - SCOPIAZZARE immagine debug remoto fatto con qemu!
 
 \begin_layout Standard
 Lavorando con qemu è possibile impostare l'emulatore (che è un programma
- utente, sulla macchina host) per offrire una connessione a gdb.
+ utente, sulla macchina host) per offrire una connessione a gdb (come se
+ si volesse fare debugging remoto su un'altra macchina).
 \end_layout
 
 \begin_layout Standard
-Lancio qemu con le opzioni -S -s, e, da un altro terminale, uso
+Per fare ciò basta eseguire qemu aggiungendo le opzioni 
+\noun on
+-S
+\noun default
+ (per non far partire la cpu dall'inizio) e 
+\noun on
+-s
+\noun default
+ (per attendere una connessione dal 
+\begin_inset Quotes eld
+\end_inset
+
+client
+\begin_inset Quotes erd
+\end_inset
+
+ gdb).
 \end_layout
 
-\begin_layout LyX-Code
-gdb $PATH/$TO/vmlinux ...
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status open
+
+\begin_layout Standard
+
+$ qemu-system-arm -M versatileab -cpu arm926 -sd IMMAGINE_SD -nographic
+ -S -s
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In questo modo il programma rimarrà in attesa.
+ Da un altro terminale, quindi, sarà possibile lanciare il debugger.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status open
+
+\begin_layout Standard
+
+$ arm-linux-gdbtui vmlinux
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
