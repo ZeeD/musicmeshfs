@@ -6024,15 +6024,27 @@ adr aggiunge al secondo il terzo valore e lo memorizza nel primo
 \end_layout
 
 \begin_layout Description
-1f label utilizzata per ciclare verso una label (2) avanti nel codice (forward)
+1f label utilizzata per ciclare verso una label (1) avanti nel codice (forward)
 \end_layout
 
 \begin_layout Description
-b (branch) salta alla label indicata (esempio b start_kernel)
+b (branch) salta alla label indicata (esempio 
+\emph on
+b start_kernel
+\emph default
+)
 \end_layout
 
 \begin_layout Description
-blo salta loopando alla label indicata (esempio blo decompress_kernel)
+blo salta loopando alla label indicata (esempio 
+\emph on
+blo decompress_kernel
+\emph default
+)
+\end_layout
+
+\begin_layout Description
+
 \end_layout
 
 \end_body
