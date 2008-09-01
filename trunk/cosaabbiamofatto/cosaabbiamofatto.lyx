@@ -2088,8 +2088,11 @@ PROCINFO_INITFUNC
 \noun default
 , quindi, altro non è che un offset per arrivare all'indirizzo di un campo
  partendo dall'indirizzo base di una struttura.
- Nel nostro caso verrà eseguito il codice presente nel file arch/arm/mm/proc-arm
-926.S.
+ Nel nostro caso verrà eseguito il codice presente nel file 
+\noun on
+arch/arm/mm/proc-arm926.S
+\noun default
+.
  (è la cpu per la quale stiamo compilando il kernel)
 \end_layout
 
