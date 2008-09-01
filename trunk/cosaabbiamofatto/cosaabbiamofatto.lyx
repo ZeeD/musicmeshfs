@@ -3122,8 +3122,12 @@ Il dubbio immediatamente successivo riguardava un problema di errato passaggio
 
 \begin_layout Standard
 Anche in questo caso abbiamo stampato a video e confrontato bit a bit il
- file del kernel che passavamo all'interno di startup.txt e il contenuto
- del buffer di memoria che veniva avviato da haret.
+ file del kernel con il contenuto del buffer di memoria che veniva avviato
+ da haret.
+\end_layout
+
+\begin_layout Chapter
+U-Boot
 \end_layout
 
 \begin_layout Standard
