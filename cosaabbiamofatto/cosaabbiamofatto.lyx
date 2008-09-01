@@ -650,6 +650,1172 @@ include/asm-arm/mach-types.h
 \end_layout
 
 \begin_layout Subsection
+Decompressione
+\end_layout
+
+\begin_layout Standard
+Le prime istruzioni eseguite all'avvio di una zImage sono quelle relative
+ alla decompressione del kernel.
+\end_layout
+
+\begin_layout Standard
+Il codice relativo alla decompressione è scritto in Assembly e si trova
+ all'interno del file 
+\noun on
+arch/arm/boot/compressed/head.s
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,language=C"
+inline false
+status open
+
+\begin_layout Standard
+
+...
+\end_layout
+
+\begin_layout Standard
+
+               .section ".start", #alloc, #execinstr
+\end_layout
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * sort out different calling conventions
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+                .align
+\end_layout
+
+\begin_layout Standard
+
+start:
+\end_layout
+
+\begin_layout Standard
+
+                .type   start,#function
+\end_layout
+
+\begin_layout Standard
+
+                .rept   8
+\end_layout
+
+\begin_layout Standard
+
+                mov     r0, r0
+\end_layout
+
+\begin_layout Standard
+
+                .endr
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                b       1f
+\end_layout
+
+\begin_layout Standard
+
+                .word   0x016f2818              @ Magic numbers to help the
+ loader
+\end_layout
+
+\begin_layout Standard
+
+                .word   start                   @ absolute load/run zImage
+ address
+\end_layout
+
+\begin_layout Standard
+
+                .word   _edata                  @ zImage end address
+\end_layout
+
+\begin_layout Standard
+
+1:              mov     r7, r1                  @ save architecture ID
+\end_layout
+
+\begin_layout Standard
+
+                mov     r8, #0                  @ save r0
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+#ifndef __ARM_ARCH_2__
+\end_layout
+
+\begin_layout Standard
+
+                /*
+\end_layout
+
+\begin_layout Standard
+
+                 * Booting from Angel - need to enter SVC mode and disable
+\end_layout
+
+\begin_layout Standard
+
+                 * FIQs/IRQs (numeric definitions from angel arm.h source).
+\end_layout
+
+\begin_layout Standard
+
+                 * We only do this if we were in user mode on entry.
+\end_layout
+
+\begin_layout Standard
+
+                 */
+\end_layout
+
+\begin_layout Standard
+
+                mrs     r2, cpsr                @ get current mode
+\end_layout
+
+\begin_layout Standard
+
+                tst     r2, #3                  @ not user?
+\end_layout
+
+\begin_layout Standard
+
+                bne     not_angel
+\end_layout
+
+\begin_layout Standard
+
+                mov     r0, #0x17               @ angel_SWIreason_EnterSVC
+\end_layout
+
+\begin_layout Standard
+
+                swi     0x123456                @ angel_SWI_ARM
+\end_layout
+
+\begin_layout Standard
+
+not_angel:
+\end_layout
+
+\begin_layout Standard
+
+                mrs     r2, cpsr                @ turn off interrupts to
+\end_layout
+
+\begin_layout Standard
+
+                orr     r2, r2, #0xc0           @ prevent angel from running
+\end_layout
+
+\begin_layout Standard
+
+                msr     cpsr_c, r2
+\end_layout
+
+\begin_layout Standard
+
+#else
+\end_layout
+
+\begin_layout Standard
+
+                teqp    pc, #0x0c000003         @ turn off interrupts
+\end_layout
+
+\begin_layout Standard
+
+#endif
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                /*
+\end_layout
+
+\begin_layout Standard
+
+                 * Note that some cache flushing and other stuff may
+\end_layout
+
+\begin_layout Standard
+
+                 * be needed here - is there an Angel SWI call for this?
+\end_layout
+
+\begin_layout Standard
+
+                 */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                /*
+\end_layout
+
+\begin_layout Standard
+
+                 * some architecture specific code can be inserted
+\end_layout
+
+\begin_layout Standard
+
+                 * by the linker here, but it should preserve r7 and r8.
+\end_layout
+
+\begin_layout Standard
+
+                 */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                .text
+\end_layout
+
+\begin_layout Standard
+
+                adr     r0, LC0
+\end_layout
+
+\begin_layout Standard
+
+                ldmia   r0, {r1, r2, r3, r4, r5, r6, ip, sp}
+\end_layout
+
+\begin_layout Standard
+
+                subs    r0, r0, r1              @ calculate the delta offset
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                                                @ if delta is zero, we're
+\end_layout
+
+\begin_layout Standard
+
+                beq     not_relocated           @ running at the address
+ we
+\end_layout
+
+\begin_layout Standard
+
+                                                @ were linked at.
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                /*
+\end_layout
+
+\begin_layout Standard
+
+                 * We're running at a different address.
+  We need to fix
+\end_layout
+
+\begin_layout Standard
+
+                 * up various pointers:
+\end_layout
+
+\begin_layout Standard
+
+                 *   r5 - zImage base address
+\end_layout
+
+\begin_layout Standard
+
+                 *   r6 - GOT start
+\end_layout
+
+\begin_layout Standard
+
+                 *   ip - GOT end
+\end_layout
+
+\begin_layout Standard
+
+                 */
+\end_layout
+
+\begin_layout Standard
+
+                add     r5, r5, r0
+\end_layout
+
+\begin_layout Standard
+
+                add     r6, r6, r0
+\end_layout
+
+\begin_layout Standard
+
+                add     ip, ip, r0
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+#ifndef CONFIG_ZBOOT_ROM
+\end_layout
+
+\begin_layout Standard
+
+                /*
+\end_layout
+
+\begin_layout Standard
+
+                 * If we're running fully PIC === CONFIG_ZBOOT_ROM = n,
+\end_layout
+
+\begin_layout Standard
+
+                 * we need to fix up pointers into the BSS region.
+\end_layout
+
+\begin_layout Standard
+
+                 *   r2 - BSS start
+\end_layout
+
+\begin_layout Standard
+
+                 *   r3 - BSS end
+\end_layout
+
+\begin_layout Standard
+
+                 *   sp - stack pointer
+\end_layout
+
+\begin_layout Standard
+
+                 */
+\end_layout
+
+\begin_layout Standard
+
+                add     r2, r2, r0
+\end_layout
+
+\begin_layout Standard
+
+                add     r3, r3, r0
+\end_layout
+
+\begin_layout Standard
+
+                add     sp, sp, r0
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                /*
+\end_layout
+
+\begin_layout Standard
+
+                 * Relocate all entries in the GOT table.
+\end_layout
+
+\begin_layout Standard
+
+                 */
+\end_layout
+
+\begin_layout Standard
+
+1:              ldr     r1, [r6, #0]            @ relocate entries in the
+ GOT
+\end_layout
+
+\begin_layout Standard
+
+                add     r1, r1, r0              @ table.
+  This fixes up the
+\end_layout
+
+\begin_layout Standard
+
+                str     r1, [r6], #4            @ C references.
+\end_layout
+
+\begin_layout Standard
+
+                cmp     r6, ip
+\end_layout
+
+\begin_layout Standard
+
+                blo     1b
+\end_layout
+
+\begin_layout Standard
+
+#else
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                /*
+\end_layout
+
+\begin_layout Standard
+
+                 * Relocate entries in the GOT table.
+  We only relocate
+\end_layout
+
+\begin_layout Standard
+
+                 * the entries that are outside the (relocated) BSS region.
+\end_layout
+
+\begin_layout Standard
+
+                 */
+\end_layout
+
+\begin_layout Standard
+
+1:              ldr     r1, [r6, #0]            @ relocate entries in the
+ GOT
+\end_layout
+
+\begin_layout Standard
+
+                cmp     r1, r2                  @ entry < bss_start ||
+\end_layout
+
+\begin_layout Standard
+
+                cmphs   r3, r1                  @ _end < entry
+\end_layout
+
+\begin_layout Standard
+
+                addlo   r1, r1, r0              @ table.
+  This fixes up the
+\end_layout
+
+\begin_layout Standard
+
+                str     r1, [r6], #4            @ C references.
+\end_layout
+
+\begin_layout Standard
+
+                cmp     r6, ip
+\end_layout
+
+\begin_layout Standard
+
+                blo     1b
+\end_layout
+
+\begin_layout Standard
+
+#endif
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+not_relocated:  mov     r0, #0
+\end_layout
+
+\begin_layout Standard
+
+1:              str     r0, [r2], #4            @ clear bss
+\end_layout
+
+\begin_layout Standard
+
+                str     r0, [r2], #4
+\end_layout
+
+\begin_layout Standard
+
+                str     r0, [r2], #4
+\end_layout
+
+\begin_layout Standard
+
+                str     r0, [r2], #4
+\end_layout
+
+\begin_layout Standard
+
+                cmp     r2, r3
+\end_layout
+
+\begin_layout Standard
+
+                blo     1b
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                /*
+\end_layout
+
+\begin_layout Standard
+
+                 * The C runtime environment should now be setup
+\end_layout
+
+\begin_layout Standard
+
+                 * sufficiently.
+  Turn the cache on, set up some
+\end_layout
+
+\begin_layout Standard
+
+                 * pointers, and start decompressing.
+\end_layout
+
+\begin_layout Standard
+
+                 */
+\end_layout
+
+\begin_layout Standard
+
+                bl      cache_on
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                mov     r1, sp                  @ malloc space above stack
+\end_layout
+
+\begin_layout Standard
+
+                add     r2, sp, #0x10000        @ 64k max
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * Check to see if we will overwrite ourselves.
+\end_layout
+
+\begin_layout Standard
+
+ *   r4 = final kernel address
+\end_layout
+
+\begin_layout Standard
+
+ *   r5 = start of this image
+\end_layout
+
+\begin_layout Standard
+
+ *   r2 = end of malloc space (and therefore this image)
+\end_layout
+
+\begin_layout Standard
+
+ * We basically want:
+\end_layout
+
+\begin_layout Standard
+
+ *   r4 >= r2 -> OK
+\end_layout
+
+\begin_layout Standard
+
+ *   r4 + image length <= r5 -> OK
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+                cmp     r4, r2
+\end_layout
+
+\begin_layout Standard
+
+                bhs     wont_overwrite
+\end_layout
+
+\begin_layout Standard
+
+                add     r0, r4, #4096*1024      @ 4MB largest kernel size
+\end_layout
+
+\begin_layout Standard
+
+                cmp     r0, r5
+\end_layout
+
+\begin_layout Standard
+
+                bls     wont_overwrite
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                mov     r5, r2                  @ decompress after malloc
+ space
+\end_layout
+
+\begin_layout Standard
+
+                mov     r0, r5
+\end_layout
+
+\begin_layout Standard
+
+                mov     r3, r7
+\end_layout
+
+\begin_layout Standard
+
+                bl      decompress_kernel
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                add     r0, r0, #127
+\end_layout
+
+\begin_layout Standard
+
+                bic     r0, r0, #127            @ align the kernel length
+\end_layout
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * r0     = decompressed kernel length
+\end_layout
+
+\begin_layout Standard
+
+ * r1-r3  = unused
+\end_layout
+
+\begin_layout Standard
+
+ * r4     = kernel execution address
+\end_layout
+
+\begin_layout Standard
+
+ * r5     = decompressed kernel start
+\end_layout
+
+\begin_layout Standard
+
+ * r6     = processor ID
+\end_layout
+
+\begin_layout Standard
+
+ * r7     = architecture ID
+\end_layout
+
+\begin_layout Standard
+
+ * r8-r14 = unused
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+                add     r1, r5, r0              @ end of decompressed kernel
+\end_layout
+
+\begin_layout Standard
+
+                adr     r2, reloc_start
+\end_layout
+
+\begin_layout Standard
+
+                ldr     r3, LC1
+\end_layout
+
+\begin_layout Standard
+
+                add     r3, r2, r3
+\end_layout
+
+\begin_layout Standard
+
+1:              ldmia   r2!, {r8 - r13}         @ copy relocation code
+\end_layout
+
+\begin_layout Standard
+
+                stmia   r1!, {r8 - r13}
+\end_layout
+
+\begin_layout Standard
+
+                ldmia   r2!, {r8 - r13}
+\end_layout
+
+\begin_layout Standard
+
+                stmia   r1!, {r8 - r13}
+\end_layout
+
+\begin_layout Standard
+
+                cmp     r2, r3
+\end_layout
+
+\begin_layout Standard
+
+                blo     1b
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                bl      cache_clean_flush
+\end_layout
+
+\begin_layout Standard
+
+                add     pc, r5, r0              @ call relocation code
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * We're not in danger of overwriting ourselves.
+  Do this the simple way.
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * r4     = kernel execution address
+\end_layout
+
+\begin_layout Standard
+
+ * r7     = architecture ID
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+wont_overwrite: mov     r0, r4
+\end_layout
+
+\begin_layout Standard
+
+                mov     r3, r7
+\end_layout
+
+\begin_layout Standard
+
+                bl      decompress_kernel
+\end_layout
+
+\begin_layout Standard
+
+                b       call_kernel
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                .type   LC0, #object
+\end_layout
+
+\begin_layout Standard
+
+LC0:            .word   LC0                     @ r1
+\end_layout
+
+\begin_layout Standard
+
+                .word   __bss_start             @ r2
+\end_layout
+
+\begin_layout Standard
+
+                .word   _end                    @ r3
+\end_layout
+
+\begin_layout Standard
+
+                .word   _load_addr              @ r4
+\end_layout
+
+\begin_layout Standard
+
+                .word   _start                  @ r5
+\end_layout
+
+\begin_layout Standard
+
+                .word   _got_start              @ r6
+\end_layout
+
+\begin_layout Standard
+
+                .word   _got_end                @ ip
+\end_layout
+
+\begin_layout Standard
+
+                .word   user_stack+4096         @ sp
+\end_layout
+
+\begin_layout Standard
+
+LC1:            .word   reloc_end - reloc_start
+\end_layout
+
+\begin_layout Standard
+
+                .size   LC0, .
+ - LC0
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+dove la funzione 
+\emph on
+start_kernel
+\emph default
+ è presente nel file 
+\noun on
+arch/arm/boot/compressed/misc.c
+\noun default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+...
+\end_layout
+
+\begin_layout Standard
+
+#ifndef STANDALONE_DEBUG
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+ulg
+\end_layout
+
+\begin_layout Standard
+
+decompress_kernel(ulg output_start, ulg free_mem_ptr_p, ulg free_mem_ptr_end_p,
+\end_layout
+
+\begin_layout Standard
+
+                  int arch_id)
+\end_layout
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\begin_layout Standard
+
+        output_data             = (uch *)output_start;  /* Points to kernel
+ start */
+\end_layout
+
+\begin_layout Standard
+
+        free_mem_ptr            = free_mem_ptr_p;
+\end_layout
+
+\begin_layout Standard
+
+        free_mem_ptr_end        = free_mem_ptr_end_p;
+\end_layout
+
+\begin_layout Standard
+
+        __machine_arch_type     = arch_id;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        arch_decomp_setup();
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        makecrc();
+\end_layout
+
+\begin_layout Standard
+
+        puts("Uncompressing Linux...");
+\end_layout
+
+\begin_layout Standard
+
+        gunzip();
+\end_layout
+
+\begin_layout Standard
+
+        puts(" done, booting the kernel.
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+        return output_ptr;
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+#else
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+char output_buffer[1500*1024];
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+int main()
+\end_layout
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\begin_layout Standard
+
+        output_data = output_buffer;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        makecrc();
+\end_layout
+
+\begin_layout Standard
+
+        puts("Uncompressing Linux...");
+\end_layout
+
+\begin_layout Standard
+
+        gunzip();
+\end_layout
+
+\begin_layout Standard
+
+        puts("done.
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+        return 0;
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+#endif
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Boot
 \end_layout
 
@@ -865,6 +2031,7 @@ inline false
 status collapsed
 
 \begin_layout Standard
+
 DEFINE(PROCINFO_INITFUNC, offsetof(struct proc_info_list, __cpu_flush));
 \end_layout
 
@@ -2984,7 +4151,11 @@ Il suo obbiettivo è di preparare il dispositivo al lancio del kernel linux.
 \begin_layout Standard
 Il programma viene copiato all'interno di una scheda di memoria (miniSD)
  con alcuni file di configurazione e il kernel stesso.
- Il file di configurazione startup.txt:
+ Il file di configurazione 
+\emph on
+startup.txt
+\emph default
+:
 \end_layout
 
 \begin_layout LyX-Code
@@ -4069,6 +5240,10 @@ Anche in questo caso abbiamo stampato a video e confrontato bit a bit il
 
 \begin_layout Chapter
 U-Boot
+\end_layout
+
+\begin_layout Standard
+To do.
 \end_layout
 
 \begin_layout Standard
