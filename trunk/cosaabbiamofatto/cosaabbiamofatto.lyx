@@ -1,4 +1,4 @@
-#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -2633,20 +2633,33 @@ Una volta superati i controlli l'esecuzione continua con il codice specifico
 \end_layout
 
 \begin_layout Standard
-Nelle ultime tre righe, infatti, si istruisce il programma a salvare nel
- registro 13 il codice di 
+Nelle ultime tre righe, infatti, si istruisce il programma a salvare in
+ r13 il codice di 
 \noun on
 __switch_data
 \noun default
- e a salvare nel 
-\begin_inset Quotes eld
+ e a salvare il 
+\noun on
+lr
+\noun default
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+last register; per questo e per altri comandi assembly si rimanda all'appendice
+ 
+\begin_inset LatexCommand vref
+reference "cha:Assembly-per-ARM"
+
 \end_inset
 
-last register
-\begin_inset Quotes erd
+
+\end_layout
+
 \end_inset
 
- (lr) il codice per abilitare l'MMU
+ il codice per abilitare l'MMU
 \begin_inset LatexCommand nomenclature
 symbol "MMU"
 description "Memory Management Unit"
@@ -2655,8 +2668,11 @@ description "Memory Management Unit"
 
 .
  Questi dovrà essere eseguito dopo il codice specifico della macchina: l'ultima
- riga, infatti, altro non fa che scrivere sul program counter (pc) la somma
- del registro 10 (indirizzo di memoria che contiene le informazioni sulla
+ riga, infatti, altro non fa che scrivere su 
+\noun on
+pc
+\noun default
+ la somma di r10 (indirizzo di memoria che contiene le informazioni sulla
  cpu riconosciuta) col valore di 
 \noun on
 PROCINFO_INITFUNC
@@ -2699,14 +2715,16 @@ __cpu_flush
 \noun on
 PROCINFO_INITFUNC
 \noun default
-, quindi, altro non è che un offset per arrivare all'indirizzo di un campo
- partendo dall'indirizzo base di una struttura.
+, quindi, è l'offset per arrivare all'indirizzo dell'attributo 
+\noun on
+__cpu_flush
+\noun default
+ partendo dall'indirizzo base della struttura.
  Nel nostro caso verrà eseguito il codice presente nel file 
 \noun on
 arch/arm/mm/proc-arm926.S
 \noun default
-.
- (è la cpu per la quale stiamo compilando il kernel)
+ (cpu per la quale stiamo compilando il kernel).
 \end_layout
 
 \begin_layout Standard
@@ -2859,8 +2877,11 @@ _JAVA
 \end_layout
 
 \begin_layout Standard
-Quindi in pratica andremo ad eseguire il codice presente nel quinto campo
- della struttura, cioé __arm926_setup, definita nello stesso file
+Quindi andremo ad eseguire il codice presente nella funzione 
+\noun on
+__arm926_setup
+\noun default
+, definita nello stesso file
 \end_layout
 
 \begin_layout Standard
@@ -3005,9 +3026,17 @@ __arm926_setup:
 \end_layout
 
 \begin_layout Standard
-A parte il codice specifico, è da notare come termini scrivendo sul program
- counter il valore del last register, cioè l'indirizzo di __enable_mmu.
- Essa è definita in head.S.
+A parte il codice specifico, è da notare come le istruzioni terminino impostando
+ il program counter col valore del last register, cioè l'indirizzo di 
+\noun on
+__enable_mmu
+\noun default
+.
+ Essa è definita in 
+\noun on
+head.S
+\noun default
+.
 \end_layout
 
 \begin_layout Standard
@@ -3169,7 +3198,11 @@ __enable_mmu:
 \end_layout
 
 \begin_layout Standard
-L'ultima riga invoca la funzione __turn_mmu_on, definita subito dopo.
+L'ultima riga invoca la funzione 
+\noun on
+__turn_mmu_on
+\noun default
+, definita subito dopo.
 \end_layout
 
 \begin_layout Standard
@@ -3287,7 +3320,11 @@ __turn_mmu_on:
 
 \begin_layout Standard
 Al termine della funzione, viene modificato il program counter per eseguire
- il contenuto del registro 13, contenente l'oggetto __switch_data.
+ il contenuto di r13, contenente l'oggetto 
+\noun on
+__switch_data
+\noun default
+.
  Questo è definito nel file 
 \noun on
 arch/arm/kernel/head-common.S
@@ -3527,8 +3564,19 @@ __mmap_switched:
 \end_layout
 
 \begin_layout Standard
-Il primo campo dell'oggetto __switch_data è la funzione __mmap_switched
- che, eseguita, termina invocando start_kernel, la funzione 
+Il primo campo dell'oggetto 
+\noun on
+__switch_data
+\noun default
+ è la funzione 
+\noun on
+__mmap_switched
+\noun default
+ che, eseguita, termina invocando 
+\noun on
+start_kernel
+\noun default
+, la funzione 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3536,7 +3584,24 @@ ad alto livello
 \begin_inset Quotes erd
 \end_inset
 
- implementata in C nel file init/main.c.
+ implementata in C nel file 
+\noun on
+init/main.c
+\noun default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Greyedout
+status open
+
+\begin_layout Standard
+E direi che può bastare
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Chapter
@@ -5923,6 +5988,11 @@ bibfiles "web-o-grafia"
 
 \begin_layout Chapter
 \start_of_appendix
+\begin_inset LatexCommand label
+name "cha:Assembly-per-ARM"
+
+\end_inset
+
 Assembly per ARM 
 \end_layout
 
