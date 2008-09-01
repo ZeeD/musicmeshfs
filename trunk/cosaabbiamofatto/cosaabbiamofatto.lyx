@@ -1656,6 +1656,7 @@ Vito: DEVO RIVEDERE
 
 \begin_layout Standard
 \begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,language=C"
 inline false
 status collapsed
 
