@@ -1,4 +1,4 @@
-#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -125,7 +125,7 @@ name "sec:Configurazione-e-compilazione"
 
 \end_inset
 
-Configurazione e compilazione
+Configurazione dei sorgenti
 \end_layout
 
 \begin_layout Standard
@@ -199,7 +199,10 @@ Dal menù
 \noun default
  scegliamo il tipo di sistema base (nel nostro caso
 \noun on
- Samsung S3C2410, S3C2412, S3C2413, S3C2440, S3C2442, S3C2443
+ 
+\series bold
+Samsung S3C2410, S3C2412, S3C2413, S3C2440, S3C2442, S3C2443
+\series default
 \noun default
 ).
 \end_layout
@@ -219,11 +222,17 @@ Dal menù
 \noun on
  Default kernel command string
 \noun default
- (per poter avere in output i messaggi di comunicazione); per avere informazioni
- il prima possibile, inoltre, conviene impostare, dal menù
+ (per poter avere in output i messaggi di comunicazione);
+\end_layout
+
+\begin_layout Itemize
+Dal menù
 \noun on
- General setup
+ General setup 
+\noun default
+impostiamo
 \series bold
+\noun on
  12
 \series default
 \noun default
@@ -241,7 +250,10 @@ Dal menù
 \noun default
  selezioniamo
 \noun on
- MMC/SD card support
+ 
+\series bold
+MMC/SD card support
+\series default
 \noun default
  (per poter accedere al supporto fisico per il file system).
 \end_layout
@@ -269,14 +281,14 @@ Alla fine della fase di configurazione, si dovrà iniziare a compilare i
 \noun on
 ARM
 \noun default
-.
+ è necessario cross-compilare.
  Per questo motivo si rimanda alla sezione 
 \begin_inset LatexCommand vref
 reference "sec:Cross-compilazione"
 
 \end_inset
 
- per le problematiche della cross-compilazione.
+ per le problematiche relative.
 \end_layout
 
 \begin_layout Section
@@ -321,7 +333,7 @@ reference "cha:Debugger"
 \begin_layout Description
 
 \family typewriter
-Image
+arch/arm/boot/Image
 \begin_inset LatexCommand nomenclature
 symbol "Image"
 description "Immagine del kernel effettivamente eseguita"
@@ -336,7 +348,7 @@ description "Immagine del kernel effettivamente eseguita"
 \begin_layout Description
 
 \family typewriter
-zImage
+arch/arm/boot/zImage
 \begin_inset LatexCommand nomenclature
 symbol "zImage"
 description "Immagine del kernel compressa preceduta da un decompressore (obsoleta)"
@@ -352,27 +364,28 @@ description "Immagine del kernel compressa preceduta da un decompressore (obsole
 \begin_layout Description
 
 \family typewriter
+arch/arm/boot/bzImage
 \begin_inset LatexCommand nomenclature
 symbol "bzImage"
 description "Immagine del kernel compressa ed eseguibile, ma composta da tre parti separate"
 
 \end_inset
 
-bzImage\InsetSpace ~
+\InsetSpace ~
 
 \family default
-(
+(big\InsetSpace ~
+
+\family typewriter
+zImage
+\family default
+
 \begin_inset LatexCommand nomenclature
 symbol "big zImage"
 description "vedi bzImage"
 
 \end_inset
 
-big\InsetSpace ~
-
-\family typewriter
-zImage
-\family default
 ) concatenatzione di
 \family typewriter
  bootsect.o
