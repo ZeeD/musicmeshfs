@@ -1642,37 +1642,10 @@ arch/arm/boot/compressed/misc.c
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-Vito: DEVO RIVEDERE
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,language=C"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=345,language=C,numbers=left,showstringspaces=false"
 inline false
 status collapsed
-
-\begin_layout Standard
-
-...
-\end_layout
-
-\begin_layout Standard
-
-#ifndef STANDALONE_DEBUG
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
 
 \begin_layout Standard
 
@@ -1760,85 +1733,6 @@ n");
 }
 \end_layout
 
-\begin_layout Standard
-
-#else
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\begin_layout Standard
-
-char output_buffer[1500*1024];
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\begin_layout Standard
-
-int main()
-\end_layout
-
-\begin_layout Standard
-
-{
-\end_layout
-
-\begin_layout Standard
-
-        output_data = output_buffer;
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\begin_layout Standard
-
-        makecrc();
-\end_layout
-
-\begin_layout Standard
-
-        puts("Uncompressing Linux...");
-\end_layout
-
-\begin_layout Standard
-
-        gunzip();
-\end_layout
-
-\begin_layout Standard
-
-        puts("done.
-\backslash
-n");
-\end_layout
-
-\begin_layout Standard
-
-        return 0;
-\end_layout
-
-\begin_layout Standard
-
-}
-\end_layout
-
-\begin_layout Standard
-
-#endif
-\end_layout
-
-\begin_layout Standard
-
-        
-\end_layout
-
 \end_inset
 
 
@@ -1856,7 +1750,7 @@ lib/inflate.c
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,language=C"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=1149,language=C,numbers=left,showstringspaces=false"
 inline false
 status collapsed
 
@@ -1877,7 +1771,7 @@ status collapsed
 
 \begin_layout Standard
 
-static int gunzip(void)
+static int INIT gunzip(void)
 \end_layout
 
 \begin_layout Standard
