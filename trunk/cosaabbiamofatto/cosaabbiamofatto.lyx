@@ -462,7 +462,11 @@ Avvio
 
 \begin_layout Standard
 Una volta che il bootloader ha caricato il kernel in memoria e l'ha eseguito,
- vi è la fase di bootstrap
+ vi è la fase di 
+\emph on
+bootstrap
+\emph default
+
 \begin_inset LatexCommand nomenclature
 symbol "bootstrap"
 description "Letteralmente la fascetta di cuoio cucita sul bordo posteriore degli stivali per aiutarsi a calzarli, fa riferimento alla leggenda del Barone di Münchhausen e alla sua capacità di sollevarsi in aria \"tirandosi per gli stivali\".\\\\Indica la fase di avvio di un pc"
@@ -680,14 +684,9 @@ arch/arm/boot/compressed/head.s
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,language=C"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=109,language=C,numbers=left,showstringspaces=false"
 inline false
-status open
-
-\begin_layout Standard
-
-...
-\end_layout
+status collapsed
 
 \begin_layout Standard
 
@@ -1618,20 +1617,18 @@ LC1:            .word   reloc_end - reloc_start
  - LC0
 \end_layout
 
-\begin_layout Standard
-
-\end_layout
-
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-dove la funzione 
+Dove la funzione 
 \emph on
+\noun on
 start_kernel
 \emph default
+\noun default
  è presente nel file 
 \noun on
 arch/arm/boot/compressed/misc.c
@@ -1640,9 +1637,22 @@ arch/arm/boot/compressed/misc.c
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Shaded
+status open
+
+\begin_layout Standard
+Vito: DEVO RIVEDERE
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset listings
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -1845,7 +1855,7 @@ Tornando alla sequenza di boot, analizziamo un attimo le prime istruzioni
 \begin_inset listings
 lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=77,language=C,numbers=left,showstringspaces=false"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -1990,8 +2000,8 @@ All'inizio degni di nota sono soprattutto i controlli effettuati dal kernel
 \end_layout
 
 \begin_layout Standard
-In caso d'errore vengono invocate delle funzioni per avvisare l'utente -
- e terminare l'esecuzione del programma.
+In caso d'errore vengono invocate delle funzioni per avvisare l'utente e
+ terminare l'esecuzione del programma.
  Altrimenti vengono 
 \begin_inset Quotes eld
 \end_inset
@@ -2000,7 +2010,7 @@ salvati
 \begin_inset Quotes erd
 \end_inset
 
- nel registro 10 il processore e nel registro 8 il tipo di macchina.
+ nel registro 10 il processore e nel registro 8 il tipo di macchina riconosciuti.
 \end_layout
 
 \begin_layout Standard
@@ -2011,7 +2021,11 @@ Una volta superati i controlli l'esecuzione continua con il codice specifico
 
 \begin_layout Standard
 Nelle ultime tre righe, infatti, si istruisce il programma a salvare nel
- registro 13 il codice di __switch_data e a salvare nel 
+ registro 13 il codice di 
+\noun on
+__switch_data
+\noun default
+ e a salvare nel 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2030,7 +2044,11 @@ description "Memory Management Unit"
  Questi dovrà essere eseguito dopo il codice specifico della macchina: l'ultima
  riga, infatti, altro non fa che scrivere sul program counter (pc) la somma
  del registro 10 (indirizzo di memoria che contiene le informazioni sulla
- cpu riconosciuta) col valore di PROCINFO_INITFUNC, definito in 
+ cpu riconosciuta) col valore di 
+\noun on
+PROCINFO_INITFUNC
+\noun default
+, definito in 
 \noun on
 arch/arm/kernel/asm-offsets.c 
 \noun default
@@ -2059,7 +2077,17 @@ dove
 proc_info_list
 \noun default
  altro non è che la struttura della variabile contenente le informazioni
- del processore, e __cpu_flush è un suo campo.
+ del processore, e 
+\noun on
+__cpu_flush
+\noun default
+ è un suo campo.
+ 
+\noun on
+PROCINFO_INITFUNC
+\noun default
+, quindi, altro non è che un offset per arrivare all'indirizzo di un campo
+ partendo dall'indirizzo base di una struttura.
  Nel nostro caso verrà eseguito il codice presente nel file arch/arm/mm/proc-arm
 926.S.
  (è la cpu per la quale stiamo compilando il kernel)
