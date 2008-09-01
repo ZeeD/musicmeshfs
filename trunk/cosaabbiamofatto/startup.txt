@@ -1,0 +1,5 @@
+set KERNEL "zImage-2.6.12"
+set MTYPE 766
+set INITRD "initrd-2.6.12-hh2.gz"
+set CMDLINE "root=/dev/ram0 console=tty0"
+bootlinux 
