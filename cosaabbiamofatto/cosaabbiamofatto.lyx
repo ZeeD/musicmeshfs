@@ -1110,7 +1110,7 @@ key "handhelds_toolchain"
 \end_layout
 
 \begin_layout Chapter
-qemu
+Qemu
 \end_layout
 
 \begin_layout Standard
