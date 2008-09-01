@@ -1,4 +1,4 @@
-#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -386,6 +386,11 @@ description "vedi bzImage"
 
 \end_inset
 
+big\InsetSpace ~
+
+\family typewriter
+zImage
+\family default
 ) concatenatzione di
 \family typewriter
  bootsect.o
@@ -1838,8 +1843,615 @@ n");
 
 \end_layout
 
+\begin_layout Standard
+La funzione 
+\emph on
+gunzip()
+\emph default
+ è presente nel file 
+\noun on
+lib/inflate.c
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,language=C"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * Do the uncompression!
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+static int gunzip(void)
+\end_layout
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\begin_layout Standard
+
+    uch flags;
+\end_layout
+
+\begin_layout Standard
+
+    unsigned char magic[2]; /* magic header */
+\end_layout
+
+\begin_layout Standard
+
+    char method;
+\end_layout
+
+\begin_layout Standard
+
+    ulg orig_crc = 0;       /* original crc */
+\end_layout
+
+\begin_layout Standard
+
+    ulg orig_len = 0;       /* original uncompressed length */
+\end_layout
+
+\begin_layout Standard
+
+    int res;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    magic[0] = NEXTBYTE();
+\end_layout
+
+\begin_layout Standard
+
+    magic[1] = NEXTBYTE();
+\end_layout
+
+\begin_layout Standard
+
+    method   = NEXTBYTE();
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    if (magic[0] != 037 ||
+\end_layout
+
+\begin_layout Standard
+
+        ((magic[1] != 0213) && (magic[1] != 0236))) {
+\end_layout
+
+\begin_layout Standard
+
+            error("bad gzip magic numbers");
+\end_layout
+
+\begin_layout Standard
+
+            return -1;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    /* We only support method #8, DEFLATED */
+\end_layout
+
+\begin_layout Standard
+
+    if (method != 8)  {
+\end_layout
+
+\begin_layout Standard
+
+            error("internal error, invalid method");
+\end_layout
+
+\begin_layout Standard
+
+            return -1;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    flags  = (uch)get_byte();
+\end_layout
+
+\begin_layout Standard
+
+    if ((flags & ENCRYPTED) != 0) {
+\end_layout
+
+\begin_layout Standard
+
+            error("Input is encrypted");
+\end_layout
+
+\begin_layout Standard
+
+            return -1;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    if ((flags & CONTINUATION) != 0) {
+\end_layout
+
+\begin_layout Standard
+
+            error("Multi part input");
+\end_layout
+
+\begin_layout Standard
+
+            return -1;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    if ((flags & RESERVED) != 0) {
+\end_layout
+
+\begin_layout Standard
+
+            error("Input has invalid flags");
+\end_layout
+
+\begin_layout Standard
+
+            return -1;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    NEXTBYTE(); /* Get timestamp */
+\end_layout
+
+\begin_layout Standard
+
+    NEXTBYTE();
+\end_layout
+
+\begin_layout Standard
+
+    NEXTBYTE();
+\end_layout
+
+\begin_layout Standard
+
+    NEXTBYTE();
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    (void)NEXTBYTE();  /* Ignore extra flags for the moment */
+\end_layout
+
+\begin_layout Standard
+
+    (void)NEXTBYTE();  /* Ignore OS type for the moment */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    if ((flags & EXTRA_FIELD) != 0) {
+\end_layout
+
+\begin_layout Standard
+
+            unsigned len = (unsigned)NEXTBYTE();
+\end_layout
+
+\begin_layout Standard
+
+            len |= ((unsigned)NEXTBYTE())<<8;
+\end_layout
+
+\begin_layout Standard
+
+            while (len--) (void)NEXTBYTE();
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    /* Get original file name if it was truncated */
+\end_layout
+
+\begin_layout Standard
+
+    if ((flags & ORIG_NAME) != 0) {
+\end_layout
+
+\begin_layout Standard
+
+            /* Discard the old name */
+\end_layout
+
+\begin_layout Standard
+
+            while (NEXTBYTE() != 0) /* null */ ;
+\end_layout
+
+\begin_layout Standard
+
+    } 
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    /* Discard file comment if any */
+\end_layout
+
+\begin_layout Standard
+
+    if ((flags & COMMENT) != 0) {
+\end_layout
+
+\begin_layout Standard
+
+            while (NEXTBYTE() != 0) /* null */ ;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    /* Decompress */
+\end_layout
+
+\begin_layout Standard
+
+    if ((res = inflate())) {
+\end_layout
+
+\begin_layout Standard
+
+            switch (res) {
+\end_layout
+
+\begin_layout Standard
+
+            case 0:
+\end_layout
+
+\begin_layout Standard
+
+                    break;
+\end_layout
+
+\begin_layout Standard
+
+            case 1:
+\end_layout
+
+\begin_layout Standard
+
+                    error("invalid compressed format (err=1)");
+\end_layout
+
+\begin_layout Standard
+
+                    break;
+\end_layout
+
+\begin_layout Standard
+
+            case 2:
+\end_layout
+
+\begin_layout Standard
+
+                    error("invalid compressed format (err=2)");
+\end_layout
+
+\begin_layout Standard
+
+                    break;
+\end_layout
+
+\begin_layout Standard
+
+            case 3:
+\end_layout
+
+\begin_layout Standard
+
+                    error("out of memory");
+\end_layout
+
+\begin_layout Standard
+
+                    break;
+\end_layout
+
+\begin_layout Standard
+
+            case 4:
+\end_layout
+
+\begin_layout Standard
+
+                    error("out of input data");
+\end_layout
+
+\begin_layout Standard
+
+                    break;
+\end_layout
+
+\begin_layout Standard
+
+            default:
+\end_layout
+
+\begin_layout Standard
+
+                    error("invalid compressed format (other)");
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+            return -1;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+    /* Get the crc and original length */
+\end_layout
+
+\begin_layout Standard
+
+    /* crc32  (see algorithm.doc)
+\end_layout
+
+\begin_layout Standard
+
+     * uncompressed input size modulo 2^32
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    orig_crc = (ulg) NEXTBYTE();
+\end_layout
+
+\begin_layout Standard
+
+    orig_crc |= (ulg) NEXTBYTE() << 8;
+\end_layout
+
+\begin_layout Standard
+
+    orig_crc |= (ulg) NEXTBYTE() << 16;
+\end_layout
+
+\begin_layout Standard
+
+    orig_crc |= (ulg) NEXTBYTE() << 24;
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    orig_len = (ulg) NEXTBYTE();
+\end_layout
+
+\begin_layout Standard
+
+    orig_len |= (ulg) NEXTBYTE() << 8;
+\end_layout
+
+\begin_layout Standard
+
+    orig_len |= (ulg) NEXTBYTE() << 16;
+\end_layout
+
+\begin_layout Standard
+
+    orig_len |= (ulg) NEXTBYTE() << 24;
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /* Validate decompression */
+\end_layout
+
+\begin_layout Standard
+
+    if (orig_crc != CRC_VALUE) {
+\end_layout
+
+\begin_layout Standard
+
+            error("crc error");
+\end_layout
+
+\begin_layout Standard
+
+            return -1;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    if (orig_len != bytes_out) {
+\end_layout
+
+\begin_layout Standard
+
+            error("length error");
+\end_layout
+
+\begin_layout Standard
+
+            return -1;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    return 0;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+ underrun:                      /* NEXTBYTE() goto's here if needed */
+\end_layout
+
+\begin_layout Standard
+
+    error("out of input data");
+\end_layout
+
+\begin_layout Standard
+
+    return -1;
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Boot
+\begin_inset LatexCommand label
+name "sub:Boot"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5306,6 +5918,50 @@ bibfiles "web-o-grafia"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Chapter
+\start_of_appendix
+Assembly per ARM 
+\end_layout
+
+\begin_layout Description
+ldr (load register) carica un valore in un registro
+\end_layout
+
+\begin_layout Description
+lr last register (ultimo registro).
+ è usato come implementazione dello stack dal momento che in questo registro
+ vengono memorizzati i riferimenti al codice a cui si vuol ritornare dopo
+ una chiamata ad un sottoprogramma.
+ Ad esempio vedere righe 101 e 102 di 
+\begin_inset LatexCommand ref
+reference "sub:Boot"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+adr aggiunge al secondo il terzo valore e lo memorizza nel primo
+\end_layout
+
+\begin_layout Description
+1b label utilizzata per ciclare verso una label (1) precedente nel codice
+ (before)
+\end_layout
+
+\begin_layout Description
+1f label utilizzata per ciclare verso una label (2) avanti nel codice (forward)
+\end_layout
+
+\begin_layout Description
+b (branch) salta alla label indicata (esempio b start_kernel)
+\end_layout
+
+\begin_layout Description
+blo salta loopando alla label indicata (esempio blo decompress_kernel)
 \end_layout
 
 \end_body
