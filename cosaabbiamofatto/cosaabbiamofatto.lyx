@@ -1,4 +1,4 @@
-#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -84,7 +84,7 @@ href{mailto:ncorriero@di.uniba.it}{ncorriero@di.uniba.it}
 \end_layout
 
 \begin_layout Standard
-\begin_inset VSpace 13.5cm*
+\begin_inset VSpace 13cm*
 \end_inset
 
 
@@ -135,7 +135,56 @@ Introduzione
 \end_layout
 
 \begin_layout Standard
-TODO
+Questo lavoro ha la presunzione di voler ordinare le idee riguardo l'avvio
+ di un sistema GNU/Linux su Arm dal momento che allo stato attuale delle
+ cose non esiste una guida a proposito.
+\end_layout
+
+\begin_layout Standard
+Si inizia parlando della fase di compilazione e del kernel.
+ I problemi nascono dal momento che abitualmente si lavora su piattaforma
+ x86, mentre nel nostro caso si ha l'esigenza di compilare su una piattaforma
+ differente.
+ In gergo si parla di cross-compilazione.
+ Infatti, prenderemo un compilatore tipico della piattaforma Arm e lo useremo
+ su piattaforma x86 per generare eseguibili su Arm.
+\end_layout
+
+\begin_layout Standard
+Il lavoro continua presentando i moduli necessari al kernel su Arm e parlando
+ dei possibili output del kernel stesso.
+\end_layout
+
+\begin_layout Standard
+Segue una dettagliata descrizione della fase di avvio del kernel commentando
+ direttamente il codice Assembly e C eseguito sia in fase di decompressione
+ del kernel sia in fase di avvio.
+\end_layout
+
+\begin_layout Standard
+Nel capitolo 3 si analizzano gli strumenti utilizzati per il testing del
+ kernel su Arm.
+ Qemu è un programma di emulazione molto semplice da usare e facilmente
+ configurabile per i nostri scopi.
+ Haret è un programma scritto in C++ per Windows CE.
+ Haret ha l'obbiettivo di copiare in memoria kernel ed eventualmente initrd,
+ spegnere l'hardware e avviare il kernel in memoria in maniera non invasiva
+ per la macchina dal momento che non fa modifiche al sistema operativo ospite.
+ Infine U-boot che è il bootloader universale per i sistemi embedded.
+ Rappresenta però una soluzione invasiva dal momento che è necessario installarl
+o sulla memoria flash del dispositivo.
+\end_layout
+
+\begin_layout Standard
+Il capitolo 4 spiega come utilizzare la fase di debugging sui dispositivi
+ embedded.
+ Verrà analizzato gdb (Gnu DeBugger), un programma creato ad-hoc come debugger
+ del kernel.
+\end_layout
+
+\begin_layout Standard
+In appendice vi è una piccola guida di Assembly per Arm per facilitare la
+ compressione del codice Assembly presentato nel capitolo 2.
 \end_layout
 
 \begin_layout Chapter
@@ -4432,7 +4481,7 @@ key "haret_home_page"
 
 \end_inset
 
- è un boot-loader scritto in C/C++ per Windows Mobile®
+ è un boot-loader scritto in C++ per Windows Mobile®
 \begin_inset LatexCommand nomenclature
 symbol "Windows Mobile®"
 description "Microsoft® Windows Mobile®, sistema operativo concepito per palmari, telefoni cellulari e Pocket PC"
@@ -4510,7 +4559,7 @@ haret.exe
 \emph default
  come settare alcuni parametri (variabili globali all'interno del codice
  di haret) quali KERNEL, MTYPE, INITRD, CMDLINE ed infine avvia la funzione
- (interna al codice di haret quindi scritta in C)
+ (interna al codice di haret quindi scritta in C++)
 \emph on
  bootlinux.
 \end_layout
@@ -4520,7 +4569,7 @@ Codice
 \end_layout
 
 \begin_layout Standard
-Il codice del programma prevede parti scritte in C/C++ e parti scritte in
+Il codice del programma prevede parti scritte in C++ e parti scritte in
  Assembly.
  Le funzioni più interessanti sono presenti all'interno del file 
 \noun on
@@ -5155,9 +5204,9 @@ startfunc(0, data->machtype, destTags);
 \end_layout
 
 \begin_layout Standard
-La programmazione in C/C++ è suddivisa in due fasi dal momento che dopo
- lo shutdown dell'hardware il programma accede direttamente alla memoria
- e non riesce a tradurre le funzioni e librerie tipiche del C con conseguente
+La programmazione in C++ è suddivisa in due fasi dal momento che dopo lo
+ shutdown dell'hardware il programma accede direttamente alla memoria e
+ non riesce a tradurre le funzioni e librerie tipiche del C++ con conseguente
  uso di funzion ad-hoc.
  Ad esempio nella funzione preloader vi è
 \end_layout
