@@ -1,4 +1,4 @@
-#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -620,7 +620,7 @@ reference "sec:Configurazione-e-compilazione"
 \begin_inset listings
 lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
 inline false
-status collapsed
+status open
 
 \begin_layout Standard
 
@@ -630,10 +630,7 @@ $ wget http://www.handhelds.org/download/projects/toolchain/arm-linux-gcc-3.4.1.
 
 \begin_layout Standard
 
-$ su -c 'tar xjf 
-\lang italian
-arm-linux-gcc-3.4.1.tar.bz2
- -C /'
+$ su -c "tar xjf arm-linux-gcc-3.4.1.tar.bz2 -C /"
 \end_layout
 
 \begin_layout Standard
