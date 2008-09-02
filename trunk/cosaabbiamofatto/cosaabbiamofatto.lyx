@@ -5155,8 +5155,8 @@ Compilazione
 \end_layout
 
 \begin_layout Standard
-Per la compilazione di haret è necessario usare un compilatore C++ per Windows
- CE su ARM.
+Per la compilazione di haret è necessario usare un compilatore C++ per ARM
+ su Windows CE.
  Noi abbiamo usato mingw32ce 
 \begin_inset LatexCommand url
 target "http://cegcc.sourceforge.net/"
@@ -5164,6 +5164,19 @@ target "http://cegcc.sourceforge.net/"
 \end_inset
 
 .
+ Dopo il dowload e la scompattazione si ritroveranno una serie di binari
+ pronti all'uso con il formato 
+\emph on
+arm-wince-cegcc-
+\emph default
+* o 
+\emph on
+arm-wince-mingw32ce-
+\emph default
+*.
+ Per utilizzarli senza problemi basterà includerli nel PATH della shell
+ di sistema.
+ 
 \end_layout
 
 \begin_layout Section
@@ -5193,7 +5206,7 @@ Come ottenerlo
 \end_layout
 
 \begin_layout Standard
-Qemu è libero, e già installato nella maggior parte delle distribuzioni.
+Qemu è libero e già installato nella maggior parte delle distribuzioni.
  Le versioni da noi usate sono state la 0.9.0 e la 0.9.1.
 \end_layout
 
@@ -5789,14 +5802,26 @@ qemu -cdrom image.iso -hda /dev/sda1 -m 128 -boot d
 \end_layout
 
 \begin_layout Standard
-cosi come per emulare un sistema ARM con macchina versatileab con kernel
- contenuto nel file locale 
+dove 
+\emph on
+qemu
+\emph default
+ è in realtà un link a 
+\emph on
+qemu-system-i386.
+\end_layout
+
+\begin_layout Standard
+Per emulare un sistema ARM con macchina versatileab con kernel contenuto
+ nel file locale 
 \emph on
 zImage
 \emph default
  e 128 mb di ram e avente come hard disk un'immagine virtuale locale 
 \emph on
 hd0.img
+\emph default
+ è necessario lanciare
 \end_layout
 
 \begin_layout LyX-Code
@@ -5805,6 +5830,66 @@ qemu-system-arm -M versatileab -kernel zImage -nographic
 
 \begin_layout LyX-Code
 -m 126 -hda hd0.img
+\end_layout
+
+\begin_layout Standard
+e cosi via per tutti i sistemi attualmente emulati da qemu:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true"
+inline false
+status open
+
+\begin_layout Standard
+
+qemu-alpha  qemu-ppc          qemu-system-cris      qemu-system-ppcemb
+\end_layout
+
+\begin_layout Standard
+
+qemu-arm    qemu-ppc64        qemu-system-i386      qemu-system-sh4
+\end_layout
+
+\begin_layout Standard
+
+qemu-armeb  qemu-ppc64abi32   qemu-system-m68k      qemu-system-sh4eb
+\end_layout
+
+\begin_layout Standard
+
+qemu-cris   qemu-sh4          qemu-system-mips      qemu-system-sparc
+\end_layout
+
+\begin_layout Standard
+
+qemu-i386   qemu-sh4eb        qemu-system-mips64    qemu-system-x86_64
+\end_layout
+
+\begin_layout Standard
+
+qemu-img    qemu-sparc        qemu-system-mips64el  qemu-x86_64
+\end_layout
+
+\begin_layout Standard
+
+qemu-m68k   qemu-sparc32plus  qemu-system-mipsel
+\end_layout
+
+\begin_layout Standard
+
+qemu-mips   qemu-sparc64      qemu-system-ppc
+\end_layout
+
+\begin_layout Standard
+
+qemu-mipsel qemu-system-arm   qemu-system-ppc64
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -6179,6 +6264,7 @@ inline false
 status collapsed
 
 \begin_layout Standard
+
 target remote :1234
 \end_layout
 
