@@ -195,7 +195,7 @@ reference "cha:Debugger"
 
  spiega come utilizzare la fase di debugging sui dispositivi embedded.
  Verrà analizzato gdb (Gnu DeBugger), un programma creato ad-hoc come debugger
- del kernel.
+ anche del kernel.
 \end_layout
 
 \begin_layout Standard
