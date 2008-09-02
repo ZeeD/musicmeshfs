@@ -1,4 +1,4 @@
-#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -5129,7 +5129,7 @@ Eravamo quindi davanti una serie di possibili cause da dimostrare.
 \begin_layout Standard
 Il primo dubbio risolto riguardava errori presenti all'interno del codice
  di haret.
- Con un'attento debug tramite stringhe stampate sullo schermo ci siamo accertati
+ Con un attento debug tramite stringhe stampate sullo schermo ci siamo accertati
  che effettivamente il controllo passava al kernel (tre righe finali viste
  in precedenza).
 \end_layout
@@ -5150,7 +5150,7 @@ Qemu
 \end_layout
 
 \begin_layout Standard
-Qemu è un emulatore e virtualizzatore generico e open source.
+Qemu è un emulatore e virtualizzatore generico open source.
  Nello specifico è stato usato per emulare un'architettura basata su cpu
  
 \noun on
@@ -5164,7 +5164,7 @@ ARM
 \noun on
  S3C2442B
 \noun default
- dopo) per semplificare le procedure di testing e debugging del kernel
+ dopo) per semplificare le procedure di testing e debugging del kernel.
 \end_layout
 
 \begin_layout Subsection
@@ -5178,7 +5178,7 @@ Qemu è libero, e già installato nella maggior parte delle distribuzioni.
 
 \begin_layout Standard
 Se non è già installato sarà sufficiente usare il package manager della
- distribuzione (YaST per OpenSuSE, apt-get per Debian e derivate, installpkg
+ distribuzione (YaST per OpenSuSE, Synaptic per Debian e derivate, installpkg
  per Slackware, eccetera); nella (improbabile) ipotesi che non sia disponibile,
  i sorgenti sono disponibili presso 
 \begin_inset LatexCommand htmlurl
@@ -5723,15 +5723,53 @@ key "openmoko_under_qemu"
 \end_layout
 
 \begin_layout Subsection
-Sistemi emulati
-\end_layout
-
-\begin_layout LyX-Code
-qemu-system-arm -M versatileab ...
+Emulazione
 \end_layout
 
 \begin_layout Standard
-perché qemu non sa ancora emulare l'architettura Samsung S3C2442b (evabé)
+Qemu fornisce alcune utility all'emulazione.
+ Ad esempio 
+\emph on
+qemu-img
+\emph default
+ è un programmino per la creazione di hard disk virtuali su cui far girare
+ o installare il sistema emulato.
+ Per l'avvio di una emulazione è possibile specificare oltre ad un hard
+ disk virtuale anche uno fisico presente sulla macchina.
+ Nel nostro caso abbiamo lanciato qemu specificando come hard disk la memory
+ card miniSD su cui avevano installato la distribuzione per Arm da testare.
+\end_layout
+
+\begin_layout Subsection
+Sistemi emulati
+\end_layout
+
+\begin_layout Standard
+Per avviare un sistema x86 partente da cd con un hard disk e 128 mb di ram
+ è necessario lanciare
+\end_layout
+
+\begin_layout LyX-Code
+qemu -cdrom image.iso -hda /dev/sda1 -m 128 -boot d
+\end_layout
+
+\begin_layout Standard
+cosi come per emulare un sistema ARM con macchina versatileab con kernel
+ contenuto nel file locale 
+\emph on
+zImage
+\emph default
+ e 128 mb di ram e avente come hard disk un'immagine virtuale locale 
+\emph on
+hd0.img
+\end_layout
+
+\begin_layout LyX-Code
+qemu-system-arm -M versatileab -kernel zImage -nographic 
+\end_layout
+
+\begin_layout LyX-Code
+-m 126 -hda hd0-img
 \end_layout
 
 \begin_layout Section
