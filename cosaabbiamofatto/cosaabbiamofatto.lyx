@@ -216,6 +216,11 @@ reference "cha:Avvio"
 \end_layout
 
 \begin_layout Chapter
+\begin_inset LatexCommand label
+name "cha:Kernel-&-compilatore"
+
+\end_inset
+
 Kernel & compilatore
 \end_layout
 
@@ -5797,7 +5802,7 @@ uzione del codice e sugli eventuali errori riscontrati sulla piattaforma.
 
 \begin_layout Standard
 Poiché vorremmo analizzare il comportamento di un kernel, però, non è possibile
- utilizzare né 
+ utilizzare 
 \noun on
 stdout
 \noun default
@@ -5805,9 +5810,9 @@ stdout
 \noun on
 stderr
 \noun default
- come canali di comunicazione, né è possibile loggare il comportamento su
- file, in quanto non è ancora disponibile un'interfaccia verso queste strutture
- ad alto livello.
+ come canali di comunicazione, né loggare il comportamento su file, in quanto
+ non è ancora disponibile un'interfaccia verso queste strutture ad alto
+ livello.
 \end_layout
 
 \begin_layout Standard
@@ -5882,7 +5887,17 @@ key "arm_intel_mobile"
 
 \end_inset
 
+.
+ Come si è visto nel capitolo 
+\begin_inset LatexCommand vref
+reference "cha:Avvio"
 
+\end_inset
+
+, la fase iniziale del boot su ARM è implementata in assembly; vi è una
+ parte comune (la decompressione della bzImage, il caricamento in memoria
+ dell'immagine del kernel, alcune funzioni d'appoggio) a tutte le CPU e
+ una parte specifica.
 \end_layout
 
 \begin_layout Section
@@ -5954,7 +5969,7 @@ $ ./configure --target=arm-linux
 
 \begin_layout Standard
 
-$ make && su -c 'make install'
+$ make && su -c "make install"
 \end_layout
 
 \end_inset
@@ -6017,11 +6032,33 @@ Tuttavia una soluzione esiste.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Shaded
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Standard
-TROVARE - SCOPIAZZARE immagine debug remoto fatto con qemu!
+\align center
+\begin_inset Graphics
+	filename remote_debugging.eps
+	lyxscale 50
+	width 70col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Schema di funzionamento di gdb con qemu
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -6059,11 +6096,11 @@ client
 \begin_inset listings
 lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
-$ qemu-system-arm -M versatileab -cpu arm926 -sd IMMAGINE_SD -nographic
+$ qemu-system-arm ...
  -S -s
 \end_layout
 
@@ -6074,15 +6111,14 @@ $ qemu-system-arm -M versatileab -cpu arm926 -sd IMMAGINE_SD -nographic
 
 \begin_layout Standard
 In questo modo il programma rimarrà in attesa.
- Da un altro terminale, quindi, sarà possibile lanciare il debugger.
- 
+ Da un altro terminale, quindi, sarà possibile lanciare il debugger: 
 \end_layout
 
 \begin_layout Standard
 \begin_inset listings
 lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -6095,15 +6131,104 @@ $ arm-linux-gdbtui vmlinux
 \end_layout
 
 \begin_layout Standard
-quindi scrivo il comando
-\end_layout
-
-\begin_layout LyX-Code
-target remote :1234
+dove il parametro di gdb è proprio il file 
+\noun on
+vmlinux
+\noun default
+ creato in fase di compilazione dei sorgenti.
 \end_layout
 
 \begin_layout Standard
-da lì in poi il debug è quello classico :)
+La prima cosa da fare è effettuare la connessione ad una sessione remota,
+ usando il comando
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Standard
+target remote :1234
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+che indica a gdb di collegarsi a localhost (indirizzo implicito) usando
+ la porta 1234 (creata di default da qemu).
+\end_layout
+
+\begin_layout Standard
+Di seguito diamo un piccolo prontuario per le operazioni più comuni di debug.
+\end_layout
+
+\begin_layout Subsection
+Comandi principali
+\end_layout
+
+\begin_layout Description
+help\InsetSpace ~
+[comando] stampa informazioni, generali o sul comando specificato
+\end_layout
+
+\begin_layout Description
+break\InsetSpace ~
+[nome_file:]numero_riga inserisci un breakpoint nel file e nella riga
+ specificati
+\end_layout
+
+\begin_layout Description
+break\InsetSpace ~
+funzione inserisci un breakpoint ove la funzione è invocata
+\end_layout
+
+\begin_layout Description
+next passa all'istruzione successiva; se è l'invocazione di una subroutine
+ viene trattata come una singola istruzione, ottenendo direttamente il risultato
+\end_layout
+
+\begin_layout Description
+step passa all'istruzione successiva; se è l'invocazione di una subroutine
+ si entra nello stack della funzione
+\end_layout
+
+\begin_layout Description
+print\InsetSpace ~
+variabile stampa a video il contenuto della variabile
+\end_layout
+
+\begin_layout Description
+info\InsetSpace ~
+[sottocomando] info consente di ottenere informazioni varie sul programma,
+ in particolare
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+info\InsetSpace ~
+locals informazioni sulle variabili locali
+\end_layout
+
+\begin_layout Description
+info\InsetSpace ~
+stack informazioni sullo stack
+\end_layout
+
+\end_deeper
+\begin_layout Description
+run\InsetSpace ~
+[parametri] esegue il programma debuggato, eventualmente con i parametri
+ passati.
+ Per quanto generalmente utile, non è necessaria nel caso specifico di qemu,
+ in quanto l'esecuzione del codice è già stata iniziata
+\end_layout
+
+\begin_layout Description
+target connette gdb ad un processo o ad una sessione remota già in esecuzione
 \end_layout
 
 \begin_layout Chapter
