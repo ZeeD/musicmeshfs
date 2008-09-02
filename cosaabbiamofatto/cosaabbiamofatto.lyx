@@ -264,8 +264,8 @@ Configurazione dei sorgenti
 \end_layout
 
 \begin_layout Standard
-Dopo aver estratto il kernel, lo dobbiamo configurare per l'architettura
- 
+Dopo aver scaricato ed estratto il kernel, lo dobbiamo configurare per l'archite
+ttura 
 \noun on
 ARM
 \noun default
@@ -327,7 +327,7 @@ $ make menuconfig
 \end_layout
 
 \begin_layout Itemize
-Dal menù
+dal menù
 \noun on
  System Type \SpecialChar \menuseparator
  Arm System Type
@@ -339,11 +339,11 @@ Dal menù
 Samsung S3C2410, S3C2412, S3C2413, S3C2440, S3C2442, S3C2443
 \series default
 \noun default
-).
+);
 \end_layout
 
 \begin_layout Itemize
-Dal menù
+dal menù
 \noun on
  Boot options
 \noun default
@@ -361,7 +361,7 @@ Dal menù
 \end_layout
 
 \begin_layout Itemize
-Dal menù
+dal menù
 \noun on
  General setup 
 \noun default
@@ -373,13 +373,18 @@ impostiamo
 \noun default
  come valore della voce
 \noun on
- Kernel log buffer size
+ Kernel log buffer size;
 \noun default
-.
+ (con un buffer così piccolo i messaggi di warning/errore vengono inviati
+ su 
+\noun on
+stdout
+\noun default
+ il prima possibile);
 \end_layout
 
 \begin_layout Itemize
-Dal menù
+dal menù
 \noun on
  Device Drivers
 \noun default
@@ -394,10 +399,13 @@ MMC/SD card support
 \end_layout
 
 \begin_layout Standard
-Dopo anche altre personalizzazioni minori, si giunge al .config finale, che,
- nel nostro caso, è abbastanza minimale: la maggior parte dei moduli, infatti,
- è stata disabilitata, tranne quelli necessari a riconoscere cpu, tastiera
- e monitor:
+Dopo anche altre personalizzazioni minori, si giunge al .
+\noun on
+config
+\noun default
+ finale, che, nel nostro caso, è abbastanza minimale: la maggior parte dei
+ moduli, infatti, è stata disabilitata, tranne quelli necessari a riconoscere
+ cpu, tastiera e monitor:
 \end_layout
 
 \begin_layout Standard
@@ -417,13 +425,6 @@ Alla fine della fase di configurazione, si dovrà iniziare a compilare i
 ARM
 \noun default
  è necessario cross-compilare.
- Per questo motivo si rimanda alla sezione 
-\begin_inset LatexCommand vref
-reference "sec:Cross-compilazione"
-
-\end_inset
-
- per le problematiche relative.
 \end_layout
 
 \begin_layout Section
@@ -522,16 +523,16 @@ Ciò comporta una serie di vantaggi:
 \end_layout
 
 \begin_layout Itemize
-Si può utilizzare come 
+si può utilizzare come 
 \noun on
 host
 \noun default
  un sistema linux già funzionante (nel nostro caso, sono stati utilizzati
- una debian Lenny e una OpenSuse 10.3)
+ una debian Lenny e una OpenSuse 10.3);
 \end_layout
 
 \begin_layout Itemize
-La capacità di calcolo di una macchina
+la capacità di calcolo di una macchina
 \noun on
  target
 \noun default
@@ -541,19 +542,6 @@ La capacità di calcolo di una macchina
 \noun default
  sono molto più potenti (minimizzando i tempi morti in attesa del termine
  della compilazione)
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TROVARE ALTRI VANTAGGI??
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -625,7 +613,7 @@ reference "sec:Configurazione-e-compilazione"
 
 \end_inset
 
-, non resta che compilare e testare :)
+, non resta che compilare e testare.
 \end_layout
 
 \begin_layout Standard
@@ -633,6 +621,25 @@ reference "sec:Configurazione-e-compilazione"
 lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
 inline false
 status collapsed
+
+\begin_layout Standard
+
+$ wget http://www.handhelds.org/download/projects/toolchain/arm-linux-gcc-3.4.1.tar.bz
+2
+\end_layout
+
+\begin_layout Standard
+
+$ su -c 'tar xjf 
+\lang italian
+arm-linux-gcc-3.4.1.tar.bz2
+ -C /'
+\end_layout
+
+\begin_layout Standard
+
+[PASSWORD DI ROOT]
+\end_layout
 
 \begin_layout Standard
 
@@ -864,8 +871,8 @@ Sorgenti
 \end_layout
 
 \begin_layout Standard
-Il codice che si prende carico del boot del sistema è presente nelle directory
- 
+Il codice che si prende carico del boot del sistema è presente principalmente
+ nelle directory 
 \noun on
 arch/arm/boot/compressed
 \noun default
@@ -3876,593 +3883,17 @@ E direi che può bastare
 Test
 \end_layout
 
-\begin_layout Section
-Qemu
-\end_layout
-
 \begin_layout Standard
-Qemu è un emulatore e virtualizzatore generico e open source.
- Nello specifico è stato usato per emulare un'architettura basata su cpu
- 
+La fase di test è consistita nel verificare il funzionamento del kernel
+ prima sul dispositivo 
 \noun on
-ARM
+HTC P6300
 \noun default
- (Versatile
-\noun on
- AB
-\noun default
- prima, Samsung
-\noun on
- S3C2442B
-\noun default
- dopo) per semplificare le procedure di testing e debugging del kernel
-\end_layout
-
-\begin_layout Subsection
-Come ottenerlo
-\end_layout
-
-\begin_layout Standard
-Qemu è libero, e già installato nella maggior parte delle distribuzioni.
- Le versioni da noi usate sono state la 0.9.0 e la 0.9.1.
-\end_layout
-
-\begin_layout Standard
-Se non è già installato sarà sufficiente usare il package manager della
- distribuzione (YaST per OpenSuSE, apt-get per Debian e derivate, installpkg
- per Slackware, eccetera); nella (improbabile) ipotesi che non sia disponibile,
- i sorgenti sono disponibili presso 
-\begin_inset LatexCommand htmlurl
-target "http://bellard.org/qemu/qemu-0.9.1.tar.gz"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-In ogni caso si avrà accesso all'applicazione tramite terminale.
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "basicstyle={\tiny\ttfamily},breaklines=true,captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false"
-inline false
-status collapsed
-
-\begin_layout Standard
-
-\begin_inset Caption
-
-\begin_layout Standard
-Output di
-\noun on
- qemu
-\noun default
- lanciato senza parametri
-\end_layout
-
-\end_inset
-
-$ qemu
-\end_layout
-
-\begin_layout Standard
-
-QEMU PC emulator version 0.9.1, Copyright (c) 2003-2008 Fabrice Bellard
-\end_layout
-
-\begin_layout Standard
-
-usage: qemu [options] [disk_image]
-\end_layout
-
-\begin_layout Standard
-
-'disk_image' is a raw hard image image for IDE hard disk 0
-\end_layout
-
-\begin_layout Standard
-
-Standard options:
-\end_layout
-
-\begin_layout Standard
-
--M machine      select emulated machine (-M ? for list)
-\end_layout
-
-\begin_layout Standard
-
--cpu cpu        select CPU (-cpu ? for list)
-\end_layout
-
-\begin_layout Standard
-
--fda/-fdb file  use 'file' as floppy disk 0/1 image
-\end_layout
-
-\begin_layout Standard
-
--hda/-hdb file  use 'file' as IDE hard disk 0/1 image
-\end_layout
-
-\begin_layout Standard
-
--hdc/-hdd file  use 'file' as IDE hard disk 2/3 image
-\end_layout
-
-\begin_layout Standard
-
--cdrom file     use 'file' as IDE cdrom image (cdrom is ide1 master)
-\end_layout
-
-\begin_layout Standard
-
--drive [file=file][,if=type][,bus=n][,unit=m][,media=d][index=i]
-\end_layout
-
-\begin_layout Standard
-
-       [,cyls=c,heads=h,secs=s[,trans=t]][snapshot=on|off]       [,cache=on|off]
-\end_layout
-
-\begin_layout Standard
-
-                use 'file' as a drive image
-\end_layout
-
-\begin_layout Standard
-
--mtdblock file  use 'file' as on-board Flash memory image
-\end_layout
-
-\begin_layout Standard
-
--sd file        use 'file' as SecureDigital card image
-\end_layout
-
-\begin_layout Standard
-
--pflash file    use 'file' as a parallel flash image
-\end_layout
-
-\begin_layout Standard
-
--boot [a|c|d|n] boot on floppy (a), hard disk (c), CD-ROM (d), or network
- (n)
-\end_layout
-
-\begin_layout Standard
-
--snapshot       write to temporary files instead of disk image files
-\end_layout
-
-\begin_layout Standard
-
--no-frame       open SDL window without a frame and window decorations
-\end_layout
-
-\begin_layout Standard
-
--alt-grab       use Ctrl-Alt-Shift to grab mouse (instead of Ctrl-Alt)
-\end_layout
-
-\begin_layout Standard
-
--no-quit        disable SDL window close capability
-\end_layout
-
-\begin_layout Standard
-
--no-fd-bootchk  disable boot signature checking for floppy disks
-\end_layout
-
-\begin_layout Standard
-
--m megs         set virtual RAM size to megs MB [default=128]
-\end_layout
-
-\begin_layout Standard
-
--smp n          set the number of CPUs to 'n' [default=1]
-\end_layout
-
-\begin_layout Standard
-
--nographic      disable graphical output and redirect serial I/Os to console
-\end_layout
-
-\begin_layout Standard
-
--portrait       rotate graphical output 90 deg left (only PXA LCD)
-\end_layout
-
-\begin_layout Standard
-
--k language     use keyboard layout (for example "fr" for French)
-\end_layout
-
-\begin_layout Standard
-
--audio-help     print list of audio drivers and their options
-\end_layout
-
-\begin_layout Standard
-
--soundhw c1,...
- enable audio support
-\end_layout
-
-\begin_layout Standard
-
-                and only specified sound cards (comma separated list)
-\end_layout
-
-\begin_layout Standard
-
-                use -soundhw ? to get the list of supported cards
-\end_layout
-
-\begin_layout Standard
-
-                use -soundhw all to enable all of them
-\end_layout
-
-\begin_layout Standard
-
--localtime      set the real time clock to local time [default=utc]
-\end_layout
-
-\begin_layout Standard
-
--full-screen    start in full screen
-\end_layout
-
-\begin_layout Standard
-
--win2k-hack     use it when installing Windows 2000 to avoid a disk full
- bug
-\end_layout
-
-\begin_layout Standard
-
--usb            enable the USB driver (will be the default soon)
-\end_layout
-
-\begin_layout Standard
-
--usbdevice name add the host or guest USB device 'name'
-\end_layout
-
-\begin_layout Standard
-
--name string    set the name of the guest
-\end_layout
-
-\begin_layout Standard
-
-Network options:
-\end_layout
-
-\begin_layout Standard
-
--net nic[,vlan=n][,macaddr=addr][,model=type]
-\end_layout
-
-\begin_layout Standard
-
-                create a new Network Interface Card and connect it to VLAN
- 'n'
-\end_layout
-
-\begin_layout Standard
-
--net user[,vlan=n][,hostname=host]
-\end_layout
-
-\begin_layout Standard
-
-                connect the user mode network stack to VLAN 'n' and send
-\end_layout
-
-\begin_layout Standard
-
-                hostname 'host' to DHCP clients
-\end_layout
-
-\begin_layout Standard
-
--net tap[,vlan=n][,fd=h][,ifname=name][,script=file][,downscript=dfile]
-\end_layout
-
-\begin_layout Standard
-
-                connect the host TAP network interface to VLAN 'n' and use
- the
-\end_layout
-
-\begin_layout Standard
-
-                network scripts 'file' (default=/etc/qemu-ifup)
-\end_layout
-
-\begin_layout Standard
-
-                and 'dfile' (default=/etc/qemu-ifdown);
-\end_layout
-
-\begin_layout Standard
-
-                use '[down]script=no' to disable script execution;
-\end_layout
-
-\begin_layout Standard
-
-                use 'fd=h' to connect to an already opened TAP interface
-\end_layout
-
-\begin_layout Standard
-
--net socket[,vlan=n][,fd=h][,listen=[host]:port][,connect=host:port]
-\end_layout
-
-\begin_layout Standard
-
-                connect the vlan 'n' to another VLAN using a socket connection
-\end_layout
-
-\begin_layout Standard
-
--net socket[,vlan=n][,fd=h][,mcast=maddr:port]
-\end_layout
-
-\begin_layout Standard
-
-                connect the vlan 'n' to multicast maddr and port
-\end_layout
-
-\begin_layout Standard
-
--net none       use it alone to have zero network devices; if no -net option
-\end_layout
-
-\begin_layout Standard
-
-                is provided, the default is '-net nic -net user'
-\end_layout
-
-\begin_layout Standard
-
--tftp dir       allow tftp access to files in dir [-net user]
-\end_layout
-
-\begin_layout Standard
-
--bootp file     advertise file in BOOTP replies
-\end_layout
-
-\begin_layout Standard
-
--smb dir        allow SMB access to files in 'dir' [-net user]
-\end_layout
-
-\begin_layout Standard
-
--redir [tcp|udp]:host-port:[guest-host]:guest-port
-\end_layout
-
-\begin_layout Standard
-
-                redirect TCP or UDP connections from host to guest [-net
- user]
-\end_layout
-
-\begin_layout Standard
-
-Linux boot specific:
-\end_layout
-
-\begin_layout Standard
-
--kernel bzImage use 'bzImage' as kernel image
-\end_layout
-
-\begin_layout Standard
-
--append cmdline use 'cmdline' as kernel command line
-\end_layout
-
-\begin_layout Standard
-
--initrd file    use 'file' as initial ram disk
-\end_layout
-
-\begin_layout Standard
-
-Debug/Expert options:
-\end_layout
-
-\begin_layout Standard
-
--monitor dev    redirect the monitor to char device 'dev'
-\end_layout
-
-\begin_layout Standard
-
--serial dev     redirect the serial port to char device 'dev'
-\end_layout
-
-\begin_layout Standard
-
--parallel dev   redirect the parallel port to char device 'dev'
-\end_layout
-
-\begin_layout Standard
-
--pidfile file   Write PID to 'file'
-\end_layout
-
-\begin_layout Standard
-
--S              freeze CPU at startup (use 'c' to start execution)
-\end_layout
-
-\begin_layout Standard
-
--s              wait gdb connection to port
-\end_layout
-
-\begin_layout Standard
-
--p port         set gdb connection port [default=1234]
-\end_layout
-
-\begin_layout Standard
-
--d item1,...
-    output log to /tmp/qemu.log (use -d ? for a list of log items)
-\end_layout
-
-\begin_layout Standard
-
--hdachs c,h,s[,t]  force hard disk 0 physical geometry and the optional
- BIOS
-\end_layout
-
-\begin_layout Standard
-
-                translation (t=none or lba) (usually qemu can guess them)
-\end_layout
-
-\begin_layout Standard
-
--L path         set the directory for the BIOS, VGA BIOS and keymaps
-\end_layout
-
-\begin_layout Standard
-
--kernel-kqemu   enable KQEMU full virtualization (default is user mode only)
-\end_layout
-
-\begin_layout Standard
-
--no-kqemu       disable KQEMU kernel module usage
-\end_layout
-
-\begin_layout Standard
-
--std-vga        simulate a standard VGA card with VESA Bochs Extensions
-\end_layout
-
-\begin_layout Standard
-
-                (default is CL-GD5446 PCI VGA)
-\end_layout
-
-\begin_layout Standard
-
--no-acpi        disable ACPI
-\end_layout
-
-\begin_layout Standard
-
--no-reboot      exit instead of rebooting
-\end_layout
-
-\begin_layout Standard
-
--loadvm file    start right away with a saved state (loadvm in monitor)
-\end_layout
-
-\begin_layout Standard
-
--vnc display    start a VNC server on display
-\end_layout
-
-\begin_layout Standard
-
--daemonize      daemonize QEMU after initializing
-\end_layout
-
-\begin_layout Standard
-
--option-rom rom load a file, rom, into the option ROM space
-\end_layout
-
-\begin_layout Standard
-
--clock          force the use of the given methods for timer alarm.
-\end_layout
-
-\begin_layout Standard
-
-                To see what timers are available use -clock help
-\end_layout
-
-\begin_layout Standard
-
-During emulation, the following keys are useful:
-\end_layout
-
-\begin_layout Standard
-
-ctrl-alt-f      toggle full screen
-\end_layout
-
-\begin_layout Standard
-
-ctrl-alt-n      switch to virtual console 'n'
-\end_layout
-
-\begin_layout Standard
-
-ctrl-alt        toggle mouse and keyboard grab
-\end_layout
-
-\begin_layout Standard
-
-When using -nographic, press 'ctrl-a h' to get some help.
-\end_layout
-
-\begin_layout Standard
-
-$
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Per poter emulare anche il chip Samsung
-\noun on
- S3C2442B
-\noun default
- è stata utilizzata anche una versione di qemu
-\emph on
- custom
-\emph default
- modificata e manutenuta dagli sviluppatori del progetto openmoko
-\begin_inset LatexCommand citep
-key "openmoko_under_qemu"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsection
-Sistemi emulati
-\end_layout
-
-\begin_layout LyX-Code
-qemu-system-arm -M versatileab ...
-\end_layout
-
-\begin_layout Standard
-perché qemu non sa ancora emulare l'architettura Samsung S3C2442b (evabé)
+, usando una smart card come dispositivo di boot e Haret come bootloader;
+ poi utilizzando qemu per realizzare una macchina virtuale su cui abbiamo
+ installato il kernel che abbiamo debuggato usando gdb; infine si vedrà
+ il comportamento del kernel usando U-boot come bootloader presente sulla
+ memoria flash del dispositivo.
 \end_layout
 
 \begin_layout Section
@@ -5624,29 +5055,600 @@ Anche in questo caso abbiamo stampato a video e confrontato bit a bit il
 \end_layout
 
 \begin_layout Section
+Qemu
+\end_layout
+
+\begin_layout Standard
+Qemu è un emulatore e virtualizzatore generico e open source.
+ Nello specifico è stato usato per emulare un'architettura basata su cpu
+ 
+\noun on
+ARM
+\noun default
+ (Versatile
+\noun on
+ AB
+\noun default
+ prima, Samsung
+\noun on
+ S3C2442B
+\noun default
+ dopo) per semplificare le procedure di testing e debugging del kernel
+\end_layout
+
+\begin_layout Subsection
+Come ottenerlo
+\end_layout
+
+\begin_layout Standard
+Qemu è libero, e già installato nella maggior parte delle distribuzioni.
+ Le versioni da noi usate sono state la 0.9.0 e la 0.9.1.
+\end_layout
+
+\begin_layout Standard
+Se non è già installato sarà sufficiente usare il package manager della
+ distribuzione (YaST per OpenSuSE, apt-get per Debian e derivate, installpkg
+ per Slackware, eccetera); nella (improbabile) ipotesi che non sia disponibile,
+ i sorgenti sono disponibili presso 
+\begin_inset LatexCommand htmlurl
+target "http://bellard.org/qemu/qemu-0.9.1.tar.gz"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In ogni caso si avrà accesso all'applicazione tramite terminale.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\tiny\ttfamily},breaklines=true,captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+\begin_inset Caption
+
+\begin_layout Standard
+Output di
+\noun on
+ qemu
+\noun default
+ lanciato senza parametri
+\end_layout
+
+\end_inset
+
+$ qemu
+\end_layout
+
+\begin_layout Standard
+
+QEMU PC emulator version 0.9.1, Copyright (c) 2003-2008 Fabrice Bellard
+\end_layout
+
+\begin_layout Standard
+
+usage: qemu [options] [disk_image]
+\end_layout
+
+\begin_layout Standard
+
+'disk_image' is a raw hard image image for IDE hard disk 0
+\end_layout
+
+\begin_layout Standard
+
+Standard options:
+\end_layout
+
+\begin_layout Standard
+
+-M machine      select emulated machine (-M ? for list)
+\end_layout
+
+\begin_layout Standard
+
+-cpu cpu        select CPU (-cpu ? for list)
+\end_layout
+
+\begin_layout Standard
+
+-fda/-fdb file  use 'file' as floppy disk 0/1 image
+\end_layout
+
+\begin_layout Standard
+
+-hda/-hdb file  use 'file' as IDE hard disk 0/1 image
+\end_layout
+
+\begin_layout Standard
+
+-hdc/-hdd file  use 'file' as IDE hard disk 2/3 image
+\end_layout
+
+\begin_layout Standard
+
+-cdrom file     use 'file' as IDE cdrom image (cdrom is ide1 master)
+\end_layout
+
+\begin_layout Standard
+
+-drive [file=file][,if=type][,bus=n][,unit=m][,media=d][index=i]
+\end_layout
+
+\begin_layout Standard
+
+       [,cyls=c,heads=h,secs=s[,trans=t]][snapshot=on|off]       [,cache=on|off]
+\end_layout
+
+\begin_layout Standard
+
+                use 'file' as a drive image
+\end_layout
+
+\begin_layout Standard
+
+-mtdblock file  use 'file' as on-board Flash memory image
+\end_layout
+
+\begin_layout Standard
+
+-sd file        use 'file' as SecureDigital card image
+\end_layout
+
+\begin_layout Standard
+
+-pflash file    use 'file' as a parallel flash image
+\end_layout
+
+\begin_layout Standard
+
+-boot [a|c|d|n] boot on floppy (a), hard disk (c), CD-ROM (d), or network
+ (n)
+\end_layout
+
+\begin_layout Standard
+
+-snapshot       write to temporary files instead of disk image files
+\end_layout
+
+\begin_layout Standard
+
+-no-frame       open SDL window without a frame and window decorations
+\end_layout
+
+\begin_layout Standard
+
+-alt-grab       use Ctrl-Alt-Shift to grab mouse (instead of Ctrl-Alt)
+\end_layout
+
+\begin_layout Standard
+
+-no-quit        disable SDL window close capability
+\end_layout
+
+\begin_layout Standard
+
+-no-fd-bootchk  disable boot signature checking for floppy disks
+\end_layout
+
+\begin_layout Standard
+
+-m megs         set virtual RAM size to megs MB [default=128]
+\end_layout
+
+\begin_layout Standard
+
+-smp n          set the number of CPUs to 'n' [default=1]
+\end_layout
+
+\begin_layout Standard
+
+-nographic      disable graphical output and redirect serial I/Os to console
+\end_layout
+
+\begin_layout Standard
+
+-portrait       rotate graphical output 90 deg left (only PXA LCD)
+\end_layout
+
+\begin_layout Standard
+
+-k language     use keyboard layout (for example "fr" for French)
+\end_layout
+
+\begin_layout Standard
+
+-audio-help     print list of audio drivers and their options
+\end_layout
+
+\begin_layout Standard
+
+-soundhw c1,...
+ enable audio support
+\end_layout
+
+\begin_layout Standard
+
+                and only specified sound cards (comma separated list)
+\end_layout
+
+\begin_layout Standard
+
+                use -soundhw ? to get the list of supported cards
+\end_layout
+
+\begin_layout Standard
+
+                use -soundhw all to enable all of them
+\end_layout
+
+\begin_layout Standard
+
+-localtime      set the real time clock to local time [default=utc]
+\end_layout
+
+\begin_layout Standard
+
+-full-screen    start in full screen
+\end_layout
+
+\begin_layout Standard
+
+-win2k-hack     use it when installing Windows 2000 to avoid a disk full
+ bug
+\end_layout
+
+\begin_layout Standard
+
+-usb            enable the USB driver (will be the default soon)
+\end_layout
+
+\begin_layout Standard
+
+-usbdevice name add the host or guest USB device 'name'
+\end_layout
+
+\begin_layout Standard
+
+-name string    set the name of the guest
+\end_layout
+
+\begin_layout Standard
+
+Network options:
+\end_layout
+
+\begin_layout Standard
+
+-net nic[,vlan=n][,macaddr=addr][,model=type]
+\end_layout
+
+\begin_layout Standard
+
+                create a new Network Interface Card and connect it to VLAN
+ 'n'
+\end_layout
+
+\begin_layout Standard
+
+-net user[,vlan=n][,hostname=host]
+\end_layout
+
+\begin_layout Standard
+
+                connect the user mode network stack to VLAN 'n' and send
+\end_layout
+
+\begin_layout Standard
+
+                hostname 'host' to DHCP clients
+\end_layout
+
+\begin_layout Standard
+
+-net tap[,vlan=n][,fd=h][,ifname=name][,script=file][,downscript=dfile]
+\end_layout
+
+\begin_layout Standard
+
+                connect the host TAP network interface to VLAN 'n' and use
+ the
+\end_layout
+
+\begin_layout Standard
+
+                network scripts 'file' (default=/etc/qemu-ifup)
+\end_layout
+
+\begin_layout Standard
+
+                and 'dfile' (default=/etc/qemu-ifdown);
+\end_layout
+
+\begin_layout Standard
+
+                use '[down]script=no' to disable script execution;
+\end_layout
+
+\begin_layout Standard
+
+                use 'fd=h' to connect to an already opened TAP interface
+\end_layout
+
+\begin_layout Standard
+
+-net socket[,vlan=n][,fd=h][,listen=[host]:port][,connect=host:port]
+\end_layout
+
+\begin_layout Standard
+
+                connect the vlan 'n' to another VLAN using a socket connection
+\end_layout
+
+\begin_layout Standard
+
+-net socket[,vlan=n][,fd=h][,mcast=maddr:port]
+\end_layout
+
+\begin_layout Standard
+
+                connect the vlan 'n' to multicast maddr and port
+\end_layout
+
+\begin_layout Standard
+
+-net none       use it alone to have zero network devices; if no -net option
+\end_layout
+
+\begin_layout Standard
+
+                is provided, the default is '-net nic -net user'
+\end_layout
+
+\begin_layout Standard
+
+-tftp dir       allow tftp access to files in dir [-net user]
+\end_layout
+
+\begin_layout Standard
+
+-bootp file     advertise file in BOOTP replies
+\end_layout
+
+\begin_layout Standard
+
+-smb dir        allow SMB access to files in 'dir' [-net user]
+\end_layout
+
+\begin_layout Standard
+
+-redir [tcp|udp]:host-port:[guest-host]:guest-port
+\end_layout
+
+\begin_layout Standard
+
+                redirect TCP or UDP connections from host to guest [-net
+ user]
+\end_layout
+
+\begin_layout Standard
+
+Linux boot specific:
+\end_layout
+
+\begin_layout Standard
+
+-kernel bzImage use 'bzImage' as kernel image
+\end_layout
+
+\begin_layout Standard
+
+-append cmdline use 'cmdline' as kernel command line
+\end_layout
+
+\begin_layout Standard
+
+-initrd file    use 'file' as initial ram disk
+\end_layout
+
+\begin_layout Standard
+
+Debug/Expert options:
+\end_layout
+
+\begin_layout Standard
+
+-monitor dev    redirect the monitor to char device 'dev'
+\end_layout
+
+\begin_layout Standard
+
+-serial dev     redirect the serial port to char device 'dev'
+\end_layout
+
+\begin_layout Standard
+
+-parallel dev   redirect the parallel port to char device 'dev'
+\end_layout
+
+\begin_layout Standard
+
+-pidfile file   Write PID to 'file'
+\end_layout
+
+\begin_layout Standard
+
+-S              freeze CPU at startup (use 'c' to start execution)
+\end_layout
+
+\begin_layout Standard
+
+-s              wait gdb connection to port
+\end_layout
+
+\begin_layout Standard
+
+-p port         set gdb connection port [default=1234]
+\end_layout
+
+\begin_layout Standard
+
+-d item1,...
+    output log to /tmp/qemu.log (use -d ? for a list of log items)
+\end_layout
+
+\begin_layout Standard
+
+-hdachs c,h,s[,t]  force hard disk 0 physical geometry and the optional
+ BIOS
+\end_layout
+
+\begin_layout Standard
+
+                translation (t=none or lba) (usually qemu can guess them)
+\end_layout
+
+\begin_layout Standard
+
+-L path         set the directory for the BIOS, VGA BIOS and keymaps
+\end_layout
+
+\begin_layout Standard
+
+-kernel-kqemu   enable KQEMU full virtualization (default is user mode only)
+\end_layout
+
+\begin_layout Standard
+
+-no-kqemu       disable KQEMU kernel module usage
+\end_layout
+
+\begin_layout Standard
+
+-std-vga        simulate a standard VGA card with VESA Bochs Extensions
+\end_layout
+
+\begin_layout Standard
+
+                (default is CL-GD5446 PCI VGA)
+\end_layout
+
+\begin_layout Standard
+
+-no-acpi        disable ACPI
+\end_layout
+
+\begin_layout Standard
+
+-no-reboot      exit instead of rebooting
+\end_layout
+
+\begin_layout Standard
+
+-loadvm file    start right away with a saved state (loadvm in monitor)
+\end_layout
+
+\begin_layout Standard
+
+-vnc display    start a VNC server on display
+\end_layout
+
+\begin_layout Standard
+
+-daemonize      daemonize QEMU after initializing
+\end_layout
+
+\begin_layout Standard
+
+-option-rom rom load a file, rom, into the option ROM space
+\end_layout
+
+\begin_layout Standard
+
+-clock          force the use of the given methods for timer alarm.
+\end_layout
+
+\begin_layout Standard
+
+                To see what timers are available use -clock help
+\end_layout
+
+\begin_layout Standard
+
+During emulation, the following keys are useful:
+\end_layout
+
+\begin_layout Standard
+
+ctrl-alt-f      toggle full screen
+\end_layout
+
+\begin_layout Standard
+
+ctrl-alt-n      switch to virtual console 'n'
+\end_layout
+
+\begin_layout Standard
+
+ctrl-alt        toggle mouse and keyboard grab
+\end_layout
+
+\begin_layout Standard
+
+When using -nographic, press 'ctrl-a h' to get some help.
+\end_layout
+
+\begin_layout Standard
+
+$
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Per poter emulare anche il chip Samsung
+\noun on
+ S3C2442B
+\noun default
+ è stata utilizzata anche una versione di qemu
+\emph on
+ custom
+\emph default
+ modificata e manutenuta dagli sviluppatori del progetto openmoko
+\begin_inset LatexCommand citep
+key "openmoko_under_qemu"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Sistemi emulati
+\end_layout
+
+\begin_layout LyX-Code
+qemu-system-arm -M versatileab ...
+\end_layout
+
+\begin_layout Standard
+perché qemu non sa ancora emulare l'architettura Samsung S3C2442b (evabé)
+\end_layout
+
+\begin_layout Section
 U-Boot
 \end_layout
 
 \begin_layout Standard
-To do.
-\end_layout
-
-\begin_layout Standard
-\begin_inset LatexCommand bibtex
-options "bibtotoc,alpha"
-bibfiles "web-o-grafia"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset LatexCommand printnomenclature
-
-\end_inset
-
-
+To do
 \end_layout
 
 \begin_layout Chapter
@@ -7743,6 +7745,24 @@ If your document contains nontrivial examples of program code, we recommend
  releasing these examples in parallel under your choice of free software
  license, such as the GNU General Public License, to permit their use in
  free software.
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand bibtex
+options "bibtotoc,alpha"
+bibfiles "web-o-grafia"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand printnomenclature
+
+\end_inset
+
+
 \end_layout
 
 \end_body
