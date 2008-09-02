@@ -5150,6 +5150,22 @@ Anche in questo caso abbiamo stampato a video e confrontato bit a bit il
  da haret.
 \end_layout
 
+\begin_layout Subsection
+Compilazione
+\end_layout
+
+\begin_layout Standard
+Per la compilazione di haret è necessario usare un compilatore C++ per Windows
+ CE su ARM.
+ Noi abbiamo usato mingw32ce 
+\begin_inset LatexCommand url
+target "http://cegcc.sourceforge.net/"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Section
 Qemu
 \end_layout
@@ -5727,6 +5743,20 @@ key "openmoko_under_qemu"
 .
 \end_layout
 
+\begin_layout Standard
+Per migliorare le prestazioni di qemu è possibile installare anche 
+\emph on
+kqemu
+\emph default
+, un modulo kernel scritto per velocizzare l'emulazione di x86 su x86 
+\begin_inset LatexCommand url
+target "http://bellard.org/qemu/download.html"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Emulazione
 \end_layout
@@ -5774,7 +5804,7 @@ qemu-system-arm -M versatileab -kernel zImage -nographic
 \end_layout
 
 \begin_layout LyX-Code
--m 126 -hda hd0-img
+-m 126 -hda hd0.img
 \end_layout
 
 \begin_layout Section
