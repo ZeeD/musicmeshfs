@@ -1,4 +1,4 @@
-#LyX 1.5.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -5797,8 +5797,22 @@ Per avviare un sistema x86 partente da cd con un hard disk e 128 mb di ram
  è necessario lanciare
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ 
+\lang italian
 qemu -cdrom image.iso -hda /dev/sda1 -m 128 -boot d
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5824,12 +5838,22 @@ hd0.img
  è necessario lanciare
 \end_layout
 
-\begin_layout LyX-Code
-qemu-system-arm -M versatileab -kernel zImage -nographic 
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ 
+\lang italian
+qemu-system-arm -M versatileab -kernel zImage -nographic -m 126 -hda hd0.img
 \end_layout
 
-\begin_layout LyX-Code
--m 126 -hda hd0.img
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5838,9 +5862,19 @@ e cosi via per tutti i sistemi attualmente emulati da qemu:
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
 inline false
-status open
+status collapsed
+
+\begin_layout Standard
+
+$ cd /usr/bin
+\end_layout
+
+\begin_layout Standard
+
+$ ls qemu-*
+\end_layout
 
 \begin_layout Standard
 
@@ -5869,12 +5903,12 @@ qemu-i386   qemu-sh4eb        qemu-system-mips64    qemu-system-x86_64
 
 \begin_layout Standard
 
-qemu-img    qemu-sparc        qemu-system-mips64el  qemu-x86_64
+qemu-img    qemu-sparc        qemu-system-mips64el  qemu-system-z80
 \end_layout
 
 \begin_layout Standard
 
-qemu-m68k   qemu-sparc32plus  qemu-system-mipsel
+qemu-m68k   qemu-sparc32plus  qemu-system-mipsel    qemu-x86_64
 \end_layout
 
 \begin_layout Standard
@@ -5885,6 +5919,241 @@ qemu-mips   qemu-sparc64      qemu-system-ppc
 \begin_layout Standard
 
 qemu-mipsel qemu-system-arm   qemu-system-ppc64
+\end_layout
+
+\begin_layout Standard
+
+$ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+in particolare, 
+\noun on
+qemu-system-arm
+\noun default
+ supporta le seguenti architetture
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ qemu-system-arm -M ?
+\end_layout
+
+\begin_layout Standard
+
+Supported machines are:
+\end_layout
+
+\begin_layout Standard
+
+integratorcp ARM Integrator/CP (ARM926EJ-S) (default)
+\end_layout
+
+\begin_layout Standard
+
+versatilepb ARM Versatile/PB (ARM926EJ-S)
+\end_layout
+
+\begin_layout Standard
+
+versatileab ARM Versatile/AB (ARM926EJ-S)
+\end_layout
+
+\begin_layout Standard
+
+realview   ARM RealView Emulation Baseboard (ARM926EJ-S)
+\end_layout
+
+\begin_layout Standard
+
+akita      Akita PDA (PXA270)
+\end_layout
+
+\begin_layout Standard
+
+spitz      Spitz PDA (PXA270)
+\end_layout
+
+\begin_layout Standard
+
+borzoi     Borzoi PDA (PXA270)
+\end_layout
+
+\begin_layout Standard
+
+terrier    Terrier PDA (PXA270)
+\end_layout
+
+\begin_layout Standard
+
+cheetah    Palm Tungsten|E aka.
+ Cheetah PDA (OMAP310)
+\end_layout
+
+\begin_layout Standard
+
+lm3s811evb Stellaris LM3S811EVB
+\end_layout
+
+\begin_layout Standard
+
+lm3s6965evb Stellaris LM3S6965EVB
+\end_layout
+
+\begin_layout Standard
+
+connex     Gumstix Connex (PXA255)
+\end_layout
+
+\begin_layout Standard
+
+verdex     Gumstix Verdex (PXA270)
+\end_layout
+
+\begin_layout Standard
+
+mainstone  Mainstone II (PXA27x)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+e le seguenti cpu
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ qemu-system-arm -cpu ?
+\end_layout
+
+\begin_layout Standard
+
+Available CPUs:
+\end_layout
+
+\begin_layout Standard
+
+  arm926
+\end_layout
+
+\begin_layout Standard
+
+  arm946
+\end_layout
+
+\begin_layout Standard
+
+  arm1026
+\end_layout
+
+\begin_layout Standard
+
+  arm1136
+\end_layout
+
+\begin_layout Standard
+
+  arm11mpcore
+\end_layout
+
+\begin_layout Standard
+
+  cortex-m3
+\end_layout
+
+\begin_layout Standard
+
+  cortex-a8
+\end_layout
+
+\begin_layout Standard
+
+  ti925t
+\end_layout
+
+\begin_layout Standard
+
+  pxa250
+\end_layout
+
+\begin_layout Standard
+
+  pxa255
+\end_layout
+
+\begin_layout Standard
+
+  pxa260
+\end_layout
+
+\begin_layout Standard
+
+  pxa261
+\end_layout
+
+\begin_layout Standard
+
+  pxa262
+\end_layout
+
+\begin_layout Standard
+
+  pxa270
+\end_layout
+
+\begin_layout Standard
+
+  pxa270-a0
+\end_layout
+
+\begin_layout Standard
+
+  pxa270-a1
+\end_layout
+
+\begin_layout Standard
+
+  pxa270-b0
+\end_layout
+
+\begin_layout Standard
+
+  pxa270-b1
+\end_layout
+
+\begin_layout Standard
+
+  pxa270-c0
+\end_layout
+
+\begin_layout Standard
+
+  pxa270-c5
+\end_layout
+
+\begin_layout Standard
+
+  any
 \end_layout
 
 \end_inset
@@ -6155,7 +6424,7 @@ status open
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename remote_debugging.eps
+	filename remote_debugging.pdf
 	lyxscale 50
 	width 70col%
 
