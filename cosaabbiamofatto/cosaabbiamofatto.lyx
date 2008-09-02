@@ -162,12 +162,23 @@ Segue una dettagliata descrizione della fase di avvio del kernel commentando
 \end_layout
 
 \begin_layout Standard
-Nel capitolo 3 si analizzano gli strumenti utilizzati per il testing del
- kernel su Arm.
+Nel capitolo 
+\begin_inset LatexCommand ref
+reference "cha:Test"
+
+\end_inset
+
+ si analizzano gli strumenti utilizzati per il testing del kernel su Arm.
  Qemu è un programma di emulazione molto semplice da usare e facilmente
  configurabile per i nostri scopi.
  Haret è un programma scritto in C++ per Windows CE.
- Haret ha l'obbiettivo di copiare in memoria kernel ed eventualmente initrd,
+ Haret(
+\begin_inset LatexCommand ref
+reference "cha:Haret"
+
+\end_inset
+
+) ha l'obbiettivo di copiare in memoria kernel ed eventualmente initrd,
  spegnere l'hardware e avviare il kernel in memoria in maniera non invasiva
  per la macchina dal momento che non fa modifiche al sistema operativo ospite.
  Infine U-boot che è il bootloader universale per i sistemi embedded.
@@ -176,15 +187,32 @@ o sulla memoria flash del dispositivo.
 \end_layout
 
 \begin_layout Standard
-Il capitolo 4 spiega come utilizzare la fase di debugging sui dispositivi
- embedded.
+Il capitolo 
+\begin_inset LatexCommand ref
+reference "cha:Debugger"
+
+\end_inset
+
+ spiega come utilizzare la fase di debugging sui dispositivi embedded.
  Verrà analizzato gdb (Gnu DeBugger), un programma creato ad-hoc come debugger
  del kernel.
 \end_layout
 
 \begin_layout Standard
-In appendice vi è una piccola guida di Assembly per Arm per facilitare la
- compressione del codice Assembly presentato nel capitolo 2.
+In appendice 
+\begin_inset LatexCommand ref
+reference "cha:Assembly-per-ARM"
+
+\end_inset
+
+ vi è una piccola guida di Assembly per Arm per facilitare la compressione
+ del codice Assembly presentato nel capitolo 
+\begin_inset LatexCommand ref
+reference "cha:Avvio"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Chapter
@@ -630,7 +658,9 @@ $ wget http://www.handhelds.org/download/projects/toolchain/arm-linux-gcc-3.4.1.
 
 \begin_layout Standard
 
+
 $ su -c "tar xjf arm-linux-gcc-3.4.1.tar.bz2 -C /"
+
 \end_layout
 
 \begin_layout Standard
@@ -841,6 +871,12 @@ target "en.wikipedia.org"
 
 \begin_layout Chapter
 Avvio
+\begin_inset LatexCommand label
+name "cha:Avvio"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3878,6 +3914,12 @@ E direi che può bastare
 
 \begin_layout Chapter
 Test
+\begin_inset LatexCommand label
+name "cha:Test"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6033,6 +6075,12 @@ blo decompress_kernel
 
 \begin_layout Chapter
 Licenza per la documentazione libera GNU
+\begin_inset LatexCommand label
+name "cha:Licenza-per-la"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
