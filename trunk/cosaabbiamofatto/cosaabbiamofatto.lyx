@@ -648,7 +648,7 @@ reference "sec:Configurazione-e-compilazione"
 \begin_inset listings
 lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -658,9 +658,7 @@ $ wget http://www.handhelds.org/download/projects/toolchain/arm-linux-gcc-3.4.1.
 
 \begin_layout Standard
 
-
 $ su -c "tar xjf arm-linux-gcc-3.4.1.tar.bz2 -C /"
-
 \end_layout
 
 \begin_layout Standard
@@ -700,7 +698,7 @@ arm-linux-ld
 \end_layout
 
 \begin_layout Section
-Output (Image, zImage + compressore)
+Output (Image, zImage, bzImage)
 \end_layout
 
 \begin_layout Standard
@@ -3979,8 +3977,8 @@ Non invasivo
 
 \begin_layout Standard
 Nel modo invasivo viene modificato la memoria interna del palmare installandoci
- sopra un bootloader universale Uboot il quale permette di far partire kernel
- anche da remoto sin dall'avvio.
+ sopra un bootloader universale U-boot il quale permette di far partire
+ kernel anche da remoto sin dall'avvio.
  Con questa modalità però si perde tutto il software preinstallato sulla
  macchina dal momento che si sovrascrive la memoria stessa.
 \end_layout
@@ -4008,13 +4006,15 @@ Il programma viene copiato all'interno di una scheda di memoria (miniSD)
  con alcuni file di configurazione e il kernel stesso.
  Il file di configurazione 
 \emph on
+\noun on
 startup.txt
 \emph default
+\noun default
 :
 \end_layout
 
 \begin_layout LyX-Code
-\begin_inset Include \verbatiminput{startup.txt}
+\begin_inset Include \lstinputlisting{startup.txt}
 preview false
 
 \end_inset
@@ -4028,10 +4028,26 @@ indica all'eseguibile
 haret.exe
 \emph default
  come settare alcuni parametri (variabili globali all'interno del codice
- di haret) quali KERNEL, MTYPE, INITRD, CMDLINE ed infine avvia la funzione
- (interna al codice di haret quindi scritta in C++)
+ di haret) quali 
+\noun on
+KERNEL
+\noun default
+, 
+\noun on
+MTYPE
+\noun default
+, 
+\noun on
+INITRD
+\noun default
+, 
+\noun on
+CMDLINE
+\noun default
+ ed infine avvia la funzione (interna al codice di haret quindi scritta
+ in C++)
 \emph on
- bootlinux.
+ bootlinux().
 \end_layout
 
 \begin_layout Subsection
@@ -4051,14 +4067,14 @@ linboot.cpp
 \begin_layout Standard
 La funzione
 \emph on
- launchKernel
+ launchKernel()
 \emph default
  ad esempio è responsabile di inibire l'hardware e lanciare il kernel
 \end_layout
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,language=C,showstringspaces=false"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=556,language={C++},numbers=left,showstringspaces=false"
 inline false
 status collapsed
 
@@ -4221,12 +4237,12 @@ return_control();
 \begin_layout Standard
 mentre la funzione
 \emph on
- preloader
+ preloader()
 \end_layout
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,language=C,showstringspaces=false"
+lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,firstnumber=245,language={C++},numbers=left,showstringspaces=false"
 inline false
 status collapsed
 
@@ -4603,7 +4619,7 @@ n");
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,firstnumber=315,language={C++},numbers=left,showstringspaces=false"
 inline false
 status collapsed
 
@@ -4625,7 +4641,7 @@ lin_t
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,firstnumber=316,language={C++},numbers=left,showstringspaces=false"
 inline false
 status collapsed
 
@@ -4640,7 +4656,11 @@ lin_t startfunc = (lin_t)destKernel;
 \end_layout
 
 \begin_layout Standard
-è definita una variabile startfunc di tipo 
+è definita una variabile 
+\emph on
+startfunc
+\emph default
+ di tipo 
 \emph on
 lin_t
 \emph default
@@ -4653,7 +4673,7 @@ destKernel
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,firstnumber=317,language={C++},numbers=left,showstringspaces=false"
 inline false
 status collapsed
 
@@ -4668,9 +4688,19 @@ startfunc(0, data->machtype, destTags);
 \end_layout
 
 \begin_layout Standard
-è lanciata la funzione startfunc con in input uno 0, il valore della variabile
- Mtype passata in precedenza e il valore di destTags, buffer di memoria
- contenenti i tags in ram.
+è lanciata la funzione 
+\emph on
+startfunc()
+\emph default
+ con in input uno 0, il valore della variabile 
+\emph on
+Mtype
+\emph default
+ passata in precedenza e il valore di 
+\emph on
+destTags
+\emph default
+, buffer di memoria contenenti i tags in ram.
 \end_layout
 
 \begin_layout Standard
@@ -4678,12 +4708,16 @@ La programmazione in C++ è suddivisa in due fasi dal momento che dopo lo
  shutdown dell'hardware il programma accede direttamente alla memoria e
  non riesce a tradurre le funzioni e librerie tipiche del C++ con conseguente
  uso di funzion ad-hoc.
- Ad esempio nella funzione preloader vi è
+ Ad esempio nella funzione 
+\emph on
+preloader()
+\emph default
+ vi è
 \end_layout
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,firstnumber=251,language={C++},numbers=left,showstringspaces=false"
 inline false
 status collapsed
 
@@ -4707,7 +4741,7 @@ la quale risulta una macro definita nel codice in modo seguente
 
 \begin_layout Standard
 \begin_inset listings
-lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,showstringspaces=false"
+lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=true,firstnumber=225,language={C++},numbers=left,showstringspaces=false"
 inline false
 status collapsed
 
@@ -4806,36 +4840,44 @@ n"
 \end_layout
 
 \begin_layout Standard
-In haret esistono due tipologie di output
+Per quanto riguarda la comunicazione verso l'utente in haret esistono due
+ tipologie di output
 \end_layout
 
 \begin_layout Itemize
-File di log
+file di log;
 \end_layout
 
 \begin_layout Itemize
-Stampa a video
+stampa a video.
 \end_layout
 
 \begin_layout Standard
 Per abilitare l'output su file di log è necessario creare un file vuoto
  all'interno della cartella dove è presente l'eseguibile 
 \emph on
+\noun on
 haret.exe
 \emph default
+\noun default
  e rinominarlo
 \emph on
- earlyharetlog.txt
+ 
+\noun on
+earlyharetlog.txt
 \emph default
+\noun default
 .
  Il file di log 
 \emph on
+\noun on
 haretlog.txt
 \emph default
+\noun default
  verrà creato nella stessa cartella.
  All'interno del codice la funzione
 \emph on
- Output
+ Output()
 \emph default
  è la responsabile della scrittura su file.
 \end_layout
@@ -4843,10 +4885,10 @@ haretlog.txt
 \begin_layout Standard
 La seconda tipologia di output si rende necessaria quando avviene lo shutdown
  dell'hardware dal momento che non si ha più accesso alla memoria della
- miniSd.
+ miniSD.
  All'interno del codice la funzione
 \emph on
- fb_printf
+ fb_printf()
 \emph default
  stampa a video ove previsto.
 \end_layout
@@ -5030,8 +5072,11 @@ Si noti come al terzo rigo avvisa dell'avvenuto riconoscimento della macchina
  e della tipologia di cpu.
  Poi parte nell'esecuzione del contenuto di
 \emph on
- startup.txt
+ 
+\noun on
+startup.txt
 \emph default
+\noun default
  come fossero comandi separati tra loro (si noti il carattere # indicatore
  della pseudo-shell).
  L'ultimo comando è appunto
@@ -5041,7 +5086,14 @@ Si noti come al terzo rigo avvisa dell'avvenuto riconoscimento della macchina
  il quale fa partire l'esecuzione del codice visto in precedenza.
  Alla fine del file di log vi è la scritta
 \emph on
- Go Go Go ...
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Go Go Go ...
+\begin_inset Quotes erd
+\end_inset
+
 
 \emph default
  che è l'ultimo messaggio previsto dal codice prima di spegnere l'hardware
