@@ -130,7 +130,19 @@ Licenza per la documentazione libera GNU
 
 \end_layout
 
+\begin_layout Chapter*
+Introduzione
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Chapter
+Kernel & compilatore
+\end_layout
+
+\begin_layout Section
 Kernel
 \end_layout
 
@@ -156,6 +168,41 @@ target "http://www.handhelds.org"
 HTC P6300
 \noun default
 ) e quindi abbiamo preferito utilizzare la versione di default.
+\end_layout
+
+\begin_layout Section
+Compilatore
+\end_layout
+
+\begin_layout Standard
+Per compilare il kernel linux è necessario usare il gcc, a causa delle varie
+ estensioni del compilatore utilizzate dai 
+\emph on
+kernel hackers
+\emph default
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Sulla versione da utilizzare non ci sono preferenze, ma, in genere, più
+ nuovo è, meglio è.
+\end_layout
+
+\begin_layout Standard
+In effetti ci potrebbero essere problemi in caso di versioni del kernel
+ e del compilatore particolarmente differenti tra di loro, a causa dell'uso
+ (e spesso dell'abuso) che viene fatto delle varie estensioni 
+\emph on
+non standard
+\emph default
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Nel nostro caso sono state usate varie versioni, principalmente 4.2.3 e 3.4.1,
+ senza riscontrare particolari problemi.
 \end_layout
 
 \begin_layout Section
@@ -331,6 +378,245 @@ reference "sec:Cross-compilazione"
 \end_layout
 
 \begin_layout Section
+\begin_inset LatexCommand label
+name "sec:Cross-compilazione"
+
+\end_inset
+
+Cross-compilazione
+\end_layout
+
+\begin_layout Standard
+Per compilare un kernel per 
+\noun on
+ARM
+\noun default
+ ci sono le seguenti opzioni:
+\end_layout
+
+\begin_layout Enumerate
+Avere un sistema operativo + compilatore 
+\noun on
+C
+\noun default
+ su architettura 
+\noun on
+ARM
+\noun default
+ (e parecchio tempo, data la potenza di questi dispositivi).
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset LatexCommand label
+name "enu:cross-compilare"
+
+\end_inset
+
+Avere un sistema operativo + compilatore 
+\noun on
+C
+\noun default
+ su architettura x86 + istruire il compilatore 
+\noun on
+C
+\noun default
+ a generare eseguibili per architettura 
+\noun on
+ARM
+\noun default
+.
+\end_layout
+
+\begin_layout Standard
+Si è scelto di approcciarsi al problema tramite la soluzione 
+\begin_inset LatexCommand ref
+reference "enu:cross-compilare"
+
+\end_inset
+
+.
+ D'ora innanzi, quindi, si dirà
+\end_layout
+
+\begin_layout Description
+
+\noun on
+host
+\begin_inset LatexCommand nomenclature
+symbol "host"
+description "In ambiente di emulazione, la macchina reale che ospita l'emulatore.\\\\In ambiente di cross-compilazione, la macchina che ospita il compilatore.\\\\Vedi: target"
+
+\end_inset
+
+
+\noun default
+ la macchina x86 su cui sono presenti compilatore e sorgenti
+\end_layout
+
+\begin_layout Description
+
+\noun on
+target
+\begin_inset LatexCommand nomenclature
+symbol "target"
+description "In ambiente di emulazione, la macchina virtuale generata dall'emulatore.\\\\In ambiente di cross-compilazione, la macchina su cui verranno utilizzati i programmi compilati.\\\\Vedi: host"
+
+\end_inset
+
+
+\noun default
+ la macchina ARM su cui si utilizzerà effettivamente il kernel compilato
+\end_layout
+
+\begin_layout Standard
+Ciò comporta una serie di vantaggi:
+\end_layout
+
+\begin_layout Itemize
+Si può utilizzare come 
+\noun on
+host
+\noun default
+ un sistema linux già funzionante (nel nostro caso, sono stati utilizzati
+ una debian Lenny e una OpenSuse 10.3)
+\end_layout
+
+\begin_layout Itemize
+La capacità di calcolo di una macchina
+\noun on
+ target
+\noun default
+ è generalmente limitata, mentre le macchine
+\noun on
+ host
+\noun default
+ sono molto più potenti (minimizzando i tempi morti in attesa del termine
+ della compilazione)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Note Shaded
+status open
+
+\begin_layout Standard
+TROVARE ALTRI VANTAGGI??
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ovviamente vi è la difficoltà di avere un compilatore 
+\noun on
+C
+\noun default
+ in grado di generare eseguibili per la macchina
+\noun on
+ target
+\noun default
+.
+ Per fortuna questo è offerto da gcc.
+ Per abilitare questa
+\emph on
+ feature
+\emph default
+, però, è necessario impostare una opzione in fase di compilazione.
+\end_layout
+
+\begin_layout Standard
+Nel nostro caso si è evitato di ri-compilare il compilatore, ed è stata
+ utilizzata una versione pre-compilata di gcc da 
+\begin_inset LatexCommand htmlurl
+name "handhelds.org"
+target "http://www.handhelds.org/download/projects/toolchain/"
+
+\end_inset
+
+
+\begin_inset LatexCommand citep
+key "handhelds_toolchain"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Tuttavia è necessario istruire il kernel del fatto che vogliamo compilare
+ i sorgenti (già configurati) con un compilatore diverso (ed un diverso
+ linker, assembler, ecc).
+\end_layout
+
+\begin_layout Standard
+Per questo viene in aiuto la variabile d'ambiente 
+\noun on
+CROSS_COMPILER
+\noun default
+, che istruisce il make su dove andare a cercare la 
+\emph on
+toolchain
+\begin_inset LatexCommand nomenclature
+symbol "toolchain"
+description "Insieme di tutti gli strumenti (tra gli altri preprocessore, assembler, compilatore, linker...) necessari alla generazione di codice eseguibile a partire da sorgenti."
+
+\end_inset
+
+
+\emph default
+ adatta.
+\end_layout
+
+\begin_layout Standard
+Terminata la parte di configurazione del kernel, come già fatto nella sezione
+ 
+\begin_inset LatexCommand vref
+reference "sec:Configurazione-e-compilazione"
+
+\end_inset
+
+, non resta che compilare e testare :)
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ export CROSS_COMPILE=/usr/local/arm/3.4.1/bin/arm-linux-
+\end_layout
+
+\begin_layout Standard
+
+$ make
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+È da notare come 
+\noun on
+CROSS_COMPILE
+\noun default
+ indichi il prefisso comune a tutti gli eseguibili necessari (
+\noun on
+arm-linux-gcc
+\noun default
+, 
+\noun on
+arm-linux-ld
+\noun default
+...).
+\end_layout
+
+\begin_layout Section
 Output (Image, zImage + compressore)
 \end_layout
 
@@ -500,7 +786,7 @@ target "en.wikipedia.org"
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Chapter
 Avvio
 \end_layout
 
@@ -3538,289 +3824,10 @@ E direi che può bastare
 \end_layout
 
 \begin_layout Chapter
-Compilatore
-\end_layout
-
-\begin_layout Standard
-L'altra componente necessaria per compilare un kernel è, ovviamente, un
- compilatore :)
+Test
 \end_layout
 
 \begin_layout Section
-Quale
-\end_layout
-
-\begin_layout Standard
-Per compilare il kernel linux è necessario usare il gcc, a causa delle varie
- estensioni del compilatore utilizzate dai 
-\emph on
-kernel hackers
-\emph default
-.
- 
-\end_layout
-
-\begin_layout Standard
-Sulla versione da utilizzare non ci sono preferenze, ma, in genere, più
- nuovo è, meglio è.
-\end_layout
-
-\begin_layout Standard
-In effetti ci potrebbero essere problemi in caso di versioni del kernel
- e del compilatore particolarmente differenti tra di loro, a causa dell'uso
- (e spesso dell'abuso) che viene fatto delle varie estensioni 
-\emph on
-non standard
-\emph default
-.
- 
-\end_layout
-
-\begin_layout Standard
-Nel nostro caso sono state usate varie versioni, principalmente 4.2.3 e 3.4.1,
- senza riscontrare particolari problemi.
-\end_layout
-
-\begin_layout Section
-\begin_inset LatexCommand label
-name "sec:Cross-compilazione"
-
-\end_inset
-
-Cross-compilazione
-\end_layout
-
-\begin_layout Standard
-Per compilare un kernel per 
-\noun on
-ARM
-\noun default
- ci sono le seguenti opzioni:
-\end_layout
-
-\begin_layout Enumerate
-Avere un sistema operativo + compilatore 
-\noun on
-C
-\noun default
- su architettura 
-\noun on
-ARM
-\noun default
- (e parecchio tempo, data la potenza di questi dispositivi).
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset LatexCommand label
-name "enu:cross-compilare"
-
-\end_inset
-
-Avere un sistema operativo + compilatore 
-\noun on
-C
-\noun default
- su architettura x86 + istruire il compilatore 
-\noun on
-C
-\noun default
- a generare eseguibili per architettura 
-\noun on
-ARM
-\noun default
-.
-\end_layout
-
-\begin_layout Standard
-Si è scelto di approcciarsi al problema tramite la soluzione 
-\begin_inset LatexCommand ref
-reference "enu:cross-compilare"
-
-\end_inset
-
-.
- D'ora innanzi, quindi, si dirà
-\end_layout
-
-\begin_layout Description
-
-\noun on
-host
-\begin_inset LatexCommand nomenclature
-symbol "host"
-description "In ambiente di emulazione, la macchina reale che ospita l'emulatore.\\\\In ambiente di cross-compilazione, la macchina che ospita il compilatore.\\\\Vedi: target"
-
-\end_inset
-
-
-\noun default
- la macchina x86 su cui sono presenti compilatore e sorgenti
-\end_layout
-
-\begin_layout Description
-
-\noun on
-target
-\begin_inset LatexCommand nomenclature
-symbol "target"
-description "In ambiente di emulazione, la macchina virtuale generata dall'emulatore.\\\\In ambiente di cross-compilazione, la macchina su cui verranno utilizzati i programmi compilati.\\\\Vedi: host"
-
-\end_inset
-
-
-\noun default
- la macchina ARM su cui si utilizzerà effettivamente il kernel compilato
-\end_layout
-
-\begin_layout Standard
-Ciò comporta una serie di vantaggi:
-\end_layout
-
-\begin_layout Itemize
-Si può utilizzare come 
-\noun on
-host
-\noun default
- un sistema linux già funzionante (nel nostro caso, sono stati utilizzati
- una debian Lenny e una OpenSuse 10.3)
-\end_layout
-
-\begin_layout Itemize
-La capacità di calcolo di una macchina
-\noun on
- target
-\noun default
- è generalmente limitata, mentre le macchine
-\noun on
- host
-\noun default
- sono molto più potenti (minimizzando i tempi morti in attesa del termine
- della compilazione)
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TROVARE ALTRI VANTAGGI??
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Ovviamente vi è la difficoltà di avere un compilatore 
-\noun on
-C
-\noun default
- in grado di generare eseguibili per la macchina
-\noun on
- target
-\noun default
-.
- Per fortuna questo è offerto da gcc.
- Per abilitare questa
-\emph on
- feature
-\emph default
-, però, è necessario impostare una opzione in fase di compilazione.
-\end_layout
-
-\begin_layout Standard
-Nel nostro caso si è evitato di ri-compilare il compilatore, ed è stata
- utilizzata una versione pre-compilata di gcc da 
-\begin_inset LatexCommand htmlurl
-name "handhelds.org"
-target "http://www.handhelds.org/download/projects/toolchain/"
-
-\end_inset
-
-
-\begin_inset LatexCommand citep
-key "handhelds_toolchain"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Tuttavia è necessario istruire il kernel del fatto che vogliamo compilare
- i sorgenti (già configurati) con un compilatore diverso (ed un diverso
- linker, assembler, ecc).
-\end_layout
-
-\begin_layout Standard
-Per questo viene in aiuto la variabile d'ambiente 
-\noun on
-CROSS_COMPILER
-\noun default
-, che istruisce il make su dove andare a cercare la 
-\emph on
-toolchain
-\begin_inset LatexCommand nomenclature
-symbol "toolchain"
-description "Insieme di tutti gli strumenti (tra gli altri preprocessore, assembler, compilatore, linker...) necessari alla generazione di codice eseguibile a partire da sorgenti."
-
-\end_inset
-
-
-\emph default
- adatta.
-\end_layout
-
-\begin_layout Standard
-Terminata la parte di configurazione del kernel, come già fatto nella sezione
- 
-\begin_inset LatexCommand vref
-reference "sec:Configurazione-e-compilazione"
-
-\end_inset
-
-, non resta che compilare e testare :)
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
-inline false
-status collapsed
-
-\begin_layout Standard
-
-$ export CROSS_COMPILE=/usr/local/arm/3.4.1/bin/arm-linux-
-\end_layout
-
-\begin_layout Standard
-
-$ make
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-È da notare come 
-\noun on
-CROSS_COMPILE
-\noun default
- indichi il prefisso comune a tutti gli eseguibili necessari (
-\noun on
-arm-linux-gcc
-\noun default
-, 
-\noun on
-arm-linux-ld
-\noun default
-...).
-\end_layout
-
-\begin_layout Chapter
 Qemu
 \end_layout
 
@@ -3842,7 +3849,7 @@ ARM
  dopo) per semplificare le procedure di testing e debugging del kernel
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Come ottenerlo
 \end_layout
 
@@ -4397,7 +4404,7 @@ key "openmoko_under_qemu"
 .
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Sistemi emulati
 \end_layout
 
@@ -4409,333 +4416,7 @@ qemu-system-arm -M versatileab ...
 perché qemu non sa ancora emulare l'architettura Samsung S3C2442b (evabé)
 \end_layout
 
-\begin_layout Chapter
-\begin_inset LatexCommand label
-name "cha:Debugger"
-
-\end_inset
-
-Debugger
-\end_layout
-
-\begin_layout Standard
-Abbiamo avuto problemi a far partire il kernel di linux sul dispositivo
- palmare, quindi abbiamo cercato di trovare un modo per avere feedback sull'esec
-uzione del codice e sugli eventuali errori riscontrati sulla piattaforma.
-\end_layout
-
-\begin_layout Standard
-Poiché vorremmo analizzare il comportamento di un kernel, però, non è possibile
- utilizzare né 
-\noun on
-stdout
-\noun default
- / 
-\noun on
-stderr
-\noun default
- come canali di comunicazione, né è possibile loggare il comportamento su
- file, in quanto non è ancora disponibile un'interfaccia verso queste strutture
- ad alto livello.
-\end_layout
-
-\begin_layout Standard
-Per questo motivo abbiamo considerato l'idea di usare un debugger.
- Per poterla applicare, però, avremmo avuto bisogno di un eseguibile per
- il sistema operativo Windows Mobile® che si integrasse con Haret (vedi
- capitolo
-\begin_inset LatexCommand vref
-reference "cha:Haret"
-
-\end_inset
-
-).
- L'alternativa scelta è stata quella di usare un emulatore per l'architettura,
- e di usare il classico 
-\noun on
-gdb
-\noun default
- per il debug.
-\end_layout
-
-\begin_layout Standard
-Questa scelta ha semplificato l'analisi e il debug dell'esecuzione delle
- singole istruzioni del codice.
-\end_layout
-
 \begin_layout Section
-A che serve
-\end_layout
-
-\begin_layout Standard
-Usare un debugger col kernel è stato utile soprattutto per scoprire 
-\begin_inset Quotes eld
-\end_inset
-
-qual è la prima funzione invocata
-\begin_inset Quotes erd
-\end_inset
-
- dal kernel stesso.
-\end_layout
-
-\begin_layout Standard
-Se è vero che su architettura x86 vi è la funzione
-\family typewriter
- main()
-\family default
- in
-\family typewriter
- 
-\family default
-\noun on
-arch/x86/boot/main.c
-\noun default
- che identifica la prima funzione invocata, su architettura 
-\noun on
-ARM
-\noun default
- questo non succede.
-\end_layout
-
-\begin_layout Standard
-Al contrario, vi sono una serie di cartelle per raggruppare l'implementazione
- delle funzioni per piattaforma e per singolo modello, in quanto il modello
- di distribuzione delle specifiche di 
-\noun on
-ARM
-\noun default
- è diverso dal modello di sviluppo intel
-\begin_inset LatexCommand citep
-key "arm_intel_mobile"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Quale usare
-\end_layout
-
-\begin_layout Standard
-Poiché vogliamo usare gdb su un 
-\noun on
-host
-\noun default
- x86, ma con 
-\noun on
-target
-\noun default
- 
-\noun on
-ARM
-\noun default
-, abbiamo bisogno di usare un debugger
-\emph on
- compilato per x86
-\emph default
-, che sappia tracciare le istruzioni ed estrarre i simboli da un binario
- (il kernel)
-\emph on
- compilato per 
-\noun on
-ARM
-\emph default
-\noun default
-.
-\end_layout
-
-\begin_layout Standard
-Per questo abbiamo scaricato i sorgenti, li abbiamo estratti e compilati,
- facendo attenzione a impostare 
-\noun on
---target=arm-linux
-\noun default
- nella fase di configurazione per analizzare binari per ARM.
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
-inline false
-status collapsed
-
-\begin_layout Standard
-
-$ wget http://ftp.gnu.org/gnu/gdb/gdb-6.8.tar.gz
-\end_layout
-
-\begin_layout Standard
-
-$ tar xzf gdb-6.8.tar.gz
-\end_layout
-
-\begin_layout Standard
-
-$ cd gdb-6.8
-\end_layout
-
-\begin_layout Standard
-
-$ ./configure --target=arm-linux
-\end_layout
-
-\begin_layout Standard
-
-$ make && su -c 'make install'
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Alla fine della fase di compilazione, in 
-\noun on
-/usr/local/bin
-\noun default
- (o dovunque sia stato definito il 
-\noun on
-PREFIX
-\noun default
- in fase di configurazione), saranno stati generati i file 
-\noun on
-arm-linux-gdb
-\noun default
- (il debugger vero e proprio), 
-\noun on
-arm-linux-gdbtui
-\noun default
- (frontend semi-grafico) e 
-\noun on
-arm-linux-run
-\noun default
- (simulatore in grado di eseguire i programmi per 
-\noun on
-ARM
-\noun default
- su x86).
-\end_layout
-
-\begin_layout Section
-Come usarlo
-\end_layout
-
-\begin_layout Standard
-Usare un debugger per monitorare processi utente è ragionevolmente facile.
- Le cose si complicano parecchio in caso si voglia debuggare il kernel stesso!
- Questo perché l'attività di debugging altro non è che eseguire un processo
- (il debugger) che, tramite chiamate di sistema (ad esempio tipo la funzione
- 
-\noun on
-ptrace
-\noun default
-()) analizza il comportamento di un altro processo (il programma da controllare).
-\end_layout
-
-\begin_layout Standard
-Tuttavia nel caso si voglia controllare il kernel, non è possibile avere
- accesso alle chiamate di sistema stesse (visto che riguardano il programma
- da controllare).
-\end_layout
-
-\begin_layout Standard
-Tuttavia una soluzione esiste.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Shaded
-status open
-
-\begin_layout Standard
-TROVARE - SCOPIAZZARE immagine debug remoto fatto con qemu!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Lavorando con qemu è possibile impostare l'emulatore (che è un programma
- utente, sulla macchina host) per offrire una connessione a gdb (come se
- si volesse fare debugging remoto su un'altra macchina).
-\end_layout
-
-\begin_layout Standard
-Per fare ciò basta eseguire qemu aggiungendo le opzioni 
-\noun on
--S
-\noun default
- (per non far partire la cpu dall'inizio) e 
-\noun on
--s
-\noun default
- (per attendere una connessione dal 
-\begin_inset Quotes eld
-\end_inset
-
-client
-\begin_inset Quotes erd
-\end_inset
-
- gdb).
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
-inline false
-status open
-
-\begin_layout Standard
-
-$ qemu-system-arm -M versatileab -cpu arm926 -sd IMMAGINE_SD -nographic
- -S -s
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In questo modo il programma rimarrà in attesa.
- Da un altro terminale, quindi, sarà possibile lanciare il debugger.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
-inline false
-status open
-
-\begin_layout Standard
-
-$ arm-linux-gdbtui vmlinux
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-quindi scrivo il comando
-\end_layout
-
-\begin_layout LyX-Code
-target remote :1234
-\end_layout
-
-\begin_layout Standard
-da lì in poi il debug è quello classico :)
-\end_layout
-
-\begin_layout Chapter
 \begin_inset LatexCommand label
 name "cha:Haret"
 
@@ -4761,7 +4442,7 @@ description "Microsoft® Windows Mobile®, sistema operativo concepito per palma
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Perché
 \end_layout
 
@@ -4795,7 +4476,7 @@ Nel modo non invasivo viene avviato un programma sotto Windows CE (haret)
  ed in fase di testing.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Come
 \end_layout
 
@@ -4834,7 +4515,7 @@ haret.exe
  bootlinux.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Codice
 \end_layout
 
@@ -5852,7 +5533,7 @@ Si noti come al terzo rigo avvisa dell'avvenuto riconoscimento della macchina
  ad haret.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Problemi
 \end_layout
 
@@ -5893,7 +5574,7 @@ Anche in questo caso abbiamo stampato a video e confrontato bit a bit il
  da haret.
 \end_layout
 
-\begin_layout Chapter
+\begin_layout Section
 U-Boot
 \end_layout
 
@@ -5917,6 +5598,332 @@ bibfiles "web-o-grafia"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Chapter
+\begin_inset LatexCommand label
+name "cha:Debugger"
+
+\end_inset
+
+Debugger
+\end_layout
+
+\begin_layout Standard
+Abbiamo avuto problemi a far partire il kernel di linux sul dispositivo
+ palmare, quindi abbiamo cercato di trovare un modo per avere feedback sull'esec
+uzione del codice e sugli eventuali errori riscontrati sulla piattaforma.
+\end_layout
+
+\begin_layout Standard
+Poiché vorremmo analizzare il comportamento di un kernel, però, non è possibile
+ utilizzare né 
+\noun on
+stdout
+\noun default
+ / 
+\noun on
+stderr
+\noun default
+ come canali di comunicazione, né è possibile loggare il comportamento su
+ file, in quanto non è ancora disponibile un'interfaccia verso queste strutture
+ ad alto livello.
+\end_layout
+
+\begin_layout Standard
+Per questo motivo abbiamo considerato l'idea di usare un debugger.
+ Per poterla applicare, però, avremmo avuto bisogno di un eseguibile per
+ il sistema operativo Windows Mobile® che si integrasse con Haret (vedi
+ capitolo
+\begin_inset LatexCommand vref
+reference "cha:Haret"
+
+\end_inset
+
+).
+ L'alternativa scelta è stata quella di usare un emulatore per l'architettura,
+ e di usare il classico 
+\noun on
+gdb
+\noun default
+ per il debug.
+\end_layout
+
+\begin_layout Standard
+Questa scelta ha semplificato l'analisi e il debug dell'esecuzione delle
+ singole istruzioni del codice.
+\end_layout
+
+\begin_layout Section
+A che serve
+\end_layout
+
+\begin_layout Standard
+Usare un debugger col kernel è stato utile soprattutto per scoprire 
+\begin_inset Quotes eld
+\end_inset
+
+qual è la prima funzione invocata
+\begin_inset Quotes erd
+\end_inset
+
+ dal kernel stesso.
+\end_layout
+
+\begin_layout Standard
+Se è vero che su architettura x86 vi è la funzione
+\family typewriter
+ main()
+\family default
+ in
+\family typewriter
+ 
+\family default
+\noun on
+arch/x86/boot/main.c
+\noun default
+ che identifica la prima funzione invocata, su architettura 
+\noun on
+ARM
+\noun default
+ questo non succede.
+\end_layout
+
+\begin_layout Standard
+Al contrario, vi sono una serie di cartelle per raggruppare l'implementazione
+ delle funzioni per piattaforma e per singolo modello, in quanto il modello
+ di distribuzione delle specifiche di 
+\noun on
+ARM
+\noun default
+ è diverso dal modello di sviluppo intel
+\begin_inset LatexCommand citep
+key "arm_intel_mobile"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Quale usare
+\end_layout
+
+\begin_layout Standard
+Poiché vogliamo usare gdb su un 
+\noun on
+host
+\noun default
+ x86, ma con 
+\noun on
+target
+\noun default
+ 
+\noun on
+ARM
+\noun default
+, abbiamo bisogno di usare un debugger
+\emph on
+ compilato per x86
+\emph default
+, che sappia tracciare le istruzioni ed estrarre i simboli da un binario
+ (il kernel)
+\emph on
+ compilato per 
+\noun on
+ARM
+\emph default
+\noun default
+.
+\end_layout
+
+\begin_layout Standard
+Per questo abbiamo scaricato i sorgenti, li abbiamo estratti e compilati,
+ facendo attenzione a impostare 
+\noun on
+--target=arm-linux
+\noun default
+ nella fase di configurazione per analizzare binari per ARM.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ wget http://ftp.gnu.org/gnu/gdb/gdb-6.8.tar.gz
+\end_layout
+
+\begin_layout Standard
+
+$ tar xzf gdb-6.8.tar.gz
+\end_layout
+
+\begin_layout Standard
+
+$ cd gdb-6.8
+\end_layout
+
+\begin_layout Standard
+
+$ ./configure --target=arm-linux
+\end_layout
+
+\begin_layout Standard
+
+$ make && su -c 'make install'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Alla fine della fase di compilazione, in 
+\noun on
+/usr/local/bin
+\noun default
+ (o dovunque sia stato definito il 
+\noun on
+PREFIX
+\noun default
+ in fase di configurazione), saranno stati generati i file 
+\noun on
+arm-linux-gdb
+\noun default
+ (il debugger vero e proprio), 
+\noun on
+arm-linux-gdbtui
+\noun default
+ (frontend semi-grafico) e 
+\noun on
+arm-linux-run
+\noun default
+ (simulatore in grado di eseguire i programmi per 
+\noun on
+ARM
+\noun default
+ su x86).
+\end_layout
+
+\begin_layout Section
+Come usarlo
+\end_layout
+
+\begin_layout Standard
+Usare un debugger per monitorare processi utente è ragionevolmente facile.
+ Le cose si complicano parecchio in caso si voglia debuggare il kernel stesso!
+ Questo perché l'attività di debugging altro non è che eseguire un processo
+ (il debugger) che, tramite chiamate di sistema (ad esempio tipo la funzione
+ 
+\noun on
+ptrace
+\noun default
+()) analizza il comportamento di un altro processo (il programma da controllare).
+\end_layout
+
+\begin_layout Standard
+Tuttavia nel caso si voglia controllare il kernel, non è possibile avere
+ accesso alle chiamate di sistema stesse (visto che riguardano il programma
+ da controllare).
+\end_layout
+
+\begin_layout Standard
+Tuttavia una soluzione esiste.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Shaded
+status open
+
+\begin_layout Standard
+TROVARE - SCOPIAZZARE immagine debug remoto fatto con qemu!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Lavorando con qemu è possibile impostare l'emulatore (che è un programma
+ utente, sulla macchina host) per offrire una connessione a gdb (come se
+ si volesse fare debugging remoto su un'altra macchina).
+\end_layout
+
+\begin_layout Standard
+Per fare ciò basta eseguire qemu aggiungendo le opzioni 
+\noun on
+-S
+\noun default
+ (per non far partire la cpu dall'inizio) e 
+\noun on
+-s
+\noun default
+ (per attendere una connessione dal 
+\begin_inset Quotes eld
+\end_inset
+
+client
+\begin_inset Quotes erd
+\end_inset
+
+ gdb).
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status open
+
+\begin_layout Standard
+
+$ qemu-system-arm -M versatileab -cpu arm926 -sd IMMAGINE_SD -nographic
+ -S -s
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In questo modo il programma rimarrà in attesa.
+ Da un altro terminale, quindi, sarà possibile lanciare il debugger.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status open
+
+\begin_layout Standard
+
+$ arm-linux-gdbtui vmlinux
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+quindi scrivo il comando
+\end_layout
+
+\begin_layout LyX-Code
+target remote :1234
+\end_layout
+
+\begin_layout Standard
+da lì in poi il debug è quello classico :)
 \end_layout
 
 \begin_layout Chapter
