@@ -146,18 +146,28 @@ Si inizia parlando della fase di compilazione e del kernel.
  x86, mentre nel nostro caso si ha l'esigenza di compilare su una piattaforma
  differente.
  In gergo si parla di cross-compilazione.
- Infatti, prenderemo un compilatore tipico della piattaforma Arm e lo useremo
- su piattaforma x86 per generare eseguibili su Arm.
+ Infatti, prenderemo un compilatore tipico della piattaforma 
+\noun on
+ARM
+\noun default
+ e lo useremo su piattaforma x86 per generare eseguibili su 
+\noun on
+ARM
+\noun default
+.
 \end_layout
 
 \begin_layout Standard
-Il lavoro continua presentando i moduli necessari al kernel su Arm e parlando
- dei possibili output del kernel stesso.
+Il lavoro continua presentando le componenti del kernel necessarie su 
+\noun on
+ARM
+\noun default
+ e parlando dei possibili output del kernel stesso.
 \end_layout
 
 \begin_layout Standard
 Segue una dettagliata descrizione della fase di avvio del kernel commentando
- direttamente il codice Assembly e C eseguito sia in fase di decompressione
+ direttamente il codice assembly e C eseguito sia in fase di decompressione
  del kernel sia in fase di avvio.
 \end_layout
 
@@ -168,22 +178,27 @@ reference "cha:Test"
 
 \end_inset
 
- si analizzano gli strumenti utilizzati per il testing del kernel su Arm.
- Qemu è un programma di emulazione molto semplice da usare e facilmente
- configurabile per i nostri scopi.
- Haret è un programma scritto in C++ per Windows CE.
- Haret(
-\begin_inset LatexCommand ref
-reference "cha:Haret"
-
-\end_inset
-
-) ha l'obbiettivo di copiare in memoria kernel ed eventualmente initrd,
- spegnere l'hardware e avviare il kernel in memoria in maniera non invasiva
- per la macchina dal momento che non fa modifiche al sistema operativo ospite.
- Infine U-boot che è il bootloader universale per i sistemi embedded.
- Rappresenta però una soluzione invasiva dal momento che è necessario installarl
-o sulla memoria flash del dispositivo.
+ si analizzano gli strumenti utilizzati per il testing del kernel su 
+\noun on
+ARM
+\noun default
+.
+\newline
+Qemu è un programma di emulazione molto semplice da usare e facilmente configura
+bile per i nostri scopi.
+\newline
+Haret è un programma scritto in C++ per Windows Mobile®;
+ ha l'obbiettivo di copiare in memoria il kernel, ed eventualmente 
+\noun on
+initrd
+\noun default
+, spegnere l'hardware e avviare il kernel in memoria in maniera non invasiva
+ per la macchina, dal momento che non fa modifiche al sistema operativo
+ ospite.
+\newline
+U-boot è un bootloader universale per i sistemi embedded; rappresenta
+ però una soluzione invasiva dal momento che è necessario installarlo sulla
+ memoria flash del dispositivo.
 \end_layout
 
 \begin_layout Standard
@@ -193,9 +208,21 @@ reference "cha:Debugger"
 
 \end_inset
 
- spiega come utilizzare la fase di debugging sui dispositivi embedded.
- Verrà analizzato gdb (Gnu DeBugger), un programma creato ad-hoc come debugger
- anche del kernel.
+ descrive come effettuare 
+\emph on
+debugging
+\emph default
+ sui dispositivi embedded.
+ Verrà analizzato 
+\noun on
+gdb
+\noun default
+ (Gnu\InsetSpace ~
+DeBugger), analizzando come usarlo per 
+\emph on
+debuggare
+\emph default
+ anche il kernel.
 \end_layout
 
 \begin_layout Standard
@@ -205,8 +232,12 @@ reference "cha:Assembly-per-ARM"
 
 \end_inset
 
- vi è una piccola guida di Assembly per Arm per facilitare la compressione
- del codice Assembly presentato nel capitolo 
+ vi è una piccola guida di assembly per 
+\noun on
+ARM
+\noun default
+ per facilitare la compressione del codice assembly presentato nel capitolo
+ 
 \begin_inset LatexCommand ref
 reference "cha:Avvio"
 
@@ -641,7 +672,7 @@ description "Insieme di tutti gli strumenti (tra gli altri preprocessore, assemb
 \begin_layout Standard
 Terminata la parte di configurazione del kernel, come già fatto nella sezione
  
-\begin_inset LatexCommand vref
+\begin_inset LatexCommand ref
 reference "sec:Configurazione-e-compilazione"
 
 \end_inset
@@ -709,6 +740,47 @@ Output (Image, zImage, bzImage)
 \begin_layout Standard
 Terminata la fase di compilazione, verranno generati, oltre ad una serie
  di file temporanei / di supporto, i seguenti file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Anatomy-of-bzimage.png
+	lyxscale 50
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Anatomia di bzImage (da 
+\begin_inset LatexCommand htmlurl
+target "en.wikipedia.org"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -821,51 +893,6 @@ zImage
 .
 \begin_inset LatexCommand citep
 key "vmlinuz_definition,vmlinux_zimage"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status collapsed
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename Anatomy-of-bzimage.png
-	lyxscale 50
-	width 80col%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Caption
-
-\begin_layout Standard
-Anatomia di bzImage (da 
-\begin_inset LatexCommand htmlurl
-target "en.wikipedia.org"
-
-\end_inset
-
-)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
 
 \end_inset
 
@@ -2955,12 +2982,12 @@ lr
 \noun default
 
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Standard
 last register; per questo e per altri comandi assembly si rimanda all'appendice
  
-\begin_inset LatexCommand vref
+\begin_inset LatexCommand ref
 reference "cha:Assembly-per-ARM"
 
 \end_inset
@@ -3904,7 +3931,7 @@ init/main.c
 
 \begin_layout Standard
 \begin_inset Note Greyedout
-status open
+status collapsed
 
 \begin_layout Standard
 E direi che può bastare
@@ -3989,27 +4016,96 @@ Nel modo invasivo viene modificato la memoria interna del palmare installandoci
 \end_layout
 
 \begin_layout Standard
-Nel modo non invasivo viene avviato un programma sotto Windows CE (haret)
- per lanciare il kernel dopo aver disabilitato l'hardware in modo da non
- danneggiarlo.
- Questa è, in effetti, una modalità abbastanza utilizzata anche se vi sono
- problemi di compatibilità tra l'hardware e Haret.
- Sul wiki di Haret è possibili trovare la lista dei dispositivi testati
- ed in fase di testing.
+Nel modo non invasivo viene avviato un programma sotto Windows Mobile® per
+ lanciare il kernel dopo aver disabilitato l'hardware in modo da non danneggiarl
+o.
+ Questa è, in effetti, una modalità abbastanza utilizzata anche se vi possono
+ essere problemi di compatibilità tra l'hardware e il bootloader.
+\end_layout
+
+\begin_layout Standard
+Volendo scelgliere la modalità non invasiva, ci siamo concentrati sul bootloader
+, Haret.
+ Sul sito del progetto è presente anche un wiki
+\begin_inset LatexCommand nomenclature
+symbol "wiki"
+description "categoria particolare di siti web, accomunati dalla possibilità di offrire agli utenti stesssi del sito la possibilità di modificarlo a loro piacimento, senza dover accedere direttamente ai file presenti in remoto."
+
+\end_inset
+
+ dove è possibile trovare una lista di dispositivi testati ed in fase di
+ testing.
 \end_layout
 
 \begin_layout Subsection
-Come
+\begin_inset LatexCommand label
+name "sub:Come-usare-Haret"
+
+\end_inset
+
+Come usare Haret
 \end_layout
 
 \begin_layout Standard
-Il suo obbiettivo è di preparare il dispositivo al lancio del kernel linux.
+Il suo obiettivo è di preparare il dispositivo al lancio del kernel linux.
 \end_layout
 
 \begin_layout Standard
-Il programma viene copiato all'interno di una scheda di memoria (miniSD)
+Prima di tutto dobbiamo ottenerlo: sono disponibili versioni precompilate
+ per Windows Mobile®, ma abbiamo preferito lavorare con i sorgenti prelevandoli
+ dal server svn
+\begin_inset LatexCommand nomenclature
+symbol "svn"
+description "SubVersioN: sistema per controllo di revisione, usato nello sviluppo di sistemi software, consente di avere e condividere la storia delle modifiche effettuate sui file del progetto"
+
+\end_inset
+
+ di sviluppo.
+\end_layout
+
+\begin_layout Standard
+Volendo usare i sorgenti, però, sorge il problema di compilarli da una macchina
+ x86 con sistema operativo linux verso una macchina ARM con sistema operativo
+ Windows Mobile®.
+ Per quest'ultimo problema, si rimanda alla sezione 
+\begin_inset LatexCommand ref
+reference "sub:Compilazione-di-Haret"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Nel caso si preferisca usare una versione già precompilata, basterà scaricarla
+ e copiarla sulla miniSD
+\begin_inset LatexCommand nomenclature
+symbol "miniSD"
+description "Mini Secure Digital, versione più piccola (20x21.5) delle schede di memoria SD (24x32)"
+
+\end_inset
+
  con alcuni file di configurazione e il kernel stesso.
- Il file di configurazione 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ wget http://www.handhelds.org/~koconnor/haret/haret-0.5.1.exe
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Il file di configurazione 
 \emph on
 \noun on
 startup.txt
@@ -4030,25 +4126,27 @@ preview false
 \begin_layout Standard
 indica all'eseguibile 
 \emph on
+\noun on
 haret.exe
 \emph default
+\noun default
  come settare alcuni parametri (variabili globali all'interno del codice
  di haret) quali 
-\noun on
+\emph on
 KERNEL
-\noun default
+\emph default
 , 
-\noun on
+\emph on
 MTYPE
-\noun default
+\emph default
 , 
-\noun on
+\emph on
 INITRD
-\noun default
+\emph default
 , 
-\noun on
+\emph on
 CMDLINE
-\noun default
+\emph default
  ed infine avvia la funzione (interna al codice di haret quindi scritta
  in C++)
 \emph on
@@ -5151,21 +5249,48 @@ Anche in questo caso abbiamo stampato a video e confrontato bit a bit il
 \end_layout
 
 \begin_layout Subsection
-Compilazione
-\end_layout
-
-\begin_layout Standard
-Per la compilazione di haret è necessario usare un compilatore C++ per ARM
- su Windows CE.
- Noi abbiamo usato mingw32ce 
-\begin_inset LatexCommand url
-target "http://cegcc.sourceforge.net/"
+\begin_inset LatexCommand label
+name "sub:Compilazione-di-Haret"
 
 \end_inset
 
-.
- Dopo il dowload e la scompattazione si ritroveranno una serie di binari
- pronti all'uso con il formato 
+Compilazione di Haret
+\end_layout
+
+\begin_layout Standard
+Per la compilazione di Haret è necessario usare un compilatore C++ per 
+\noun on
+ARM
+\noun default
+ con Windows Mobile®.
+ Noi abbiamo usato 
+\emph on
+arm-mingw32ce
+\emph default
+, toolset sviluppato nel progetto cegcc
+\begin_inset LatexCommand citep
+key "cegcc_home_page"
+
+\end_inset
+
+, sviluppato allo scopo di compilare binari per windows CE.
+ Dopo il dowload
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+Non è possibile segnalare il link diretto, in quanto il progetto si appoggia
+ a sourceforge.net, che utilizza un insieme di mirror per lo 
+\emph on
+storage
+\emph default
+ dei file.
+\end_layout
+
+\end_inset
+
+ e la scompattazione si ritroveranno una serie di binari pronti all'uso
+ con il formato 
 \emph on
 arm-wince-cegcc-
 \emph default
@@ -5174,9 +5299,82 @@ arm-wince-cegcc-
 arm-wince-mingw32ce-
 \emph default
 *.
- Per utilizzarli senza problemi basterà includerli nel PATH della shell
- di sistema.
- 
+ Se si scompattano i file nella directory radice, non sarà necessario modificare
+ il Makefile dei sorgenti di Haret.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ su -c "tar xzf cegcc-gcc430.tar.gz -C /"
+\end_layout
+
+\begin_layout Standard
+
+[PASSWORD DI ROOT]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Per ottenere l'ultima versione dei sorgenti, è necessario usare cvs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+$ cvs -d :pserver:anoncvs@anoncvs.handhelds.org:/cvs login
+\end_layout
+
+\begin_layout Standard
+
+CVS password: anoncvs
+\end_layout
+
+\begin_layout Standard
+
+$ cvs -d :pserver:anoncvs@anoncvs.handhelds.org:/cvs co haret
+\end_layout
+
+\begin_layout Standard
+
+$ cd haret
+\end_layout
+
+\begin_layout Standard
+
+$ make
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+al termine della compilazione, sarà stato generato il file 
+\noun on
+out/haret.exe
+\noun default
+, pronto per essere usato come già detto nella sezione 
+\begin_inset LatexCommand ref
+reference "sub:Come-usare-Haret"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
@@ -5805,9 +6003,7 @@ status collapsed
 
 \begin_layout Standard
 
-$ 
-\lang italian
-qemu -cdrom image.iso -hda /dev/sda1 -m 128 -boot d
+$ qemu -cdrom image.iso -hda /dev/sda1 -m 128 -boot d
 \end_layout
 
 \end_inset
@@ -5846,9 +6042,7 @@ status collapsed
 
 \begin_layout Standard
 
-$ 
-\lang italian
-qemu-system-arm -M versatileab -kernel zImage -nographic -m 126 -hda hd0.img
+$ qemu-system-arm -M versatileab -kernel zImage -nographic -m 126 -hda hd0.img
 \end_layout
 
 \end_inset
@@ -6204,7 +6398,7 @@ Per questo motivo abbiamo considerato l'idea di usare un debugger.
  Per poterla applicare, però, avremmo avuto bisogno di un eseguibile per
  il sistema operativo Windows Mobile® che si integrasse con Haret (vedi
  capitolo
-\begin_inset LatexCommand vref
+\begin_inset LatexCommand ref
 reference "cha:Haret"
 
 \end_inset
@@ -6273,7 +6467,7 @@ key "arm_intel_mobile"
 
 .
  Come si è visto nel capitolo 
-\begin_inset LatexCommand vref
+\begin_inset LatexCommand ref
 reference "cha:Avvio"
 
 \end_inset
