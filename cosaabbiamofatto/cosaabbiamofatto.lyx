@@ -33,7 +33,7 @@
 \quotes_language english
 \papercolumns 1
 \papersides 2
-\paperpagestyle default
+\paperpagestyle headings
 \listings_params "basicstyle={\normalsize\ttfamily},captionpos=tb,extendedchars=true,frame=shadowbox,showstringspaces=false"
 \tracking_changes false
 \output_changes false
@@ -929,7 +929,7 @@ ARM
 , è implementata per la maggior parte in assembly.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Section
 Sorgenti
 \end_layout
 
@@ -1115,7 +1115,7 @@ include/asm-arm/mach-types.h
  specifico della macchina target.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Section
 Decompressione
 \end_layout
 
@@ -2783,7 +2783,7 @@ static int INIT gunzip(void)
 
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Section
 Boot
 \begin_inset LatexCommand label
 name "sub:Boot"
@@ -3940,6 +3940,287 @@ E direi che può bastare
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Hello, world!
+\end_layout
+
+\begin_layout Standard
+Avendo capito dov'è il punto di avvio del kernel, e volendone modificare
+ il comportamento all'avvio, abbiamo deciso di iniziare dal classico 
+\begin_inset Quotes eld
+\end_inset
+
+Hello, world!
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In particolare, abbiamo modificato i sorgenti nei file 
+\noun on
+arch/arm/kernel/head-common.S 
+\noun default
+(in modo da invocare una funzione diversa al termine della fase di bootstrap)
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,firstnumber=61,language=C,numbers=left,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+    b   start_kernel_hello_os   /* b   start_kernel */
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+e abbiamo modificato il file 
+\noun on
+init/main.c
+\noun default
+ (aggiungendo la nuova funzione da invocare all'avvio)
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,firstnumber=534,language=C,numbers=left,showstringspaces=false"
+inline false
+status open
+
+\begin_layout Standard
+
+extern void printascii(const char*);
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+asmlinkage void __init start_kernel_hello_os(void) {
+\end_layout
+
+\begin_layout Standard
+
+    printascii("Hello, world!
+\backslash
+n");
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Il prototipo della funzione start_kernel_hello_os() è identico a quello
+ della funzione start_kernel(), inidicando al compilatore
+\end_layout
+
+\begin_layout Itemize
+che essa è una funzione che non ha parametri né restituisce niente (i due
+ 
+\series bold
+void
+\series default
+)
+\end_layout
+
+\begin_layout Itemize
+che la funzione non utilizzerà i registri, ma solo lo stack per i parametri
+ (come ottimizzazione)
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+Confronta 
+\begin_inset LatexCommand htmlurl
+target "http://kernelnewbies.org/FAQ/asmlinkage"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+che il codice generato dovrà essere presente in una parte ben definita del
+ binario (in questo caso nella sezione 
+\begin_inset Quotes eld
+\end_inset
+
+.init.text
+\begin_inset Quotes erd
+\end_inset
+
+)
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+Confronta 
+\begin_inset LatexCommand htmlurl
+target "http://kernelnewbies.org/FAQ/InitExitMacros"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Inoltre è stato necessario introdurre il prototipo della funzione 
+\emph on
+printascii()
+\emph default
+, implementata in assembly nel file 
+\noun on
+arch/arm/kernel/debug.S
+\noun default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,extendedchars=true,firstnumber=116,language={[x86masm]Assembler},numbers=left,showstringspaces=false"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+ENTRY(printascii)
+\end_layout
+
+\begin_layout Standard
+
+                addruart r3
+\end_layout
+
+\begin_layout Standard
+
+                b       2f
+\end_layout
+
+\begin_layout Standard
+
+1:              waituart r2, r3
+\end_layout
+
+\begin_layout Standard
+
+                senduart r1, r3
+\end_layout
+
+\begin_layout Standard
+
+                busyuart r2, r3
+\end_layout
+
+\begin_layout Standard
+
+                teq     r1, #'
+\backslash
+n'
+\end_layout
+
+\begin_layout Standard
+
+                moveq   r1, #'
+\backslash
+r'
+\end_layout
+
+\begin_layout Standard
+
+                beq     1b
+\end_layout
+
+\begin_layout Standard
+
+2:              teq     r0, #0
+\end_layout
+
+\begin_layout Standard
+
+                ldrneb  r1, [r0], #1
+\end_layout
+
+\begin_layout Standard
+
+                teqne   r1, #0
+\end_layout
+
+\begin_layout Standard
+
+                bne     1b
+\end_layout
+
+\begin_layout Standard
+
+                mov     pc, lr
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Purtroppo, l'implementazione delle macro 
+\emph on
+addruart
+\emph default
+, 
+\emph on
+waituart
+\emph default
+, 
+\emph on
+senduart
+\emph default
+ e 
+\emph on
+busyuart
+\emph default
+ è 
+\begin_inset Quotes eld
+\end_inset
+
+implemention defined
+\begin_inset Quotes erd
+\end_inset
+
+, nel senso che ogni singola architettura dell'ARM definisce una sua versione
+ delle quattro macro.
+ Esse sono definite nei vari file 
+\noun on
+include/asm-arm/arch-*/debug-macro.S
+\noun default
+.
 \end_layout
 
 \begin_layout Chapter
@@ -6742,72 +7023,13 @@ che indica a gdb di collegarsi a localhost (indirizzo implicito) usando
 \end_layout
 
 \begin_layout Standard
-Di seguito diamo un piccolo prontuario per le operazioni più comuni di debug.
-\end_layout
+Nell'appendice 
+\begin_inset LatexCommand ref
+reference "cha:Comandi-principali-gdb"
 
-\begin_layout Subsection
-Comandi principali
-\end_layout
+\end_inset
 
-\begin_layout Description
-help\InsetSpace ~
-[comando] stampa informazioni, generali o sul comando specificato
-\end_layout
-
-\begin_layout Description
-break\InsetSpace ~
-[nome_file:]numero_riga inserisci un breakpoint nel file e nella riga
- specificati
-\end_layout
-
-\begin_layout Description
-break\InsetSpace ~
-funzione inserisci un breakpoint ove la funzione è invocata
-\end_layout
-
-\begin_layout Description
-next passa all'istruzione successiva; se è l'invocazione di una subroutine
- viene trattata come una singola istruzione, ottenendo direttamente il risultato
-\end_layout
-
-\begin_layout Description
-step passa all'istruzione successiva; se è l'invocazione di una subroutine
- si entra nello stack della funzione
-\end_layout
-
-\begin_layout Description
-print\InsetSpace ~
-variabile stampa a video il contenuto della variabile
-\end_layout
-
-\begin_layout Description
-info\InsetSpace ~
-[sottocomando] info consente di ottenere informazioni varie sul programma,
- in particolare
-\end_layout
-
-\begin_deeper
-\begin_layout Description
-info\InsetSpace ~
-locals informazioni sulle variabili locali
-\end_layout
-
-\begin_layout Description
-info\InsetSpace ~
-stack informazioni sullo stack
-\end_layout
-
-\end_deeper
-\begin_layout Description
-run\InsetSpace ~
-[parametri] esegue il programma debuggato, eventualmente con i parametri
- passati.
- Per quanto generalmente utile, non è necessaria nel caso specifico di qemu,
- in quanto l'esecuzione del codice è già stata iniziata
-\end_layout
-
-\begin_layout Description
-target connette gdb ad un processo o ad una sessione remota già in esecuzione
+ diamo un piccolo prontuario per le operazioni più comuni di debug.
 \end_layout
 
 \begin_layout Chapter
@@ -6817,7 +7039,17 @@ name "cha:Assembly-per-ARM"
 
 \end_inset
 
-Assembly per ARM 
+Assembly per ARM
+\end_layout
+
+\begin_layout Standard
+Tratto da 
+\begin_inset LatexCommand citep
+key "assembler_intro"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Description
@@ -6852,21 +7084,179 @@ adr aggiunge al secondo il terzo valore e lo memorizza nel primo
 \end_layout
 
 \begin_layout Description
-b (branch) salta alla label indicata (esempio 
+b (branch) salta alla label indicata (esempio: 
 \emph on
+\noun on
 b start_kernel
 \emph default
+\noun default
 )
 \end_layout
 
 \begin_layout Description
-blo salta loopando alla label indicata (esempio 
+blo salta loopando alla label indicata (esempio: 
 \emph on
+\noun on
 blo decompress_kernel
 \emph default
+\noun default
 )
 \end_layout
 
+\begin_layout Chapter
+\begin_inset LatexCommand label
+name "cha:Comandi-principali-gdb"
+
+\end_inset
+
+Comandi principali gdb
+\end_layout
+
+\begin_layout Standard
+Tratto da 
+\begin_inset LatexCommand citep
+key "gdb_intro"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+h\InsetSpace ~
+[
+\emph on
+comando
+\emph default
+] stampa informazioni, generali o sul comando specificato
+\end_layout
+
+\begin_layout Description
+q esci dal debugger
+\end_layout
+
+\begin_layout Description
+target connette gdb ad un processo o ad una sessione remota già in esecuzione
+\end_layout
+
+\begin_layout Description
+b\InsetSpace ~
+[
+\emph on
+nome_file
+\emph default
+:]
+\emph on
+numero_riga
+\emph default
+ inserisci un breakpoint nel file e nella riga specificati
+\end_layout
+
+\begin_layout Description
+b\InsetSpace ~
+
+\emph on
+funzione
+\emph default
+ inserisci un breakpoint ove la funzione è invocata
+\end_layout
+
+\begin_layout Description
+d\InsetSpace ~
+
+\emph on
+numero
+\emph default
+ rimuove il breakpoing 
+\emph on
+numero
+\end_layout
+
+\begin_layout Description
+run\InsetSpace ~
+[
+\emph on
+parametri
+\emph default
+] esegue il programma debuggato, eventualmente con i parametri passati.
+ Per quanto generalmente utile, non è necessaria nel caso specifico di qemu,
+ in quanto l'esecuzione del codice è già stata iniziata
+\end_layout
+
+\begin_layout Description
+c continua l'esecuzione fino al termine o al raggiungimento di un 
+\emph on
+breakpoint
+\end_layout
+
+\begin_layout Description
+u\InsetSpace ~
+[
+\emph on
+nome_file
+\emph default
+:]
+\emph on
+numero_riga
+\emph default
+ continua l'esecuzione fino al raggiungimento nel file e nella riga specificati
+ (come se ci fosse un breakpoint)
+\end_layout
+
+\begin_layout Description
+n passa all'istruzione successiva; se è l'invocazione di una subroutine
+ viene trattata come una singola istruzione, ottenendo direttamente il risultato
+\end_layout
+
+\begin_layout Description
+s passa all'istruzione successiva; se è l'invocazione di una subroutine
+ si entra nello stack della funzione
+\end_layout
+
+\begin_layout Description
+si come s, ma attraverso le istruzioni definite in assembly
+\end_layout
+
+\begin_layout Description
+ni come n, ma attraverso le istruzioni definite in assembly
+\end_layout
+
+\begin_layout Description
+p\InsetSpace ~
+
+\emph on
+espressione
+\emph default
+ stampa a video il valore dell'espressione (qualunque espressione valida
+ in C, con inoltre, l'accesso ai registri tramite l'operatore $)
+\end_layout
+
+\begin_layout Description
+i\InsetSpace ~
+[
+\emph on
+sottocomando
+\emph default
+] info consente di ottenere informazioni varie sul programma, in particolare
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+i\InsetSpace ~
+lo informazioni sulle variabili locali
+\end_layout
+
+\begin_layout Description
+i\InsetSpace ~
+s informazioni sullo stack
+\end_layout
+
+\begin_layout Description
+i\InsetSpace ~
+r informazioni sui registri
+\end_layout
+
+\end_deeper
 \begin_layout Chapter
 Licenza per la documentazione libera GNU
 \begin_inset LatexCommand label
@@ -8587,9 +8977,7 @@ If your document contains nontrivial examples of program code, we recommend
 \end_layout
 
 \begin_layout Standard
-\begin_inset LatexCommand bibtex
-options "bibtotoc,alpha"
-bibfiles "web-o-grafia"
+\begin_inset LatexCommand printnomenclature
 
 \end_inset
 
@@ -8597,7 +8985,9 @@ bibfiles "web-o-grafia"
 \end_layout
 
 \begin_layout Standard
-\begin_inset LatexCommand printnomenclature
+\begin_inset LatexCommand bibtex
+options "bibtotoc,alpha"
+bibfiles "web-o-grafia"
 
 \end_inset
 
