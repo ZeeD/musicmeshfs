@@ -3995,7 +3995,7 @@ init/main.c
 \begin_inset listings
 lstparams "breaklines=true,extendedchars=true,firstnumber=534,language=C,numbers=left,showstringspaces=false"
 inline false
-status open
+status collapsed
 
 \begin_layout Standard
 
@@ -4046,7 +4046,7 @@ void
 che la funzione non utilizzerà i registri, ma solo lo stack per i parametri
  (come ottimizzazione)
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Standard
 Confronta 
@@ -4069,13 +4069,19 @@ che il codice generato dovrà essere presente in una parte ben definita del
 \begin_inset Quotes eld
 \end_inset
 
+
+\family typewriter
+\noun on
 .init.text
+\family default
+\noun default
+
 \begin_inset Quotes erd
 \end_inset
 
 )
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Standard
 Confronta 
