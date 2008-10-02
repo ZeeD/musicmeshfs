@@ -1,5 +1,5 @@
-#LyX 1.5.6 created this file. For more info see http://www.lyx.org/
-\lyxformat 276
+#LyX 1.6.0rc2 created this file. For more info see http://www.lyx.org/
+\lyxformat 340
 \begin_document
 \begin_header
 \textclass book
@@ -16,9 +16,11 @@
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
+
 \graphics default
 \paperfontsize 12
 \spacing single
+\use_hyperref false
 \papersize default
 \use_geometry false
 \use_amsmath 1
@@ -49,12 +51,14 @@ GNU/Linux su ARM
 
 \begin_layout Author
 Vito De Tullio 
-\hfill
+\begin_inset space \hfill{}
+\end_inset
+
 
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 
 \backslash
@@ -64,14 +68,18 @@ href{mailto:vito.detullio@gmail.com}{vito.detullio@gmail.com}
 \end_inset
 
 
-\newline
+\begin_inset Newline newline
+\end_inset
+
 Nicola Corriero 
-\hfill
+\begin_inset space \hfill{}
+\end_inset
+
 
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 
 \backslash
@@ -123,7 +131,8 @@ Licenza per la documentazione libera GNU
 \end_layout
 
 \begin_layout Standard
-\begin_inset LatexCommand tableofcontents
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
 
 \end_inset
 
@@ -173,7 +182,8 @@ Segue una dettagliata descrizione della fase di avvio del kernel commentando
 
 \begin_layout Standard
 Nel capitolo 
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "cha:Test"
 
 \end_inset
@@ -183,27 +193,34 @@ reference "cha:Test"
 ARM
 \noun default
 .
-\newline
+\begin_inset Newline newline
+\end_inset
+
 Qemu è un programma di emulazione molto semplice da usare e facilmente configura
 bile per i nostri scopi.
-\newline
-Haret è un programma scritto in C++ per Windows Mobile®;
- ha l'obbiettivo di copiare in memoria il kernel, ed eventualmente 
+\begin_inset Newline newline
+\end_inset
+
+Haret è un programma scritto in C++ per Windows Mobile®; ha l'obbiettivo
+ di copiare in memoria il kernel, ed eventualmente 
 \noun on
 initrd
 \noun default
 , spegnere l'hardware e avviare il kernel in memoria in maniera non invasiva
  per la macchina, dal momento che non fa modifiche al sistema operativo
  ospite.
-\newline
-U-boot è un bootloader universale per i sistemi embedded; rappresenta
- però una soluzione invasiva dal momento che è necessario installarlo sulla
- memoria flash del dispositivo.
+\begin_inset Newline newline
+\end_inset
+
+U-boot è un bootloader universale per i sistemi embedded; rappresenta però
+ una soluzione invasiva dal momento che è necessario installarlo sulla memoria
+ flash del dispositivo.
 \end_layout
 
 \begin_layout Standard
 Il capitolo 
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "cha:Debugger"
 
 \end_inset
@@ -217,7 +234,10 @@ debugging
 \noun on
 gdb
 \noun default
- (Gnu\InsetSpace ~
+ (Gnu
+\begin_inset space ~
+\end_inset
+
 DeBugger), analizzando come usarlo per 
 \emph on
 debuggare
@@ -227,7 +247,8 @@ debuggare
 
 \begin_layout Standard
 In appendice 
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "cha:Assembly-per-ARM"
 
 \end_inset
@@ -238,7 +259,8 @@ ARM
 \noun default
  per facilitare la compressione del codice assembly presentato nel capitolo
  
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "cha:Avvio"
 
 \end_inset
@@ -247,7 +269,8 @@ reference "cha:Avvio"
 \end_layout
 
 \begin_layout Chapter
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "cha:Kernel-&-compilatore"
 
 \end_inset
@@ -262,16 +285,26 @@ Kernel
 \begin_layout Standard
 È stato usata la versione 2.6.25.10 del kernel vanilla (versione di default,
  non patchata) reperibile presso 
-\begin_inset LatexCommand htmlurl
-target "ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2"
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2
+\end_layout
 
 \end_inset
 
 .
  Esistono versioni modificate da singoli per supportare questa o quell'architett
 ura (in particolare è da notare la versione del kernel mantenuta da 
-\begin_inset LatexCommand htmlurl
-target "http://www.handhelds.org"
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.handhelds.org
+\end_layout
 
 \end_inset
 
@@ -281,6 +314,11 @@ target "http://www.handhelds.org"
 HTC P6300
 \noun default
 ) e quindi abbiamo preferito utilizzare la versione di default.
+\end_layout
+
+\begin_layout Standard
+In seguito, inoltre, abbiamo abbandonato del tutto l'hardware, e ci siamo
+ spostati sullo sviluppo di un sistema operativo per arm usando un emulatore.
 \end_layout
 
 \begin_layout Section
@@ -319,7 +357,8 @@ Nel nostro caso sono state usate varie versioni, principalmente 4.2.3 e 3.4.1,
 \end_layout
 
 \begin_layout Section
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "sec:Configurazione-e-compilazione"
 
 \end_inset
@@ -354,27 +393,27 @@ lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=fal
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ wget ftp://ftp.kernel.org/pub/linux/kernel/v2.6/linux-2.6.25.10.tar.bz2
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ tar xjf kernel-2.6.25.10.tar.bz2
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ cd kernel-2.6.25.10
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ export ARCH=arm
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ make menuconfig
 \end_layout
@@ -396,11 +435,20 @@ dal menù
  System Type \SpecialChar \menuseparator
  Arm System Type
 \noun default
- scegliamo il tipo di sistema base (nel nostro caso
+ scegliamo il tipo di sistema base (nel nostro caso inizialmente abbiamo
+ impostato
 \noun on
  
 \series bold
 Samsung S3C2410, S3C2412, S3C2413, S3C2440, S3C2442, S3C2443
+\series default
+\noun default
+, per compatibilità con l'HTC P6300, ma poi ci siamo spostati sull'architettura
+ 
+\series bold
+\noun on
+ARM Ltd.
+ Versatile family
 \series default
 \noun default
 );
@@ -473,8 +521,10 @@ config
 \end_layout
 
 \begin_layout Standard
-\begin_inset Include \lstinputlisting{_CONFIGURE_VANIGLIA_VERSATILE_2.6.25.10_no_comments}[basicstyle={\tiny\ttfamily},caption={.config finale utilizzato (le voci commentate sono state rimosse)}]
-preview false
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "_CONFIGURE_VANIGLIA_VERSATILE_2.6.25.10_no_comments"
+lstparams "basicstyle={\\tiny\\ttfamily},caption={.config finale utilizzato (le voci commentate sono state rimosse)}"
 
 \end_inset
 
@@ -492,7 +542,8 @@ ARM
 \end_layout
 
 \begin_layout Section
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "sec:Cross-compilazione"
 
 \end_inset
@@ -521,7 +572,8 @@ ARM
 \end_layout
 
 \begin_layout Enumerate
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "enu:cross-compilare"
 
 \end_inset
@@ -543,7 +595,8 @@ ARM
 
 \begin_layout Standard
 Si è scelto di approcciarsi al problema tramite la soluzione 
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "enu:cross-compilare"
 
 \end_inset
@@ -556,7 +609,8 @@ reference "enu:cross-compilare"
 
 \noun on
 host
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "host"
 description "In ambiente di emulazione, la macchina reale che ospita l'emulatore.\\\\In ambiente di cross-compilazione, la macchina che ospita il compilatore.\\\\Vedi: target"
 
@@ -571,7 +625,8 @@ description "In ambiente di emulazione, la macchina reale che ospita l'emulatore
 
 \noun on
 target
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "target"
 description "In ambiente di emulazione, la macchina virtuale generata dall'emulatore.\\\\In ambiente di cross-compilazione, la macchina su cui verranno utilizzati i programmi compilati.\\\\Vedi: host"
 
@@ -628,15 +683,20 @@ C
 
 \begin_layout Standard
 Nel nostro caso si è evitato di ri-compilare il compilatore, ed è stata
- utilizzata una versione pre-compilata di gcc da 
-\begin_inset LatexCommand htmlurl
-name "handhelds.org"
-target "http://www.handhelds.org/download/projects/toolchain/"
+ utilizzata una versione pre-compilata di gcc da handhelds.org 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.handhelds.org/download/projects/toolchain/
+\end_layout
 
 \end_inset
 
 
-\begin_inset LatexCommand citep
+\begin_inset CommandInset citation
+LatexCommand citep
 key "handhelds_toolchain"
 
 \end_inset
@@ -658,7 +718,8 @@ CROSS_COMPILER
 , che istruisce il make su dove andare a cercare la 
 \emph on
 toolchain
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "toolchain"
 description "Insieme di tutti gli strumenti (tra gli altri preprocessore, assembler, compilatore, linker...) necessari alla generazione di codice eseguibile a partire da sorgenti."
 
@@ -672,7 +733,8 @@ description "Insieme di tutti gli strumenti (tra gli altri preprocessore, assemb
 \begin_layout Standard
 Terminata la parte di configurazione del kernel, come già fatto nella sezione
  
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "sec:Configurazione-e-compilazione"
 
 \end_inset
@@ -686,28 +748,28 @@ lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=fal
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ wget http://www.handhelds.org/download/projects/toolchain/arm-linux-gcc-3.4.1.tar.bz
 2
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ su -c "tar xjf arm-linux-gcc-3.4.1.tar.bz2 -C /"
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [PASSWORD DI ROOT]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ export CROSS_COMPILE=/usr/local/arm/3.4.1/bin/arm-linux-
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ make
 \end_layout
@@ -748,7 +810,7 @@ wide false
 sideways false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
 \begin_inset Graphics
 	filename Anatomy-of-bzimage.png
@@ -760,13 +822,18 @@ status collapsed
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Caption
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Anatomia di bzImage (da 
-\begin_inset LatexCommand htmlurl
-target "en.wikipedia.org"
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+en.wikipedia.org
+\end_layout
 
 \end_inset
 
@@ -787,7 +854,8 @@ target "en.wikipedia.org"
 
 \family typewriter
 vmlinux
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "vmlinux"
 description "Eseguibile non compresso e non bootable del kernel."
 
@@ -805,7 +873,8 @@ description "Eseguibile non compresso e non bootable del kernel."
 \emph default
  del kernel.
  Usato soprattutto per debug, come vedremo nel capitolo
-\begin_inset LatexCommand vref
+\begin_inset CommandInset ref
+LatexCommand vref
 reference "cha:Debugger"
 
 \end_inset
@@ -817,7 +886,8 @@ reference "cha:Debugger"
 
 \family typewriter
 arch/arm/boot/Image
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "Image"
 description "Immagine del kernel effettivamente eseguita"
 
@@ -832,7 +902,8 @@ description "Immagine del kernel effettivamente eseguita"
 
 \family typewriter
 arch/arm/boot/zImage
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "zImage"
 description "Immagine del kernel compressa preceduta da un decompressore (obsoleta)"
 
@@ -848,28 +919,39 @@ description "Immagine del kernel compressa preceduta da un decompressore (obsole
 
 \family typewriter
 arch/arm/boot/bzImage
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "bzImage"
 description "Immagine del kernel compressa ed eseguibile, ma composta da tre parti separate"
 
 \end_inset
 
-\InsetSpace ~
+
+\begin_inset space ~
+\end_inset
+
 
 \family default
-(big\InsetSpace ~
+(big
+\begin_inset space ~
+\end_inset
+
 
 \family typewriter
 zImage
 \family default
 
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "big zImage"
 description "vedi bzImage"
 
 \end_inset
 
-big\InsetSpace ~
+big
+\begin_inset space ~
+\end_inset
+
 
 \family typewriter
 zImage
@@ -891,7 +973,8 @@ zImage
  piggy.o
 \family default
 .
-\begin_inset LatexCommand citep
+\begin_inset CommandInset citation
+LatexCommand citep
 key "vmlinuz_definition,vmlinux_zimage"
 
 \end_inset
@@ -901,7 +984,8 @@ key "vmlinuz_definition,vmlinux_zimage"
 
 \begin_layout Chapter
 Avvio
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "cha:Avvio"
 
 \end_inset
@@ -916,7 +1000,8 @@ Una volta che il bootloader ha caricato il kernel in memoria e l'ha eseguito,
 bootstrap
 \emph default
 
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "bootstrap"
 description "Letteralmente la fascetta di cuoio cucita sul bordo posteriore degli stivali per aiutarsi a calzarli, fa riferimento alla leggenda del Barone di Münchhausen e alla sua capacità di sollevarsi in aria \"tirandosi per gli stivali\".\\\\Indica la fase di avvio di un pc"
 
@@ -994,68 +1079,68 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * Kernel startup entry point.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * ---------------------------
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * This is normally called from the decompressor code.
  The requirements
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * are: MMU = off, D-cache = off, I-cache = dont care, r0 = 0,
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * r1 = machine nr, r2 = atags pointer.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * This code is mostly position independent, so if you link the kernel at
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * 0xc0008000, you call this at __pa(0xc0008000).
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * See linux/arch/arm/tools/mach-types for the complete list of machine
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * numbers for r1.
 \end_layout
@@ -1094,7 +1179,8 @@ The ARM Linux Project
 \end_inset
 
 
-\begin_inset LatexCommand citep
+\begin_inset CommandInset citation
+LatexCommand citep
 key "mach_types_home_page"
 
 \end_inset
@@ -1137,930 +1223,930 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                .section ".start", #alloc, #execinstr
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * sort out different calling conventions
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .align
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 start:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .type   start,#function
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .rept   8
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mov     r0, r0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .endr
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 b       1f
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .word   0x016f2818              @ Magic numbers to help the
  loader
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .word   start                   @ absolute load/run zImage
  address
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .word   _edata                  @ zImage end address
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 1:              mov     r7, r1                  @ save architecture ID
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mov     r8, #0                  @ save r0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #ifndef __ARM_ARCH_2__
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * Booting from Angel - need to enter SVC mode and disable
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * FIQs/IRQs (numeric definitions from angel arm.h source).
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * We only do this if we were in user mode on entry.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mrs     r2, cpsr                @ get current mode
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 tst     r2, #3                  @ not user?
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 bne     not_angel
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mov     r0, #0x17               @ angel_SWIreason_EnterSVC
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 swi     0x123456                @ angel_SWI_ARM
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 not_angel:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mrs     r2, cpsr                @ turn off interrupts to
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 orr     r2, r2, #0xc0           @ prevent angel from running
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 msr     cpsr_c, r2
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #else
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 teqp    pc, #0x0c000003         @ turn off interrupts
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #endif
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * Note that some cache flushing and other stuff may
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * be needed here - is there an Angel SWI call for this?
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * some architecture specific code can be inserted
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * by the linker here, but it should preserve r7 and r8.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .text
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 adr     r0, LC0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 ldmia   r0, {r1, r2, r3, r4, r5, r6, ip, sp}
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 subs    r0, r0, r1              @ calculate the delta offset
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                                                 @ if delta is zero, we're
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 beq     not_relocated           @ running at the address
  we
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                                                 @ were linked at.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * We're running at a different address.
   We need to fix
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * up various pointers:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  *   r5 - zImage base address
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  *   r6 - GOT start
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  *   ip - GOT end
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     r5, r5, r0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     r6, r6, r0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     ip, ip, r0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #ifndef CONFIG_ZBOOT_ROM
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * If we're running fully PIC === CONFIG_ZBOOT_ROM = n,
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * we need to fix up pointers into the BSS region.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  *   r2 - BSS start
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  *   r3 - BSS end
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  *   sp - stack pointer
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     r2, r2, r0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     r3, r3, r0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     sp, sp, r0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * Relocate all entries in the GOT table.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 1:              ldr     r1, [r6, #0]            @ relocate entries in the
  GOT
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     r1, r1, r0              @ table.
   This fixes up the
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 str     r1, [r6], #4            @ C references.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 cmp     r6, ip
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 blo     1b
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #else
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * Relocate entries in the GOT table.
   We only relocate
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * the entries that are outside the (relocated) BSS region.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 1:              ldr     r1, [r6, #0]            @ relocate entries in the
  GOT
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 cmp     r1, r2                  @ entry < bss_start ||
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 cmphs   r3, r1                  @ _end < entry
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 addlo   r1, r1, r0              @ table.
   This fixes up the
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 str     r1, [r6], #4            @ C references.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 cmp     r6, ip
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 blo     1b
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #endif
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 not_relocated:  mov     r0, #0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 1:              str     r0, [r2], #4            @ clear bss
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 str     r0, [r2], #4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 str     r0, [r2], #4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 str     r0, [r2], #4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 cmp     r2, r3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 blo     1b
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * The C runtime environment should now be setup
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * sufficiently.
   Turn the cache on, set up some
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  * pointers, and start decompressing.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 bl      cache_on
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mov     r1, sp                  @ malloc space above stack
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     r2, sp, #0x10000        @ 64k max
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * Check to see if we will overwrite ourselves.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *   r4 = final kernel address
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *   r5 = start of this image
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *   r2 = end of malloc space (and therefore this image)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * We basically want:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *   r4 >= r2 -> OK
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *   r4 + image length <= r5 -> OK
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 cmp     r4, r2
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 bhs     wont_overwrite
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     r0, r4, #4096*1024      @ 4MB largest kernel size
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 cmp     r0, r5
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 bls     wont_overwrite
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mov     r5, r2                  @ decompress after malloc
  space
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mov     r0, r5
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mov     r3, r7
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 bl      decompress_kernel
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     r0, r0, #127
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 bic     r0, r0, #127            @ align the kernel length
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * r0     = decompressed kernel length
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * r1-r3  = unused
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * r4     = kernel execution address
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * r5     = decompressed kernel start
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * r6     = processor ID
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * r7     = architecture ID
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * r8-r14 = unused
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     r1, r5, r0              @ end of decompressed kernel
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 adr     r2, reloc_start
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 ldr     r3, LC1
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     r3, r2, r3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 1:              ldmia   r2!, {r8 - r13}         @ copy relocation code
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 stmia   r1!, {r8 - r13}
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 ldmia   r2!, {r8 - r13}
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 stmia   r1!, {r8 - r13}
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 cmp     r2, r3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 blo     1b
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 bl      cache_clean_flush
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 add     pc, r5, r0              @ call relocation code
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * We're not in danger of overwriting ourselves.
   Do this the simple way.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * r4     = kernel execution address
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * r7     = architecture ID
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 wont_overwrite: mov     r0, r4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mov     r3, r7
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 bl      decompress_kernel
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 b       call_kernel
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .type   LC0, #object
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 LC0:            .word   LC0                     @ r1
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .word   __bss_start             @ r2
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .word   _end                    @ r3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .word   _load_addr              @ r4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .word   _start                  @ r5
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .word   _got_start              @ r6
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .word   _got_end                @ ip
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .word   user_stack+4096         @ sp
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 LC1:            .word   reloc_end - reloc_start
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 .size   LC0, .
  - LC0
@@ -2091,88 +2177,88 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ulg
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 decompress_kernel(ulg output_start, ulg free_mem_ptr_p, ulg free_mem_ptr_end_p,
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                   int arch_id)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         output_data             = (uch *)output_start;  /* Points to kernel
  start */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         free_mem_ptr            = free_mem_ptr_p;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         free_mem_ptr_end        = free_mem_ptr_end_p;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         __machine_arch_type     = arch_id;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         arch_decomp_setup();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         makecrc();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         puts("Uncompressing Linux...");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         gunzip();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         puts(" done, booting the kernel.
 \backslash
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         return output_ptr;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 }
 \end_layout
@@ -2198,582 +2284,582 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * Do the uncompression!
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 static int INIT gunzip(void)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     uch flags;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     unsigned char magic[2]; /* magic header */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     char method;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     ulg orig_crc = 0;       /* original crc */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     ulg orig_len = 0;       /* original uncompressed length */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     int res;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     magic[0] = NEXTBYTE();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     magic[1] = NEXTBYTE();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     method   = NEXTBYTE();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if (magic[0] != 037 ||
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         ((magic[1] != 0213) && (magic[1] != 0236))) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             error("bad gzip magic numbers");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             return -1;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     /* We only support method #8, DEFLATED */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if (method != 8)  {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             error("internal error, invalid method");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             return -1;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     flags  = (uch)get_byte();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if ((flags & ENCRYPTED) != 0) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             error("Input is encrypted");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             return -1;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if ((flags & CONTINUATION) != 0) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             error("Multi part input");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             return -1;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if ((flags & RESERVED) != 0) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             error("Input has invalid flags");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             return -1;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     NEXTBYTE(); /* Get timestamp */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     NEXTBYTE();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     NEXTBYTE();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     NEXTBYTE();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     (void)NEXTBYTE();  /* Ignore extra flags for the moment */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     (void)NEXTBYTE();  /* Ignore OS type for the moment */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if ((flags & EXTRA_FIELD) != 0) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             unsigned len = (unsigned)NEXTBYTE();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             len |= ((unsigned)NEXTBYTE())<<8;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             while (len--) (void)NEXTBYTE();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     /* Get original file name if it was truncated */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if ((flags & ORIG_NAME) != 0) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             /* Discard the old name */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             while (NEXTBYTE() != 0) /* null */ ;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     } 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     /* Discard file comment if any */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if ((flags & COMMENT) != 0) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             while (NEXTBYTE() != 0) /* null */ ;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     /* Decompress */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if ((res = inflate())) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             switch (res) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             case 0:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                     break;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             case 1:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                     error("invalid compressed format (err=1)");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                     break;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             case 2:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                     error("invalid compressed format (err=2)");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                     break;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             case 3:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                     error("out of memory");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                     break;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             case 4:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                     error("out of input data");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                     break;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             default:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                     error("invalid compressed format (other)");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             return -1;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     /* Get the crc and original length */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     /* crc32  (see algorithm.doc)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
      * uncompressed input size modulo 2^32
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
      */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     orig_crc = (ulg) NEXTBYTE();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     orig_crc |= (ulg) NEXTBYTE() << 8;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     orig_crc |= (ulg) NEXTBYTE() << 16;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     orig_crc |= (ulg) NEXTBYTE() << 24;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     orig_len = (ulg) NEXTBYTE();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     orig_len |= (ulg) NEXTBYTE() << 8;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     orig_len |= (ulg) NEXTBYTE() << 16;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     orig_len |= (ulg) NEXTBYTE() << 24;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     /* Validate decompression */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if (orig_crc != CRC_VALUE) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             error("crc error");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             return -1;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if (orig_len != bytes_out) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             error("length error");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             return -1;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     return 0;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  underrun:                      /* NEXTBYTE() goto's here if needed */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     error("out of input data");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     return -1;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 }
 \end_layout
@@ -2785,7 +2871,8 @@ static int INIT gunzip(void)
 
 \begin_layout Section
 Boot
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "sub:Boot"
 
 \end_inset
@@ -2808,134 +2895,134 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .section ".text.head", "ax"
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .type   stext, %function
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ENTRY(stext)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         msr     cpsr_c, #PSR_F_BIT | PSR_I_BIT | SVC_MODE @ ensure svc mode
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                                                 @ and irqs disabled
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mrc     p15, 0, r9, c0, c0              @ get processor id
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bl      __lookup_processor_type         @ r5=procinfo r9=cpuid
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         movs    r10, r5                         @ invalid processor (r5=0)?
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         beq     __error_p                       @ yes, error 'p'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bl      __lookup_machine_type           @ r5=machinfo
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         movs    r8, r5                          @ invalid machine (r5=0)?
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         beq     __error_a                       @ yes, error 'a'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bl      __vet_atags
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bl      __create_page_tables
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
          * The following calls CPU specific code in a position independent
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
          * manner.
   See arch/arm/mm/proc-*.S for details.
   r10 = base of
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
          * xxx_proc_info structure selected by __lookup_machine_type
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
          * above.
   On return, the CPU will be ready for the MMU to be
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
          * turned on, and r0 will hold the CPU control register value.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         ldr     r13, __switch_data              @ address to jump to after
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                                                 @ mmu has been enabled
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         adr     lr, __enable_mmu                @ return (PIC) address
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         add     pc, r10, #PROCINFO_INITFUNC
 \end_layout
@@ -2984,10 +3071,11 @@ lr
 \begin_inset Foot
 status open
 
-\begin_layout Standard
+\begin_layout Plain Layout
 last register; per questo e per altri comandi assembly si rimanda all'appendice
  
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "cha:Assembly-per-ARM"
 
 \end_inset
@@ -2998,7 +3086,8 @@ reference "cha:Assembly-per-ARM"
 \end_inset
 
  il codice per abilitare l'MMU
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "MMU"
 description "Memory Management Unit"
 
@@ -3028,7 +3117,7 @@ lstparams "basicstyle={\tiny\ttfamily},breaklines=true,extendedchars=true,langua
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 DEFINE(PROCINFO_INITFUNC, offsetof(struct proc_info_list, __cpu_flush));
 \end_layout
@@ -3071,139 +3160,139 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .type   __arm926_proc_info,#object
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 __arm926_proc_info:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   0x41069260                      @ ARM926EJ-S (v5TEJ)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   0xff0ffff0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   PMD_TYPE_SECT | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 PMD_SECT_BUFFERABLE | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 PMD_SECT_CACHEABLE | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 PMD_BIT4 | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 PMD_SECT_AP_WRITE | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 PMD_SECT_AP_READ
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   PMD_TYPE_SECT | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 PMD_BIT4 | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 PMD_SECT_AP_WRITE | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 PMD_SECT_AP_READ
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         b       __arm926_setup
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   cpu_arch_name
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   cpu_elf_name
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   HWCAP_SWP|HWCAP_HALF|HWCAP_THUMB|HWCAP_FAST_MULT|HWCAP_EDSP|HWCAP
 _JAVA
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   cpu_arm926_name
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   arm926_processor_functions
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   v4wbi_tlb_fns
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   v4wb_user_fns
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   arm926_cache_fns
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .size   __arm926_proc_info, .
  - __arm926_proc_info
@@ -3228,113 +3317,113 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .type   __arm926_setup, #function
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 __arm926_setup:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mov     r0, #0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mcr     p15, 0, r0, c7, c7              @ invalidate I,D caches
  on v4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mcr     p15, 0, r0, c7, c10, 4          @ drain write buffer on
  v4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #ifdef CONFIG_MMU
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mcr     p15, 0, r0, c8, c7              @ invalidate I,D TLBs on
  v4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #endif
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #ifdef CONFIG_CPU_DCACHE_WRITETHROUGH
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mov     r0, #4                          @ disable write-back on
  caches explicitly
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mcr     p15, 7, r0, c15, c0, 0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #endif
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         adr     r5, arm926_crval
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         ldmia   r5, {r5, r6}
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mrc     p15, 0, r0, c1, c0              @ get control register v4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bic     r0, r0, r5
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         orr     r0, r0, r6
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #ifdef CONFIG_CPU_CACHE_ROUND_ROBIN
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         orr     r0, r0, #0x4000                 @ .1..
  ....
@@ -3342,17 +3431,17 @@ __arm926_setup:
  ....
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #endif
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mov     pc, lr
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .size   __arm926_setup, .
  - __arm926_setup
@@ -3383,149 +3472,149 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * Setup common bits before finally enabling the MMU.
   Essentially
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * this is just loading the page table pointer and domain access
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * registers.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .type   __enable_mmu, %function
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 __enable_mmu:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #ifdef CONFIG_ALIGNMENT_TRAP
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         orr     r0, r0, #CR_A
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #else
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bic     r0, r0, #CR_A
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #endif
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #ifdef CONFIG_CPU_DCACHE_DISABLE
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bic     r0, r0, #CR_C
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #endif
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #ifdef CONFIG_CPU_BPREDICT_DISABLE
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bic     r0, r0, #CR_Z
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #endif
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #ifdef CONFIG_CPU_ICACHE_DISABLE
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bic     r0, r0, #CR_I
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #endif
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mov     r5, #(domain_val(DOMAIN_USER, DOMAIN_MANAGER) | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                       domain_val(DOMAIN_KERNEL, DOMAIN_MANAGER) | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                       domain_val(DOMAIN_TABLE, DOMAIN_MANAGER) | 
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                       domain_val(DOMAIN_IO, DOMAIN_CLIENT))
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mcr     p15, 0, r5, c3, c0, 0           @ load domain access register
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mcr     p15, 0, r4, c2, c0, 0           @ load page table pointer
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         b       __turn_mmu_on
 \end_layout
@@ -3549,104 +3638,104 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * Enable the MMU.
   This completely changes the structure of the visible
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * memory space.
   You will not be able to trace execution through this.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * If you have an enquiry about this, *please* check the linux-arm-kernel
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * mailing list archives BEFORE sending another post to the list.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *  r0  = cp#15 control register
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *  r13 = *virtual* address to jump to upon completion
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * other registers depend on the function called upon completion
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .align  5
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .type   __turn_mmu_on, %function
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 __turn_mmu_on:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mov     r0, r0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mcr     p15, 0, r0, c1, c0, 0           @ write control reg
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mrc     p15, 0, r3, c0, c0, 0           @ read id reg
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mov     r3, r3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mov     r3, r3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mov     pc, r13
 \end_layout
@@ -3674,224 +3763,224 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .type   __switch_data, %object
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 __switch_data:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   __mmap_switched
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   __data_loc                      @ r4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   __data_start                    @ r5
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   __bss_start                     @ r6
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   _end                            @ r7
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   processor_id                    @ r4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   __machine_arch_type             @ r5
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   __atags_pointer                 @ r6
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   cr_alignment                    @ r7
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .long   init_thread_union + THREAD_START_SP @ sp
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 /*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * The following fragment of code is executed with the MMU on in MMU mode,
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  * and uses absolute addresses; this is not position independent.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *  r0  = cp#15 control register
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *  r1  = machine ID
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *  r2  = atags pointer
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  *  r9  = processor ID
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
  */
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         .type   __mmap_switched, %function
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 __mmap_switched:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         adr     r3, __switch_data + 4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         ldmia   r3!, {r4, r5, r6, r7}
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         cmp     r4, r5                          @ Copy data segment if needed
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 1:      cmpne   r5, r6
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         ldrne   fp, [r4], #4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         strne   fp, [r5], #4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bne     1b
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         mov     fp, #0                          @ Clear BSS (and zero fp)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 1:      cmp     r6, r7
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         strcc   fp, [r6],#4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bcc     1b
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         ldmia   r3, {r4, r5, r6, r7, sp}
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         str     r9, [r4]                        @ Save processor ID
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         str     r1, [r5]                        @ Save machine type
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         str     r2, [r6]                        @ Save atags pointer
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         bic     r4, r0, #CR_A                   @ Clear 'A' bit
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         stmia   r7, {r0, r4}                    @ Save control register
  values
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         b       start_kernel
 \end_layout
@@ -3933,7 +4022,7 @@ init/main.c
 \begin_inset Note Greyedout
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 E direi che può bastare
 \end_layout
 
@@ -3973,7 +4062,7 @@ lstparams "breaklines=true,extendedchars=true,firstnumber=61,language=C,numbers=
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     b   start_kernel_hello_os   /* b   start_kernel */
 \end_layout
@@ -3997,28 +4086,28 @@ lstparams "breaklines=true,extendedchars=true,firstnumber=534,language=C,numbers
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 extern void printascii(const char*);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 asmlinkage void __init start_kernel_hello_os(void) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     printascii("Hello, world!
 \backslash
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 }
 \end_layout
@@ -4048,10 +4137,15 @@ che la funzione non utilizzerà i registri, ma solo lo stack per i parametri
 \begin_inset Foot
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Confronta 
-\begin_inset LatexCommand htmlurl
-target "http://kernelnewbies.org/FAQ/asmlinkage"
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://kernelnewbies.org/FAQ/asmlinkage
+\end_layout
 
 \end_inset
 
@@ -4083,10 +4177,15 @@ che il codice generato dovrà essere presente in una parte ben definita del
 \begin_inset Foot
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Confronta 
-\begin_inset LatexCommand htmlurl
-target "http://kernelnewbies.org/FAQ/InitExitMacros"
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://kernelnewbies.org/FAQ/InitExitMacros
+\end_layout
 
 \end_inset
 
@@ -4116,76 +4215,76 @@ lstparams "breaklines=true,extendedchars=true,firstnumber=116,language={[x86masm
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ENTRY(printascii)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 addruart r3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 b       2f
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 1:              waituart r2, r3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 senduart r1, r3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 busyuart r2, r3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 teq     r1, #'
 \backslash
 n'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 moveq   r1, #'
 \backslash
 r'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 beq     1b
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 2:              teq     r0, #0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 ldrneb  r1, [r0], #1
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 teqne   r1, #0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 bne     1b
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 mov     pc, lr
 \end_layout
@@ -4231,7 +4330,8 @@ include/asm-arm/arch-*/debug-macro.S
 
 \begin_layout Chapter
 Test
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "cha:Test"
 
 \end_inset
@@ -4253,7 +4353,8 @@ HTC P6300
 \end_layout
 
 \begin_layout Section
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "cha:Haret"
 
 \end_inset
@@ -4263,15 +4364,17 @@ Haret
 
 \begin_layout Standard
 Haret
-\begin_inset LatexCommand citep*
+\begin_inset CommandInset citation
+LatexCommand citep*
 key "haret_home_page"
 
 \end_inset
 
- è un boot-loader scritto in C++ per Windows Mobile®
-\begin_inset LatexCommand nomenclature
-symbol "Windows Mobile®"
-description "Microsoft® Windows Mobile®, sistema operativo concepito per palmari, telefoni cellulari e Pocket PC"
+ è un boot-loader scritto in C++ per Windows Mobile
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+symbol "Windows Mobile"
+description "Microsoft Windows Mobile, sistema operativo concepito per palmari, telefoni cellulari e Pocket PC"
 
 \end_inset
 
@@ -4303,7 +4406,7 @@ Nel modo invasivo viene modificato la memoria interna del palmare installandoci
 \end_layout
 
 \begin_layout Standard
-Nel modo non invasivo viene avviato un programma sotto Windows Mobile® per
+Nel modo non invasivo viene avviato un programma sotto Windows Mobile per
  lanciare il kernel dopo aver disabilitato l'hardware in modo da non danneggiarl
 o.
  Questa è, in effetti, una modalità abbastanza utilizzata anche se vi possono
@@ -4314,7 +4417,8 @@ o.
 Volendo scelgliere la modalità non invasiva, ci siamo concentrati sul bootloader
 , Haret.
  Sul sito del progetto è presente anche un wiki
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "wiki"
 description "categoria particolare di siti web, accomunati dalla possibilità di offrire agli utenti stesssi del sito la possibilità di modificarlo a loro piacimento, senza dover accedere direttamente ai file presenti in remoto."
 
@@ -4325,7 +4429,8 @@ description "categoria particolare di siti web, accomunati dalla possibilità di
 \end_layout
 
 \begin_layout Subsection
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "sub:Come-usare-Haret"
 
 \end_inset
@@ -4339,9 +4444,10 @@ Il suo obiettivo è di preparare il dispositivo al lancio del kernel linux.
 
 \begin_layout Standard
 Prima di tutto dobbiamo ottenerlo: sono disponibili versioni precompilate
- per Windows Mobile®, ma abbiamo preferito lavorare con i sorgenti prelevandoli
+ per Windows Mobile, ma abbiamo preferito lavorare con i sorgenti prelevandoli
  dal server svn
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "svn"
 description "SubVersioN: sistema per controllo di revisione, usato nello sviluppo di sistemi software, consente di avere e condividere la storia delle modifiche effettuate sui file del progetto"
 
@@ -4353,9 +4459,10 @@ description "SubVersioN: sistema per controllo di revisione, usato nello svilupp
 \begin_layout Standard
 Volendo usare i sorgenti, però, sorge il problema di compilarli da una macchina
  x86 con sistema operativo linux verso una macchina ARM con sistema operativo
- Windows Mobile®.
+ Windows Mobile.
  Per quest'ultimo problema, si rimanda alla sezione 
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "sub:Compilazione-di-Haret"
 
 \end_inset
@@ -4366,7 +4473,8 @@ reference "sub:Compilazione-di-Haret"
 \begin_layout Standard
 Nel caso si preferisca usare una versione già precompilata, basterà scaricarla
  e copiarla sulla miniSD
-\begin_inset LatexCommand nomenclature
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
 symbol "miniSD"
 description "Mini Secure Digital, versione più piccola (20x21.5) delle schede di memoria SD (24x32)"
 
@@ -4381,7 +4489,7 @@ lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=fal
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ wget http://www.handhelds.org/~koconnor/haret/haret-0.5.1.exe
 \end_layout
@@ -4402,8 +4510,9 @@ startup.txt
 \end_layout
 
 \begin_layout LyX-Code
-\begin_inset Include \lstinputlisting{startup.txt}
-preview false
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "startup.txt"
 
 \end_inset
 
@@ -4468,107 +4577,107 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 static void
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 launchKernel(struct bootmem *bm)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 // Prep the trampoline.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 uint32 physAddrTram = setupTrampoline();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 if (! physAddrTram)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 return;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 // Cache an mmu pointer for the trampoline
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 uint8 *virtAddrMmu = memPhysMap(cpuGetMMU());
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Output("MMU setup: mmu=%p/%08x", virtAddrMmu, cpuGetMMU());
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 // Call per-arch setup.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 int ret = Mach->preHardwareShutdown();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 if (ret) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Output(C_ERROR "Setup for machine shutdown failed");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 return;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Screen("Go Go Go...");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 // Disable interrupts
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 take_control();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 fb_clear(&bm->pd->fbi);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 fb_printf(&bm->pd->fbi, "HaRET boot
 \backslash
@@ -4577,44 +4686,44 @@ nShutting down hardware
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 // Call per-arch boot prep function.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Mach->hardwareShutdown(&bm->pd->fbi);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 fb_printf(&bm->pd->fbi, "Turning off MMU...
 \backslash
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 // Disable MMU and launch linux.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 mmu_trampoline(physAddrTram, virtAddrMmu, bm->physExec, Mach->flushCache);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 // The above should not ever return, but we attempt recovery here.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 return_control();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 }
 \end_layout
@@ -4636,37 +4745,37 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 // Code to launch kernel.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 static void __preload
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 preloader(struct preloadData *data)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     data->fbi.fb = (uint16 *)data->physFB;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     data->fbi.fonts = (unsigned char *)data->physFonts;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     FB_PRINTF(&data->fbi, "In preloader
 \backslash
@@ -4675,12 +4784,12 @@ preloader(struct preloadData *data)
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     uint32 psr = do_cpuGetPSR();
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     FB_PRINTF(&data->fbi, "PSR=%%x
 \backslash
@@ -4689,12 +4798,12 @@ n");
 n", psr);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if ((psr & 0xc0) != 0xc0)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         FB_PRINTF(&data->fbi, "ERROR: IRQS not off
 \backslash
@@ -4703,12 +4812,12 @@ n", psr);
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if (fbOverlaps(data)) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         FB_PRINTF(&data->fbi, "Disabling framebuffer feedback
 \backslash
@@ -4717,32 +4826,32 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         data->fbi.fb = 0;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     // Copy tags to beginning of ram.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     char *destTags = (char *)data->startRam + PHYSOFFSET_TAGS;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     do_copy(destTags, data->tags, TAGSIZE);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     FB_PRINTF(&data->fbi, "Tags relocated
 \backslash
@@ -4751,27 +4860,27 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     // Copy kernel image
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     char *destKernel = (char *)data->startRam + PHYSOFFSET_KERNEL;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     int kernelCount = PAGE_ALIGN(data->kernelSize) / PAGE_SIZE;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     do_copyPages((char *)destKernel, data->indexPages, 0, kernelCount);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     FB_PRINTF(&data->fbi, "Kernel relocated
 \backslash
@@ -4780,27 +4889,27 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     // Copy initrd (if applicable)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     char *destInitrd = (char *)data->startRam + PHYSOFFSET_INITRD;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     int initrdCount = PAGE_ALIGN(data->initrdSize) / PAGE_SIZE;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     do_copyPages(destInitrd, data->indexPages, kernelCount, initrdCount);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     FB_PRINTF(&data->fbi, "Initrd relocated
 \backslash
@@ -4809,37 +4918,37 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     // Do CRC check (if enabled).
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     if (data->doCRC) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         FB_PRINTF(&data->fbi, "Checking tags crc...");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         uint32 crc = crc32_be(0, destTags, TAGSIZE);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         crc = crc32_be_finish(crc, TAGSIZE);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         if (crc == data->tagsCRC)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             FB_PRINTF(&data->fbi, "okay
 \backslash
@@ -4848,12 +4957,12 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         else
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             FB_PRINTF(&data->fbi, "FAIL FAIL FAIL
 \backslash
@@ -4862,27 +4971,27 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         FB_PRINTF(&data->fbi, "Checking kernel crc...");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         crc = crc32_be(0, destKernel, data->kernelSize);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         crc = crc32_be_finish(crc, data->kernelSize);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         if (crc == data->kernelCRC)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             FB_PRINTF(&data->fbi, "okay
 \backslash
@@ -4891,12 +5000,12 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         else
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             FB_PRINTF(&data->fbi, "FAIL FAIL FAIL
 \backslash
@@ -4905,32 +5014,32 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         if (data->initrdSize) {
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             FB_PRINTF(&data->fbi, "Checking initrd crc...");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             crc = crc32_be(0, destInitrd, data->initrdSize);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             crc = crc32_be_finish(crc, data->initrdSize);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             if (crc == data->initrdCRC)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 FB_PRINTF(&data->fbi, "okay
 \backslash
@@ -4939,12 +5048,12 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
             else
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 FB_PRINTF(&data->fbi, "FAIL FAIL FAIL
 \backslash
@@ -4953,17 +5062,17 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     }
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     FB_PRINTF(&data->fbi, "Jumping to Kernel...
 \backslash
@@ -4972,27 +5081,27 @@ n");
 n");
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     // Boot
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     typedef void (*lin_t)(uint32 zero, uint32 mach, char *tags);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     lin_t startfunc = (lin_t)destKernel;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     startfunc(0, data->machtype, destTags);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 }
 \end_layout
@@ -5013,7 +5122,7 @@ lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=tru
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 typedef void (*lin_t)(uint32 zero, uint32 mach, char *tags);
 \end_layout
@@ -5035,7 +5144,7 @@ lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=tru
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 lin_t startfunc = (lin_t)destKernel;
 \end_layout
@@ -5067,7 +5176,7 @@ lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=tru
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 startfunc(0, data->machtype, destTags);
 \end_layout
@@ -5111,7 +5220,7 @@ lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=tru
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 FB_PRINTF(&data->fbi, "In preloader
 \backslash
@@ -5135,21 +5244,21 @@ lstparams "basicstyle={\footnotesize\ttfamily},breaklines=true,extendedchars=tru
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #define STR_IN_CODE(sec,str) ({
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     const char *__str;
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     asm(".section " #sec ", 1
 \backslash
@@ -5158,7 +5267,7 @@ n"
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         "1:      .asciz
 \backslash
@@ -5171,7 +5280,7 @@ n"
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         "        .balign 4
 \backslash
@@ -5180,7 +5289,7 @@ n"
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         "        .section " #sec ", 0
 \backslash
@@ -5189,7 +5298,7 @@ n"
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         "        add %0, pc, #( 1b - .
  - 8 )
@@ -5199,26 +5308,26 @@ n"
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
         : "=r" (__str));
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
     __str;
 \backslash
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 })
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 #define FB_PRINTF(fbi,fmt,args...) fb_printf((fbi), STR_IN_CODE(.text.preload,
  fmt) , ##args )
@@ -5294,160 +5403,160 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Welcome, this is HaRET pre-0.5.2-20080711_124633 running on WindowsCE v5.1
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Minimal virtual address: 00010000, maximal virtual address: 7FFFFFFF
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Detected machine Panda/s3c2442 (Plat='PocketPC' OEM='PAND100')
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 CPU is ARM ARM arch 4T stepping 0 running in system mode
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Enter 'HELP' for a short command summary.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Running WSAStartup
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Starting gui
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 In initdialog
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Found machine Panda
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 executing startup.txt
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 HaRET(1)# set MTYPE 1806
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 HaRET(2)# set KERNEL "zImage"
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 HaRET(3)# set CMDLINE "root=/dev/mmcblk0p2 console=tty0 mem=128M rootdelay=5"
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 HaRET(4)# bootlinux
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 boot KERNEL=zImage INITRD=
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Opening file zImage
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 boot params: RAMADDR=30000000 RAMSIZE=08000000 MTYPE=1806 CMDLINE='root=/dev/mmc
 blk0p2 console=tty0 mem=128M rootdelay=5'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Boot FB feedback: 1
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Built virtual to physical page mapping
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Allocated 265 pages (tags=4FB00000/36b4e000 kernel=4FB01000/36b4f000 initrd=4FC0
 5000/36a47000 index=4FC05000/36a47000)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Built kernel tags area
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Built page index
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Video buffer at 52800000 sx=240 sy=320 mx=60 my=53
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Video Phys FB=10800000 Fonts=36a45064
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 preload=2260@4FC08000/36a44000 sj=4FC08000 stack=4FC06000/36a46000 data=4FC07000
 /36a45000 exec=36a44128
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Reading 1062116 bytes...
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Read complete
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Launching to physical address 36a44010
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Trampoline setup (tram=136@00024AEC/1c024aec/30882aec)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 MMU setup: mmu=A0250000/30550000
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Go Go Go...
 \end_layout
@@ -5536,7 +5645,8 @@ Anche in questo caso abbiamo stampato a video e confrontato bit a bit il
 \end_layout
 
 \begin_layout Subsection
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "sub:Compilazione-di-Haret"
 
 \end_inset
@@ -5549,13 +5659,14 @@ Per la compilazione di Haret è necessario usare un compilatore C++ per
 \noun on
 ARM
 \noun default
- con Windows Mobile®.
+ con Windows Mobile.
  Noi abbiamo usato 
 \emph on
 arm-mingw32ce
 \emph default
 , toolset sviluppato nel progetto cegcc
-\begin_inset LatexCommand citep
+\begin_inset CommandInset citation
+LatexCommand citep
 key "cegcc_home_page"
 
 \end_inset
@@ -5565,7 +5676,7 @@ key "cegcc_home_page"
 \begin_inset Foot
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Non è possibile segnalare il link diretto, in quanto il progetto si appoggia
  a sourceforge.net, che utilizza un insieme di mirror per lo 
 \emph on
@@ -5595,12 +5706,12 @@ arm-wince-mingw32ce-
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ su -c "tar xzf cegcc-gcc430.tar.gz -C /"
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [PASSWORD DI ROOT]
 \end_layout
@@ -5620,27 +5731,27 @@ lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=fal
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ cvs -d :pserver:anoncvs@anoncvs.handhelds.org:/cvs login
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 CVS password: anoncvs
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ cvs -d :pserver:anoncvs@anoncvs.handhelds.org:/cvs co haret
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ cd haret
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ make
 \end_layout
@@ -5656,7 +5767,8 @@ al termine della compilazione, sarà stato generato il file
 out/haret.exe
 \noun default
 , pronto per essere usato come già detto nella sezione 
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "sub:Come-usare-Haret"
 
 \end_inset
@@ -5700,8 +5812,13 @@ Se non è già installato sarà sufficiente usare il package manager della
  distribuzione (YaST per OpenSuSE, Synaptic per Debian e derivate, installpkg
  per Slackware, eccetera); nella (improbabile) ipotesi che non sia disponibile,
  i sorgenti sono disponibili presso 
-\begin_inset LatexCommand htmlurl
-target "http://bellard.org/qemu/qemu-0.9.1.tar.gz"
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://bellard.org/qemu/qemu-0.9.1.tar.gz
+\end_layout
 
 \end_inset
 
@@ -5718,11 +5835,11 @@ lstparams "basicstyle={\tiny\ttfamily},breaklines=true,captionpos=tb,extendedcha
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 \begin_inset Caption
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Output di
 \noun on
  qemu
@@ -5735,485 +5852,485 @@ Output di
 $ qemu
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 QEMU PC emulator version 0.9.1, Copyright (c) 2003-2008 Fabrice Bellard
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 usage: qemu [options] [disk_image]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 'disk_image' is a raw hard image image for IDE hard disk 0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Standard options:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -M machine      select emulated machine (-M ? for list)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -cpu cpu        select CPU (-cpu ? for list)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -fda/-fdb file  use 'file' as floppy disk 0/1 image
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -hda/-hdb file  use 'file' as IDE hard disk 0/1 image
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -hdc/-hdd file  use 'file' as IDE hard disk 2/3 image
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -cdrom file     use 'file' as IDE cdrom image (cdrom is ide1 master)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -drive [file=file][,if=type][,bus=n][,unit=m][,media=d][index=i]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
        [,cyls=c,heads=h,secs=s[,trans=t]][snapshot=on|off]       [,cache=on|off]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 use 'file' as a drive image
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -mtdblock file  use 'file' as on-board Flash memory image
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -sd file        use 'file' as SecureDigital card image
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -pflash file    use 'file' as a parallel flash image
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -boot [a|c|d|n] boot on floppy (a), hard disk (c), CD-ROM (d), or network
  (n)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -snapshot       write to temporary files instead of disk image files
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -no-frame       open SDL window without a frame and window decorations
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -alt-grab       use Ctrl-Alt-Shift to grab mouse (instead of Ctrl-Alt)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -no-quit        disable SDL window close capability
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -no-fd-bootchk  disable boot signature checking for floppy disks
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -m megs         set virtual RAM size to megs MB [default=128]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -smp n          set the number of CPUs to 'n' [default=1]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -nographic      disable graphical output and redirect serial I/Os to console
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -portrait       rotate graphical output 90 deg left (only PXA LCD)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -k language     use keyboard layout (for example "fr" for French)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -audio-help     print list of audio drivers and their options
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -soundhw c1,...
  enable audio support
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 and only specified sound cards (comma separated list)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 use -soundhw ? to get the list of supported cards
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 use -soundhw all to enable all of them
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -localtime      set the real time clock to local time [default=utc]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -full-screen    start in full screen
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -win2k-hack     use it when installing Windows 2000 to avoid a disk full
  bug
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -usb            enable the USB driver (will be the default soon)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -usbdevice name add the host or guest USB device 'name'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -name string    set the name of the guest
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Network options:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -net nic[,vlan=n][,macaddr=addr][,model=type]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 create a new Network Interface Card and connect it to VLAN
  'n'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -net user[,vlan=n][,hostname=host]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 connect the user mode network stack to VLAN 'n' and send
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 hostname 'host' to DHCP clients
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -net tap[,vlan=n][,fd=h][,ifname=name][,script=file][,downscript=dfile]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 connect the host TAP network interface to VLAN 'n' and use
  the
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 network scripts 'file' (default=/etc/qemu-ifup)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 and 'dfile' (default=/etc/qemu-ifdown);
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 use '[down]script=no' to disable script execution;
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 use 'fd=h' to connect to an already opened TAP interface
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -net socket[,vlan=n][,fd=h][,listen=[host]:port][,connect=host:port]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 connect the vlan 'n' to another VLAN using a socket connection
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -net socket[,vlan=n][,fd=h][,mcast=maddr:port]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 connect the vlan 'n' to multicast maddr and port
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -net none       use it alone to have zero network devices; if no -net option
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 is provided, the default is '-net nic -net user'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -tftp dir       allow tftp access to files in dir [-net user]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -bootp file     advertise file in BOOTP replies
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -smb dir        allow SMB access to files in 'dir' [-net user]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -redir [tcp|udp]:host-port:[guest-host]:guest-port
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 redirect TCP or UDP connections from host to guest [-net
  user]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Linux boot specific:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -kernel bzImage use 'bzImage' as kernel image
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -append cmdline use 'cmdline' as kernel command line
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -initrd file    use 'file' as initial ram disk
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Debug/Expert options:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -monitor dev    redirect the monitor to char device 'dev'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -serial dev     redirect the serial port to char device 'dev'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -parallel dev   redirect the parallel port to char device 'dev'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -pidfile file   Write PID to 'file'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -S              freeze CPU at startup (use 'c' to start execution)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -s              wait gdb connection to port
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -p port         set gdb connection port [default=1234]
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -d item1,...
     output log to /tmp/qemu.log (use -d ? for a list of log items)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -hdachs c,h,s[,t]  force hard disk 0 physical geometry and the optional
  BIOS
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 translation (t=none or lba) (usually qemu can guess them)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -L path         set the directory for the BIOS, VGA BIOS and keymaps
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -kernel-kqemu   enable KQEMU full virtualization (default is user mode only)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -no-kqemu       disable KQEMU kernel module usage
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -std-vga        simulate a standard VGA card with VESA Bochs Extensions
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 (default is CL-GD5446 PCI VGA)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -no-acpi        disable ACPI
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -no-reboot      exit instead of rebooting
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -loadvm file    start right away with a saved state (loadvm in monitor)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -vnc display    start a VNC server on display
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -daemonize      daemonize QEMU after initializing
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -option-rom rom load a file, rom, into the option ROM space
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 -clock          force the use of the given methods for timer alarm.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
                 To see what timers are available use -clock help
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 During emulation, the following keys are useful:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ctrl-alt-f      toggle full screen
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ctrl-alt-n      switch to virtual console 'n'
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ctrl-alt        toggle mouse and keyboard grab
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 When using -nographic, press 'ctrl-a h' to get some help.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $
 \end_layout
@@ -6233,7 +6350,8 @@ Per poter emulare anche il chip Samsung
  custom
 \emph default
  modificata e manutenuta dagli sviluppatori del progetto openmoko
-\begin_inset LatexCommand citep
+\begin_inset CommandInset citation
+LatexCommand citep
 key "openmoko_under_qemu"
 
 \end_inset
@@ -6247,8 +6365,13 @@ Per migliorare le prestazioni di qemu è possibile installare anche
 kqemu
 \emph default
 , un modulo kernel scritto per velocizzare l'emulazione di x86 su x86 
-\begin_inset LatexCommand url
-target "http://bellard.org/qemu/download.html"
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://bellard.org/qemu/download.html
+\end_layout
 
 \end_inset
 
@@ -6288,7 +6411,7 @@ lstparams "breaklines=true,extendedchars=true,showstringspaces=false"
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ qemu -cdrom image.iso -hda /dev/sda1 -m 128 -boot d
 \end_layout
@@ -6327,7 +6450,7 @@ lstparams "breaklines=true,extendedchars=true,showstringspaces=false"
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ qemu-system-arm -M versatileab -kernel zImage -nographic -m 126 -hda hd0.img
 \end_layout
@@ -6347,62 +6470,62 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ cd /usr/bin
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ ls qemu-*
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 qemu-alpha  qemu-ppc          qemu-system-cris      qemu-system-ppcemb
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 qemu-arm    qemu-ppc64        qemu-system-i386      qemu-system-sh4
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 qemu-armeb  qemu-ppc64abi32   qemu-system-m68k      qemu-system-sh4eb
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 qemu-cris   qemu-sh4          qemu-system-mips      qemu-system-sparc
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 qemu-i386   qemu-sh4eb        qemu-system-mips64    qemu-system-x86_64
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 qemu-img    qemu-sparc        qemu-system-mips64el  qemu-system-z80
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 qemu-m68k   qemu-sparc32plus  qemu-system-mipsel    qemu-x86_64
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 qemu-mips   qemu-sparc64      qemu-system-ppc
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 qemu-mipsel qemu-system-arm   qemu-system-ppc64
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ 
 \end_layout
@@ -6426,83 +6549,83 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ qemu-system-arm -M ?
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Supported machines are:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 integratorcp ARM Integrator/CP (ARM926EJ-S) (default)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 versatilepb ARM Versatile/PB (ARM926EJ-S)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 versatileab ARM Versatile/AB (ARM926EJ-S)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 realview   ARM RealView Emulation Baseboard (ARM926EJ-S)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 akita      Akita PDA (PXA270)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 spitz      Spitz PDA (PXA270)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 borzoi     Borzoi PDA (PXA270)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 terrier    Terrier PDA (PXA270)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 cheetah    Palm Tungsten|E aka.
  Cheetah PDA (OMAP310)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 lm3s811evb Stellaris LM3S811EVB
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 lm3s6965evb Stellaris LM3S6965EVB
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 connex     Gumstix Connex (PXA255)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 verdex     Gumstix Verdex (PXA270)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 mainstone  Mainstone II (PXA27x)
 \end_layout
@@ -6522,117 +6645,117 @@ lstparams "basicstyle={\scriptsize\ttfamily},breaklines=true,extendedchars=true,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ qemu-system-arm -cpu ?
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 Available CPUs:
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   arm926
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   arm946
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   arm1026
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   arm1136
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   arm11mpcore
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   cortex-m3
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   cortex-a8
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   ti925t
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa250
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa255
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa260
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa261
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa262
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa270
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa270-a0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa270-a1
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa270-b0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa270-b1
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa270-c0
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   pxa270-c5
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
   any
 \end_layout
@@ -6651,7 +6774,8 @@ To do
 \end_layout
 
 \begin_layout Chapter
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "cha:Debugger"
 
 \end_inset
@@ -6683,9 +6807,9 @@ stderr
 \begin_layout Standard
 Per questo motivo abbiamo considerato l'idea di usare un debugger.
  Per poterla applicare, però, avremmo avuto bisogno di un eseguibile per
- il sistema operativo Windows Mobile® che si integrasse con Haret (vedi
- capitolo
-\begin_inset LatexCommand ref
+ il sistema operativo Windows Mobile che si integrasse con Haret (vedi capitolo
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "cha:Haret"
 
 \end_inset
@@ -6747,14 +6871,16 @@ Al contrario, vi sono una serie di cartelle per raggruppare l'implementazione
 ARM
 \noun default
  è diverso dal modello di sviluppo intel
-\begin_inset LatexCommand citep
+\begin_inset CommandInset citation
+LatexCommand citep
 key "arm_intel_mobile"
 
 \end_inset
 
 .
  Come si è visto nel capitolo 
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "cha:Avvio"
 
 \end_inset
@@ -6812,27 +6938,27 @@ lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=fal
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ wget http://ftp.gnu.org/gnu/gdb/gdb-6.8.tar.gz
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ tar xzf gdb-6.8.tar.gz
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ cd gdb-6.8
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ ./configure --target=arm-linux
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ make && su -c "make install"
 \end_layout
@@ -6902,7 +7028,7 @@ wide false
 sideways false
 status open
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \align center
 \begin_inset Graphics
 	filename remote_debugging.pdf
@@ -6914,10 +7040,10 @@ status open
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Caption
 
-\begin_layout Standard
+\begin_layout Plain Layout
 Schema di funzionamento di gdb con qemu
 \end_layout
 
@@ -6963,7 +7089,7 @@ lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=fal
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ qemu-system-arm ...
  -S -s
@@ -6985,7 +7111,7 @@ lstparams "breaklines=true,extendedchars=true,language=bash,showstringspaces=fal
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 $ arm-linux-gdbtui vmlinux
 \end_layout
@@ -7013,7 +7139,7 @@ La prima cosa da fare è effettuare la connessione ad una sessione remota,
 inline false
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 target remote :1234
 \end_layout
@@ -7030,7 +7156,8 @@ che indica a gdb di collegarsi a localhost (indirizzo implicito) usando
 
 \begin_layout Standard
 Nell'appendice 
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "cha:Comandi-principali-gdb"
 
 \end_inset
@@ -7040,7 +7167,8 @@ reference "cha:Comandi-principali-gdb"
 
 \begin_layout Chapter
 \start_of_appendix
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "cha:Assembly-per-ARM"
 
 \end_inset
@@ -7050,7 +7178,8 @@ Assembly per ARM
 
 \begin_layout Standard
 Tratto da 
-\begin_inset LatexCommand citep
+\begin_inset CommandInset citation
+LatexCommand citep
 key "assembler_intro"
 
 \end_inset
@@ -7068,7 +7197,8 @@ lr last register (ultimo registro).
  vengono memorizzati i riferimenti al codice a cui si vuol ritornare dopo
  una chiamata ad un sottoprogramma.
  Ad esempio vedere righe 101 e 102 di 
-\begin_inset LatexCommand ref
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "sub:Boot"
 
 \end_inset
@@ -7110,7 +7240,8 @@ blo decompress_kernel
 \end_layout
 
 \begin_layout Chapter
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "cha:Comandi-principali-gdb"
 
 \end_inset
@@ -7120,7 +7251,8 @@ Comandi principali gdb
 
 \begin_layout Standard
 Tratto da 
-\begin_inset LatexCommand citep
+\begin_inset CommandInset citation
+LatexCommand citep
 key "gdb_intro"
 
 \end_inset
@@ -7129,7 +7261,10 @@ key "gdb_intro"
 \end_layout
 
 \begin_layout Description
-h\InsetSpace ~
+h
+\begin_inset space ~
+\end_inset
+
 [
 \emph on
 comando
@@ -7146,7 +7281,10 @@ target connette gdb ad un processo o ad una sessione remota già in esecuzione
 \end_layout
 
 \begin_layout Description
-b\InsetSpace ~
+b
+\begin_inset space ~
+\end_inset
+
 [
 \emph on
 nome_file
@@ -7159,7 +7297,10 @@ numero_riga
 \end_layout
 
 \begin_layout Description
-b\InsetSpace ~
+b
+\begin_inset space ~
+\end_inset
+
 
 \emph on
 funzione
@@ -7168,7 +7309,10 @@ funzione
 \end_layout
 
 \begin_layout Description
-d\InsetSpace ~
+d
+\begin_inset space ~
+\end_inset
+
 
 \emph on
 numero
@@ -7179,7 +7323,10 @@ numero
 \end_layout
 
 \begin_layout Description
-run\InsetSpace ~
+run
+\begin_inset space ~
+\end_inset
+
 [
 \emph on
 parametri
@@ -7196,7 +7343,10 @@ breakpoint
 \end_layout
 
 \begin_layout Description
-u\InsetSpace ~
+u
+\begin_inset space ~
+\end_inset
+
 [
 \emph on
 nome_file
@@ -7228,7 +7378,10 @@ ni come n, ma attraverso le istruzioni definite in assembly
 \end_layout
 
 \begin_layout Description
-p\InsetSpace ~
+p
+\begin_inset space ~
+\end_inset
+
 
 \emph on
 espressione
@@ -7238,7 +7391,10 @@ espressione
 \end_layout
 
 \begin_layout Description
-i\InsetSpace ~
+i
+\begin_inset space ~
+\end_inset
+
 [
 \emph on
 sottocomando
@@ -7248,24 +7404,34 @@ sottocomando
 
 \begin_deeper
 \begin_layout Description
-i\InsetSpace ~
+i
+\begin_inset space ~
+\end_inset
+
 lo informazioni sulle variabili locali
 \end_layout
 
 \begin_layout Description
-i\InsetSpace ~
+i
+\begin_inset space ~
+\end_inset
+
 s informazioni sullo stack
 \end_layout
 
 \begin_layout Description
-i\InsetSpace ~
+i
+\begin_inset space ~
+\end_inset
+
 r informazioni sui registri
 \end_layout
 
 \end_deeper
 \begin_layout Chapter
 Licenza per la documentazione libera GNU
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "cha:Licenza-per-la"
 
 \end_inset
@@ -7284,7 +7450,8 @@ Questo documento è distribuito secondo i termini della licenza GNU Free
 \noindent
 
 \lang english
-\begin_inset LatexCommand label
+\begin_inset CommandInset label
+LatexCommand label
 name "sec:GNU-Free-Documentation"
 
 \end_inset
@@ -7793,7 +7960,10 @@ You may copy and distribute the Document in any medium, either commercially
  further copying of the copies you make or distribute.
  However, you may accept compensation in exchange for copies.
  If you distribute a large enough number of copies you must also follow
- the conditions in section\InsetSpace ~
+ the conditions in section
+\begin_inset space ~
+\end_inset
+
 3.
 \end_layout
 
@@ -7914,7 +8084,7 @@ You may copy and distribute a Modified Version of the Document under the
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -7925,7 +8095,7 @@ A.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -7948,7 +8118,7 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -7959,7 +8129,7 @@ B.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -7982,7 +8152,7 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -7993,7 +8163,7 @@ C.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8013,7 +8183,7 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8024,7 +8194,7 @@ D.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8043,7 +8213,7 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8054,7 +8224,7 @@ E.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8074,7 +8244,7 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8085,7 +8255,7 @@ F.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8106,7 +8276,7 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8117,7 +8287,7 @@ G.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8137,7 +8307,7 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8148,7 +8318,7 @@ H.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8167,7 +8337,7 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8178,7 +8348,7 @@ I.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8218,7 +8388,7 @@ History
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8229,7 +8399,7 @@ J.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8262,7 +8432,7 @@ History
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8273,7 +8443,7 @@ K.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8310,7 +8480,7 @@ ns given therein.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8321,7 +8491,7 @@ L.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8343,7 +8513,7 @@ status collapsed
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8354,7 +8524,7 @@ M.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8382,7 +8552,7 @@ Endorsements
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8393,7 +8563,7 @@ N.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8420,7 +8590,7 @@ Endorsements
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 [
 \end_layout
@@ -8431,7 +8601,7 @@ O.
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 ]
 \end_layout
@@ -8523,12 +8693,14 @@ nt of any Modified Version.
 \size footnotesize
 \lang english
 You may combine the Document with other documents released under this License,
- under the terms defined in section\InsetSpace ~
-4 above for modified versions, provided
- that you include in the combination all of the Invariant Sections of all
- of the original documents, unmodified, and list them all as Invariant Sections
- of your combined work in its license notice, and that you preserve all
- their Warranty Disclaimers.
+ under the terms defined in section
+\begin_inset space ~
+\end_inset
+
+4 above for modified versions, provided that you include in the combination
+ all of the Invariant Sections of all of the original documents, unmodified,
+ and list them all as Invariant Sections of your combined work in its license
+ notice, and that you preserve all their Warranty Disclaimers.
 \end_layout
 
 \begin_layout Standard
@@ -8674,12 +8846,15 @@ aggregate
 
 \size footnotesize
 \lang english
-If the Cover Text requirement of section\InsetSpace ~
-3 is applicable to these copies
- of the Document, then if the Document is less than one half of the entire
- aggregate, the Document's Cover Texts may be placed on covers that bracket
- the Document within the aggregate, or the electronic equivalent of covers
- if the Document is in electronic form.
+If the Cover Text requirement of section
+\begin_inset space ~
+\end_inset
+
+3 is applicable to these copies of the Document, then if the Document is
+ less than one half of the entire aggregate, the Document's Cover Texts
+ may be placed on covers that bracket the Document within the aggregate,
+ or the electronic equivalent of covers if the Document is in electronic
+ form.
  Otherwise they must appear on printed covers that bracket the whole aggregate.
 \end_layout
 
@@ -8701,7 +8876,10 @@ If the Cover Text requirement of section\InsetSpace ~
 \size footnotesize
 \lang english
 Translation is considered a kind of modification, so you may distribute
- translations of the Document under the terms of section\InsetSpace ~
+ translations of the Document under the terms of section
+\begin_inset space ~
+\end_inset
+
 4.
  Replacing Invariant Sections with translations requires special permission
  from their copyright holders, but you may include translations of some
@@ -8745,10 +8923,15 @@ History
 \begin_inset Quotes erd
 \end_inset
 
-, the requirement (section\InsetSpace ~
-4) to Preserve its Title (section\InsetSpace ~
-1) will typically
- require changing the actual title.
+, the requirement (section
+\begin_inset space ~
+\end_inset
+
+4) to Preserve its Title (section
+\begin_inset space ~
+\end_inset
+
+1) will typically require changing the actual title.
 \end_layout
 
 \begin_layout Section*
@@ -8908,7 +9091,7 @@ with
 \begin_inset ERT
 status collapsed
 
-\begin_layout Standard
+\begin_layout Plain Layout
 
 
 \backslash
@@ -8917,7 +9100,10 @@ dots
 
 \end_inset
 
-\InsetSpace \space{}
+
+\begin_inset space \space{}
+\end_inset
+
 Texts.
 \begin_inset Quotes erd
 \end_inset
@@ -8983,7 +9169,8 @@ If your document contains nontrivial examples of program code, we recommend
 \end_layout
 
 \begin_layout Standard
-\begin_inset LatexCommand printnomenclature
+\begin_inset CommandInset nomencl_print
+LatexCommand printnomenclature
 
 \end_inset
 
@@ -8991,9 +9178,10 @@ If your document contains nontrivial examples of program code, we recommend
 \end_layout
 
 \begin_layout Standard
-\begin_inset LatexCommand bibtex
-options "bibtotoc,alpha"
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
 bibfiles "web-o-grafia"
+options "bibtotoc,alpha"
 
 \end_inset
 
