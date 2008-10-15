@@ -33,8 +33,29 @@ static ssize_t stacktrace_fs_read(struct file* f, char __user* buf,
     return count ;
 }
 
+// static ssize_t hixosfs_write(struct file* f, const char __user* buf,
+//         size_t count, loff_t* ppos) {
+//     struct dentry* de = F->f_dentry;
+//     struct inode* i = de->d_inode;
+//     struct super_block* sb = i->i_sb;
+//     struct buffer_head* bh;
+//     struct stacktrace_fs_block* stackblock;
+//     if (*ppos != 0)
+//         return 0;
+//     bh = sb_write(sb, i->i_ino);
+//     if (!bh)
+//         return -ENOMEM;
+//     stackblock = (struct stacktrace_fs_block *) bh->b_data;
+//     memcpy(buf, stackblock->filedata, STACKTRACE_MAX_FILESIZE);
+//     brelse(bh);
+//     /* incremento la posizione per il seeking */
+//     *ppos = (loff_t) STACKTRACE_MAX_FILESIZE-1 ;
+//     return count;
+// }
+
 static const struct file_operations stacktrace_fs_file_ops = {
     .read = stacktrace_fs_read,
+//     .write = hixosfs_write,
 };
 
 static struct dentry* stacktrace_fs_lookup(struct inode* i,
@@ -123,7 +144,7 @@ static int stacktrace_sb_fill(struct super_block* sb, void* data, int silent) {
     bh = sb_bread(sb, 0);
     if (!bh)
         return -ENOMEM;
-    if (strncmp(bh->b_data, "stacktrace_fs",13)) {
+    if (strncmp(bh->b_data, "HiXoS_FS", 13)) {
         printk("not a valid stacktrace_fs filesystem !!!\n") ;
         brelse(bh);
         return -EINVAL;
@@ -147,41 +168,31 @@ static int stacktrace_sb_fill(struct super_block* sb, void* data, int silent) {
 }
 
 
-int stacktrace_fs_get_sb(struct file_system_type *fs_type,
-        int flags, const char *dev_name, void *data, struct vfsmount *mnt)
-{
-        return get_sb_bdev(fs_type, flags, dev_name, data, stacktrace_sb_fill, mnt);
+int stacktrace_fs_get_sb(struct file_system_type *fs_type, int flags,
+        const char *dev_name, void *data, struct vfsmount *mnt) {
+    return get_sb_bdev(fs_type, flags, dev_name, data, stacktrace_sb_fill, mnt);
 }
 
-
-
-
-
-
-
 static struct file_system_type stacktrace_fs_type = {
-        .name           = "stacktrace_fs",
-        .get_sb         = stacktrace_fs_get_sb,
-        .kill_sb        = kill_block_super,
-        .fs_flags       = FS_REQUIRES_DEV,
-        .owner          = THIS_MODULE,
+    .name = "hixosfs",
+    .get_sb = stacktrace_fs_get_sb,
+    .kill_sb = kill_block_super,
+    .fs_flags = FS_REQUIRES_DEV,
+    .owner = THIS_MODULE,
 };
 
-
-
 static int __init init_stacktrace(void) {
-        printk("inizializzo modulo stacktrace...\n") ;
-        return register_filesystem(&stacktrace_fs_type);
+    printk("inizializzo modulo stacktrace...\n") ;
+    return register_filesystem(&stacktrace_fs_type);
 }
 
 static void __exit free_stacktrace(void) {
-        printk("libero il modulo stacktrace...\n") ;
-        unregister_filesystem(&stacktrace_fs_type);
+    printk("libero il modulo stacktrace...\n") ;
+    unregister_filesystem(&stacktrace_fs_type);
 }
 
-
-MODULE_DESCRIPTION("Una breve descrizione del modulo");
-MODULE_AUTHOR("StackTrace <info@stacktrace.it>");
+MODULE_DESCRIPTION("HiXoS FS - Fs versionato - versione 0.0.1-pre-alpha");
+MODULE_AUTHOR("Vito De Tullio <vito.detullio@gmail.com");
 MODULE_LICENSE("GPL");
 
 module_init(init_stacktrace);
