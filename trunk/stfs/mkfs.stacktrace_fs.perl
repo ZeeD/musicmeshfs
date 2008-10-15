@@ -1,6 +1,8 @@
-my $sb = 'stacktrace_fs' ;
-for(my $i =13;$i<512;$i++) {
-        $sb.= "\0" ;
+#!/usr/bin/env perl
+
+my $sb = 'stacktrace_fs';
+for (my $i=13; $i<512; $i++) {
+        $sb .= "\0" ;
 }
 
 my $file1 = "pippo\0\0\0\0\0\0\0\0\0\0\0" ;
