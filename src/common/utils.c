@@ -501,9 +501,12 @@ char* strmalloccat(char* str1, const char* str2) {
     \sa fprintf(), vfprintf()
  */
 int errprintf(char* fmt, ...) {
+    int ret = fprintf(stderr, "ERROR: ");
+    if (ret<0)
+        return ret;
     va_list ap;
     va_start(ap, fmt);
-    int ret = vfprintf(stderr, fmt, ap);
+    ret += vfprintf(stderr, fmt, ap);
     va_end(ap);
     return ret;
 }
