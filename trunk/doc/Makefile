@@ -1,5 +1,5 @@
 TESI = Tesi.lyx
-DIA_FILES = imgs/DiagrammaER.dia  imgs/Scanner.dia  imgs/SchemaLinguaggio.dia imgs/Rete.dia imgs/Architettura.dia
+DIA_FILES = imgs/DiagrammaER.dia  imgs/Scanner.dia  imgs/SchemaLinguaggio.dia imgs/Rete.dia imgs/Architettura.dia imgs/Tabelle.dia imgs/FSM_fisso.dia
 
 doc: ../Doxyfile $(DIA_FILES:.dia=.eps)
 	ln -s doxy/{struct,sqlite,inotify,utils,commons,fuse__utils,musicmeshfsd,musicmeshfsc,table__view__fuse,constants}*pdf . ; true

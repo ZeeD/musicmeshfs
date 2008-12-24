@@ -4,7 +4,7 @@ LDFLAGS = `pkg-config --libs sqlite3` -ltag_c
 parser: ../common/utils.o ../musicmeshfsc/configurazione.o
 	$(MAKE) $(CFLAGS) $(LDFLAGS) -DDEBUG ../common/utils.o ../musicmeshfsc/configurazione.o parser.c -o parser
 
-argp: ../common/sqlite.o ../common/utils.o parser.o ../musicmeshfsc/configurazione.o
+argp: ../common/sqlite.o ../common/utils.o parser.o ../musicmeshfsc/configurazione.o DAMN_C_MACROS.h
 
 ../common/sqlite.o:
 	$(MAKE) -C ../common sqlite.o
@@ -15,5 +15,10 @@ argp: ../common/sqlite.o ../common/utils.o parser.o ../musicmeshfsc/configurazio
 ../musicmeshfsc/configurazione.o:
 	$(MAKE) -C ../musicmeshfsc configurazione.o
 
+DAMN_C_MACROS.h: mk_DAMN_C_MACROS
+	./mk_DAMN_C_MACROS DAMN_C_MACROS.h
+
+mk_DAMN_C_MACROS: ../musicmeshfsc/configurazione.o
+
 clean:
-	rm -rf *.o *~ argp
+	rm -rf *.o *~ argp mk_DAMN_C_MACROS DAMN_C_MACROS.h
