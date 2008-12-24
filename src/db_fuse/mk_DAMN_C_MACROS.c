@@ -11,8 +11,12 @@ const char* headers[] = {
 
 int main(int argc, char* argv[]) {
     FILE* stream;
-    if (argc > 1)
-        stream = fopen(argv[1], "w");
+    if (argc > 1) {
+        if (!(stream=fopen(argv[1], "w"))) {
+            perror(argv[0]);
+            return -1;
+        }
+    }
     else
         stream = stdout;
     fprintf(stream, "/* this file is auto-generated, don't modify it! */\n");
