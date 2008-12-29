@@ -17,17 +17,17 @@
     along with MusicMeshFSd.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../common/utils.h"     /* errprintf(), dynamic_str_t, init_str(),
-        append_str() */
-#include <stdlib.h>  /* exit(), EXIT_FAILURE */
-#include "commons.h" /* inotify_t, new_inotify_t(), sqlite3, crea_db_vuoto(),
-        init_db_and_inotify(), free_str(), local_loop() */
-#include <stdio.h>   /* perror() */
+#include <stdlib.h>          /* exit(), EXIT_FAILURE */
+#include <stdio.h>           /* perror() */
+#include <err.h>             /* warn() */
+#include "commons.h"         /* inotify_t, new_inotify_t(), sqlite3,
+        crea_db_vuoto(), init_db_and_inotify(), free_str(), local_loop() */
+#include "../common/utils.h" /* dynamic_str_t, init_str(), append_str() */
 
 int main(int argc, char** argv) {
     // basico controllo dei parametri
     if (argc < 2) {
-        errprintf("USO: `%s DATABASE [FILES_DA_MONITORARE]'\n", argv[0]);
+        warn("USO: `%s DATABASE [FILES_DA_MONITORARE]'\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 

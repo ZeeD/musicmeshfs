@@ -22,6 +22,7 @@
 
 #include <stdlib.h>  /* malloc(), realloc(), calloc() */
 #include <string.h>  /* strncmp(), strncpy() */
+#include <err.h>     /* warn() */
 #include "../common/utils.h"   /* dynamic_obj_t */
 
 extern const int IS_A_DIR;

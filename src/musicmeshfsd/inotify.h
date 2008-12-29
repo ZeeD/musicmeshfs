@@ -24,6 +24,7 @@
         struct inotify_event,  */
 #include <stdio.h>           /* perror() */
 #include <string.h>          /* strcat, strlen */
+#include <err.h>             /* warn() */
 #include "../common/utils.h" /* dynamic_str_t */
 
 /**
@@ -40,9 +41,9 @@ typedef struct {
     dynamic_str_t files;
 } inotify_t;
 
-const unsigned int MAX_BUFFER_LEN;
+static const unsigned int MAX_BUFFER_LEN;
 
-inotify_t new_inotify_t();
+inotify_t new_inotify_t(void);
 
 char* watch_fd_to_file(int, inotify_t);
 int file_to_watch_fd(char*, inotify_t);

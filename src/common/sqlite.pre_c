@@ -46,7 +46,7 @@ sqlite3* crea_db_vuoto(char* db_file) {
     char* schema = "TRANSLATE_ME_PLEASE";   // sostituisci.py (anche "schema"!)
     sqlite3* db;
     if (sqlite3_open(db_file, &db) != SQLITE_OK) {
-        errprintf("sqlite3_open: `%s'\n", sqlite3_errmsg(db));
+        warn("sqlite3_open: `%s'\n", sqlite3_errmsg(db));
         sqlite3_close(db);
     }
     else
@@ -106,7 +106,7 @@ int callback_print(void* non_usato, int argc, char** argv, char**
     \return il valore di sqlite3_exec()
     \sa sqlite3_exec(), callback_print()
 */
-int esegui_query(sqlite3* db, char* query, ...) {
+int esegui_query(sqlite3* db, const char* query, ...) {
     va_list ap;
     va_start(ap, query);
     char* quoted_query = sqlite3_vmprintf(query, ap);
@@ -115,14 +115,14 @@ int esegui_query(sqlite3* db, char* query, ...) {
     int r = sqlite3_exec(db, quoted_query, callback_print, NULL, &errmsg);
     sqlite3_free(quoted_query);
     if (errmsg) {
-        errprintf("esegui_query: `%s'\n", errmsg);
+        warn("esegui_query: `%s'\n", errmsg);
         sqlite3_free(errmsg);
     }
     return r;
 }
 
 int esegui_query_callback(sqlite3* db, int(*callback)(void*, int, char**,
-            char**), void* callback_par, char* query, ...) {
+            char**), void* callback_par, const char* query, ...) {
     va_list ap;
     va_start(ap, query);     /* inizializzo ap col primo valore successivo a
                                 query, se ce ne sono */
@@ -132,7 +132,7 @@ int esegui_query_callback(sqlite3* db, int(*callback)(void*, int, char**,
     int r = sqlite3_exec(db, quoted_query, callback, callback_par, &errmsg);
     sqlite3_free(quoted_query);
     if (errmsg) {
-        errprintf("esegui_query_callback: `%s'\n", errmsg);
+        warn("esegui_query_callback: `%s'\n", errmsg);
         sqlite3_free(errmsg);
     }
     return r;
@@ -158,7 +158,7 @@ int esegui_query_callback(sqlite3* db, int(*callback)(void*, int, char**,
     \sa init_db(), esegui_query(), preprocessing()
 */
 int add_local_file_in_db(void* db, const char* path) {
-    errprintf("[add_local_file_in_db] path = `%s'\n", path);
+    warn("[add_local_file_in_db] path = `%s'\n", path);
     TagLib_File* tlf = taglib_file_new(path);
     if (!tlf)
         return -1;
@@ -205,7 +205,7 @@ int add_local_file_in_db(void* db, const char* path) {
     \sa add_local_file_in_db()
 */
 int del_local_file_from_db(void* db, char* path) {
-    errprintf("[del_local_file_from_db] path = `%s'\n", path);
+    warn("[del_local_file_from_db] path = `%s'\n", path);
     dynamic_obj_t musica;
     init_obj(&musica);
     if (esegui_query_callback(db, get_columns, &musica, "SELECT titolo,"

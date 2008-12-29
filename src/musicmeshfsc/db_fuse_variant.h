@@ -23,6 +23,7 @@
 #include "../common/utils.h"    /* dynamic_str_t */
 #include "../common/sqlite.h"   /* sqlite3 */
 
+int get_size(sqlite3*,  dynamic_obj_t, dynamic_obj_t, dynamic_obj_t);
 dynamic_str_t get_local_paths(sqlite3*, dynamic_obj_t, dynamic_obj_t, dynamic_obj_t);
 int is_local_file(sqlite3*, dynamic_obj_t, dynamic_obj_t, dynamic_obj_t);
 int rename_local_file(void*, dynamic_obj_t, dynamic_obj_t, dynamic_obj_t, dynamic_obj_t);

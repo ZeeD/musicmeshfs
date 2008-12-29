@@ -33,14 +33,15 @@
                         taglib_tag_set_year, taglib_tag_set_track,
                         taglib_tag_free_strings, taglib_file_free */
 #include <string.h>  /* strcmp() */
+#include <err.h>     /* warn() */
 #include "utils.h"   /* dynamic_obj_t */
 
 int path_is_a_db(const char*);
 sqlite3* crea_db_vuoto(char*);
 int callback_print(void*, int, char**, char**);
-int esegui_query(sqlite3*, char*, ...);
+int esegui_query(sqlite3*, const char*, ...);
 int esegui_query_callback(sqlite3*, int(*callback)(void*, int, char**, char**),
-        void*, char*, ...);
+        void*, const char*, ...);
 
 int add_local_file_in_db(void*, const char*);
 int del_local_file_from_db(void*, char*);

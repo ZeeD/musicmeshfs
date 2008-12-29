@@ -299,9 +299,11 @@ int parse_path(const char* path, dynamic_obj_t fissi, dynamic_obj_t keywords,
 }
 
 #ifndef DEBUG
-int _main() {
+int _main(void);
+
+int _main(void) {
 #else
-int main() {
+int main(void) {
 #endif
     const char* schema = "%%eyar - %title.%type";
 //     const char* path[] = { "/", "/Born to be Abramo (ciao).mp3", "/.directory", NULL };
@@ -312,16 +314,16 @@ int main() {
 //     dynamic_obj_t dinamici;
 //     int ret;
 //     for (int jj=0; path[jj]; jj++) {
-//         errprintf("parse_path(`%s') = ", path[jj]);
+//         ("parse_path(`%s') = ", path[jj]);
 //         ret = parse_path(path[jj], fissi, keywords, &dinamici);
-//         errprintf("`%s'\tdinamici.size = %d\n",
+//         warn("`%s'\tdinamici.size = %d\n",
 //                 ret == -1 ? "-1" : ret == IS_A_FILE ? "IS_A_FILE" : "IS_A_DIR",
 //                 dinamici.size);
 //         for (int i=0; i<dinamici.size; i++) {
 //             dbgprint_str(*(dynamic_str_t*)fissi.buf[i], "fissi[i]");
 //             dbgprint_str(*(dynamic_str_t*)keywords.buf[i], "keywords[i]");
 //             dbgprint_str(*(dynamic_str_t*)dinamici.buf[i], "dinamici[i]");
-//             errprintf("\n");
+//             warn("\n");
 //         }
 //     }
     return EXIT_SUCCESS;

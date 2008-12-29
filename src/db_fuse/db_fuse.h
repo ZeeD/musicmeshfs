@@ -26,6 +26,7 @@
 #include <errno.h>           /* errno */
 #include <unistd.h>          /* pread() */
 #include <sqlite3.h>         /* sqlite3 */
+#include <err.h>             /* warn() */
 #include "../common/utils.h" /* dynamic_obj_t */
 
 int db_fuse_readdir(const char*, void*, fuse_fill_dir_t, off_t, struct
