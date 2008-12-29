@@ -17,13 +17,13 @@
     along with MusicMeshFSc.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../common/utils.h"     /* errprintf(), dynamic_obj_t, init_obj(),
-                                    append_obj() */
 #include <stdlib.h>              /* exit(), EXIT_FAILURE */
 #include <signal.h>              /* signal, SIGINT */
-#include "../db_fuse/parser.h"   /* parse_schema() */
 #include <sqlite3.h>             /* sqlite3, sqlite3_open(), SQLITE_OK,
                                     sqlite3_errmsg(), sqlite3_close() */
+#include <err.h>                 /* err(), warn() */
+#include "../common/utils.h"     /* dynamic_obj_t, init_obj(), append_obj() */
+#include "../db_fuse/parser.h"   /* parse_schema() */
 #include "../db_fuse/db_fuse.h"  /* struct fuse_operations, db_fuse_getattr(),
         db_fuse_rename(), db_fuse_chmod(), db_fuse_read(),  db_fuse_readdir(),
         db_fuse_open(), db_fuse_release(), struct fuse_args, FUSE_ARGS_INIT,
@@ -33,39 +33,35 @@
 struct fuse_args args;
 struct fuse_chan* ch;
 char* mountpoint;
-int err = -1;
+int err_value = -1;
 
-void chiudi_fuse_prima_di_morire() {
+void chiudi_fuse_prima_di_morire(int) __attribute__ ((noreturn));
+
+void chiudi_fuse_prima_di_morire(int unused) {
+    unused = unused;
     fuse_unmount(mountpoint, ch);
     fuse_opt_free_args(&args);
-    exit(err ? EXIT_FAILURE : EXIT_SUCCESS);
+    exit(err_value ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 int main(int argc, char** argv) {
-    if (argc != 4) {
-        errprintf("USO: `%s DATABASE PATH MOUNT_SCHEMA'\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
+    if (argc != 4)
+        err(EXIT_FAILURE, "USO: `%s DATABASE PATH MOUNT_SCHEMA'\n", argv[0]);
     struct stat tmp;
-    if (stat(argv[1], &tmp) != 0) {
-        errprintf("ERR: DATABASE `%s' non esistente!\n", argv[1]);
-        exit(EXIT_FAILURE);
-    }
-    if (stat(argv[2], &tmp) != 0) {
-        errprintf("ERR: PATH `%s' non esistente!\n", argv[2]);
-        exit(EXIT_FAILURE);
-    }
+    if (stat(argv[1], &tmp) != 0)
+        err(EXIT_FAILURE, "ERR: DATABASE `%s' non esistente!\n", argv[1]);
+    if (stat(argv[2], &tmp) != 0)
+        err(EXIT_FAILURE, "ERR: PATH `%s' non esistente!\n", argv[2]);
     dynamic_obj_t fissi, keywords;
     init_obj(&fissi);
     init_obj(&keywords);
-    if (parse_schema(argv[3], &fissi, &keywords) != 0) {
-        errprintf("ERR: MOUNT_SCHEMA `%s' non valido!\n", argv[3]);
-        exit(EXIT_FAILURE);
-    }
-    signal(SIGINT, chiudi_fuse_prima_di_morire);
+    if (parse_schema(argv[3], &fissi, &keywords) != 0)
+        err(EXIT_FAILURE, "ERR: MOUNT_SCHEMA `%s' non valido!\n", argv[3]);
+    struct sigaction s = { .sa_handler = chiudi_fuse_prima_di_morire };
+    sigaction(SIGINT, &s, NULL);
     sqlite3* db;
     if (sqlite3_open(argv[1], &db) != SQLITE_OK) {
-        errprintf("sqlite3_open: `%s'\n", sqlite3_errmsg(db));
+        warn("sqlite3_open: `%s'\n", sqlite3_errmsg(db));
         sqlite3_close(db);
     }
     else {
@@ -92,7 +88,7 @@ int main(int argc, char** argv) {
             struct fuse* se;
             if ((se = fuse_new(ch, &args, &musicmeshfs_op,
                     sizeof musicmeshfs_op, &parametro)) != NULL)
-                err = fuse_loop(se);
+                err_value = fuse_loop(se);
         }
     }
 }

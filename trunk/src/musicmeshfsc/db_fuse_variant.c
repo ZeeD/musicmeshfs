@@ -103,7 +103,6 @@ dynamic_str_t get_local_paths(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t
     for (int i=0; i<where.size; i++)
         query = strmalloccat(strmalloccat(query, " AND\n\t"), where.buf[i]);
 
-//     errprintf("get_local_path) query = `%s'\n", query);
     esegui_query_callback(db, get_one_column, &ret, query);
     free(query);
     return ret;
@@ -128,30 +127,6 @@ int is_local_file(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
     (void) dinamici;
     return 1;
 }
-/*
-void set_local_file(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
-        dynamic_obj_t dinamici_from, dynamic_obj_t dinamici_to) {
-    dynamic_str_t chiavi_taglib;
-    init_str(&chiavi_taglib);
-    append_str(&chiavi_taglib, "artist");
-    append_str(&chiavi_taglib, "title");
-    append_str(&chiavi_taglib, "album");
-    append_str(&chiavi_taglib, "track");
-    append_str(&chiavi_taglib, "genre");
-    append_str(&chiavi_taglib, "year");
-    for (int i=0; i<dinamici_from.size; i++) {
-        for (int j=0; j<((dynamic_str_t*)dinamici_from.buf[i])->size; j++) {
-            char* keyword = ((dynamic_str_t*)keywords.buf[i])->buf[j];
-            char* value_to = ((dynamic_str_t*)dinamici_to.buf[i])->buf[j];
-            if (contains_str(chiavi_taglib, keyword))
-                rename_local_file(get_local_path(db, fissi, keywords, dinamici_from), keyword, value_to);
-            else {
-                // TODO: che ci faccio?
-                errprintf("Non so come fare a modificare '%s'\n", keyword);
-            }
-        }
-    }
-}*/
 
 int rename_local_file(void* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
         dynamic_obj_t values_from, dynamic_obj_t values_to) {
@@ -179,7 +154,7 @@ int rename_local_file(void* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
                 else if (!strcmp(keyword, "genre"))
                     taglib_tag_set_genre(tlt, value);
                 else
-                    errprintf("keyword non supportata `%s' (value = `%s')\n",
+                    warn("keyword non supportata `%s' (value = `%s')\n",
                             keyword, value);
             }
         taglib_file_save(tlf);

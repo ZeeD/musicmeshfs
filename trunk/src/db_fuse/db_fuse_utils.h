@@ -26,9 +26,9 @@
 #include <fuse.h>            /* fuse_get_context() */
 #include <stdlib.h>          /* calloc() */
 
-sqlite3* get_db_from_context();
-dynamic_obj_t get_fissi_from_context();
-dynamic_obj_t get_keywords_from_context();
+sqlite3* get_db_from_context(void);
+dynamic_obj_t get_fissi_from_context(void);
+dynamic_obj_t get_keywords_from_context(void);
 
 int exist(sqlite3*, dynamic_obj_t, dynamic_obj_t, dynamic_obj_t, const char*);
 

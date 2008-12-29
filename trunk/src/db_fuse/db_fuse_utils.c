@@ -25,7 +25,7 @@
 /**
     utility per ottenere, da Fuse, il database passato come parametro
 */
-sqlite3* get_db_from_context() {
+sqlite3* get_db_from_context(void) {
     return (sqlite3*)((dynamic_obj_t*)fuse_get_context()->private_data)->buf[0];
 }
 
@@ -33,7 +33,7 @@ sqlite3* get_db_from_context() {
     utility per ottenere, da Fuse, il vettore degli elementi fissi passato come
     parametro
 */
-dynamic_obj_t get_fissi_from_context() {
+dynamic_obj_t get_fissi_from_context(void) {
     return *(dynamic_obj_t*)((dynamic_obj_t*)fuse_get_context()->private_data)->
             buf[1];
 }
@@ -42,7 +42,7 @@ dynamic_obj_t get_fissi_from_context() {
     utility per ottenere, da Fuse, il vettore degli elementi keywords passato
     come parametro
 */
-dynamic_obj_t get_keywords_from_context() {
+dynamic_obj_t get_keywords_from_context(void) {
     return *(dynamic_obj_t*)((dynamic_obj_t*)fuse_get_context()->private_data)->
             buf[2];
 }
@@ -94,9 +94,6 @@ dynamic_str_t sub_dir(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
 
     dynamic_str_t fissi_file = *(dynamic_str_t*)fissi.buf[dinamici.size];
     dynamic_str_t keywords_file = *(dynamic_str_t*)keywords.buf[dinamici.size];
-//     errprintf("ciao\n");
-//     dbgprint_str(fissi_file, "fissi_file");
-//     dbgprint_str(keywords_file, "keywords_file");
     for (int i=0; i<keywords_file.size; i++) {
         if (i)
             query = strmalloccat(query, " ||");
@@ -111,14 +108,12 @@ dynamic_str_t sub_dir(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
             query = strmalloccat(query, "\t");
         query = strmalloccat(strmalloccat(strmalloccat(query, "REPLACE("),
                 column_from_keyword(keywords_file.buf[i])), ", '/', '_')");
-//         errprintf("fissi_file.size = %d, i+1 = %d\n", fissi_file.size, i+1);
         if (fissi_file.size > i+1) {        // se è seguito da un elemento fisso
             char* tmp = sqlite3_mprintf(", %Q, '_') || %Q\n", fissi_file.buf[i+1], fissi_file.buf[i+1]);
             query = strmalloccat(query, tmp);
             sqlite3_free(tmp);
         }
     }
-//     errprintf("sub_dir) query = `%s'\n", query);
     dynamic_str_t tabelle, where;
     init_str(&tabelle);
     for (int i=0; i<keywords.size; i++)
@@ -176,8 +171,6 @@ dynamic_str_t sub_dir(sqlite3* db, dynamic_obj_t fissi, dynamic_obj_t keywords,
         }
 
     }
-
-//     errprintf("sub_dir) query = `%s'\n", query);
     esegui_query_callback(db, get_one_column, &ret, query);
     free(query);
     return ret;
@@ -272,7 +265,7 @@ void cercaPercorso(const char* t1, const char* t2, dynamic_str_t* tabelle,
                 append_str(where, WHERE[m]);
                 append_str(where, WHERE[n]);
                 break;
-                done = !done;
+//                 done = !done;
             }
             free(t2t3);
             free(t3t2);

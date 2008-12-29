@@ -26,7 +26,7 @@
 */
 int db_fuse_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
         off_t offset, struct fuse_file_info *fi) {
-    errprintf("[READDIR] path = `%s'\n", path);
+    warn("[READDIR] path = `%s'\n", path);
     (void) fi;      // uso path
     (void) offset;  // lettura tutta d'una volta
     filler(buf, ".", NULL, 0);
@@ -53,7 +53,7 @@ int db_fuse_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
     ritorna l'errore appropriato
 */
 int db_fuse_getattr(const char* path, struct stat* filestat) {
-    errprintf("[GETATTR] path = `%s'\n", path);
+    warn("[GETATTR] path = `%s'\n", path);
     if (!strcmp(path, "/")) {   // root esiste :)
         memset(filestat, 0, sizeof(struct stat));
         filestat->st_mode = S_IFDIR | 0755;
@@ -84,7 +84,6 @@ int db_fuse_getattr(const char* path, struct stat* filestat) {
         }
         else // TODO: file remoto
             return -EACCES;
-    return -ENOENT;
 }
 
 #include "constants.h"           /* column_from_keyword() */
@@ -108,7 +107,7 @@ int db_fuse_getattr(const char* path, struct stat* filestat) {
     ;
 */
 int db_fuse_rename(const char* from, const char* to) {
-    errprintf("[RENAME] from = `%s', to = `%s'\n", from, to);
+    warn("[RENAME] from = `%s', to = `%s'\n", from, to);
     sqlite3* db = get_db_from_context();
     dynamic_obj_t fissi = get_fissi_from_context();
     dynamic_obj_t keywords = get_keywords_from_context();
@@ -131,140 +130,6 @@ int db_fuse_rename(const char* from, const char* to) {
 
     if (is_local_file(db, fissi, keywords, dinamici_from))
         rename_local_file(db, fissi, keywords, dinamici_from, dinamici_to);
-//     else
-        // TODO: file remoti
-/*
-    dynamic_str_t tabelle, where;
-    init_str(&tabelle);
-    if (calcola_tabelle(*(dynamic_str_t*)keywords.buf[dinamici_to.size-1],
-            &tabelle) == -1)
-        return -EIO;
-    if (!tabelle.size)
-        return -EIO;
-    calcola_where(tabelle, &where);
-
-    char* query = strmalloccat(calloc(1, 1), "BEGIN TRANSACTION\n");
-    for (int ii=0; ii<tabelle.size; ii++) {
-        query = strmalloccat(strmalloccat(strmalloccat(query, "UPDATE "),
-                tabelle.buf[ii]), " SET\n\t");
-        for (int i=0; i<dinamici_to.size; i++) {
-            dynamic_str_t tabella_colonna = split(column_from_keyword(
-                    ((dynamic_str_t*)keywords.buf[dinamici_to.size-1])->buf[i]),
-                    '.');
-            if (contains_str(tabelle, tabella_colonna.buf[0])) {
-                if (i)
-                    query = strmalloccat(query, ",\n\t");
-                char* tmp = sqlite3_mprintf(" = %Q", ((dynamic_str_t*)
-                        dinamici_to.buf[dinamici_to.size-1])->buf[i]);
-                query = strmalloccat(strmalloccat(query,
-                        tabella_colonna.buf[1]), tmp);
-                free(tmp);
-            }
-        }
-        query = strmalloccat(query, "\nWHERE\n\t");
-        for (int i=0; i<dinamici_from.size; i++)
-            for (int j=0; j<((dynamic_str_t*)dinamici_from.buf[i])->size; j++) {
-                if (i || j)
-                    query = strmalloccat(query, " AND\n\t");
-                dynamic_str_t tabella_colonna = split(column_from_keyword(
-                        ((dynamic_str_t*)keywords.buf[i])->buf[j]), '.');
-//                 dbgprint_str(tabella_colonna, "keywords");
-                if (contains_str(tabelle, tabella_colonna.buf[0])) {
-                    char* tmp = sqlite3_mprintf(" = %Q", ((dynamic_str_t*)
-                            dinamici_from.buf[i])->buf[j]);
-                    query = strmalloccat(strmalloccat(query,
-                                        tabella_colonna.buf[1]), tmp);
-                    free(tmp);
-                }
-                else {
-                    // trova percorso da tabella_colonna a tabelle.buf[ii]
-                    // es: da artista.nome_artista a musica.artista_nome_artista
-                    // artista_nome_artista in (
-                    //  SELECT artista_nome_artista
-                    //  FROM artista,musica
-                    //  WHERE
-                    //    nome_artista = '...'
-                    //    artista_nome_artista = artista.nome_artista
-                    // )
-                }
-            }
-        query = strmalloccat(query, "\n;");
-
-    }
-    query = strmalloccat(query, "\nEND");
-
-*/
-
-/*    char* query = strmalloccat(calloc(1, 1), "UPDATE\n\t");
-
-    for (int i=0; i<tabelle.size; i++) {
-        if (i)
-            query = strmalloccat(query, ", ");
-        query = strmalloccat(query, tabelle.buf[i]);
-    }
-    query = strmalloccat(query, "\nSET (\n\t");
-
-    // lavoro sull'ultimo vettore di elementi di dinamici_to
-    dynamic_str_t keywords_ = *(dynamic_str_t*)keywords.buf[dinamici_to.size-1];
-    dynamic_str_t to_ = *(dynamic_str_t*)dinamici_to.buf[dinamici_to.size-1];
-    // assumo che keywords_.size == to_.size == > 0
-
-    // sto cercando di rinominare una cartella fatta solo da elementi fissi O_o
-    if (!keywords_.size)
-        return -EROFS;
-
-    for (int i=0; i<keywords_.size; i++) {
-        if (i)
-            query = strmalloccat(query, ",\n\t");
-        query = strmalloccat(query, column_from_keyword(keywords_.buf[i]));
-        char* tmp = sqlite3_mprintf(" = %Q", to_.buf[i]);
-        query = strmalloccat(query, tmp);
-        free(tmp);
-    }
-    // il WHERE c'è di sicuro
-    query = strmalloccat(query, "\n) WHERE\n");
-
-    for (int i=0; i<dinamici_from.size; i++) {
-        keywords_ = *(dynamic_str_t*)keywords.buf[i];
-        dynamic_str_t from_ = *(dynamic_str_t*)dinamici_from.buf[i];
-        // assumo che keywords.size == from_.size
-//         for (int j=0; j<keywords_.size; j++) {
-//             if (j)
-//                 query = strmalloccat(query, " AND\n\t");
-//             query = strmalloccat(strmalloccat(strmalloccat(query,
-//                     column_from_keyword(keywords_.buf[j])), " GLOB "),
-//                     from_.buf[j]);
-
-        for (int j=0; j<keywords_.size; j++) {
-            if (i)
-                query = strmalloccat(query, " AND\n");
-//             if (fissi2.size > j+1)          // se è seguito da un elemento fisso
-//                 query = strmalloccat(query, "\t(REPLACE(");
-//             else
-                query = strmalloccat(query, "\t(");
-            query = strmalloccat(strmalloccat(strmalloccat(query, "REPLACE("),
-                    column_from_keyword(keywords_.buf[j])), ", '/', '_')");
-//             if (fissi2.size > j+1) {        // se è seguito da un elemento fisso
-//                 char* tmp = sqlite3_mprintf(", %Q, '_')", fissi2.buf[j+1]);
-//                 query = strmalloccat(query, tmp);
-//                 sqlite3_free(tmp);
-//             }
-            char* tmp = sqlite3_mprintf(" GLOB %Q)", from_.buf[j]);
-            query = strmalloccat(query, tmp);
-            free(tmp);
-        }
-
-    }
-*/
-
-//     calcola_where(tabelle, &where);
-//     for (int i=0; i<where.size; i++)
-//         query = strmalloccat(strmalloccat(query, " AND\n\t"), where.buf[i]);
-//     errprintf("rename->query = `%s'\n", query);
-
-//     int ret = esegui_query(db, query);
-//     free(query);
-//     return ret;
     return 0;
 }
 
@@ -272,7 +137,7 @@ int db_fuse_rename(const char* from, const char* to) {
     Implementazione di fuse_operations.chmod()
 */
 int db_fuse_chmod(const char* path, mode_t mode) {
-    errprintf("[CHMOD] path = `%s'\n", path);
+    warn("[CHMOD] path = `%s'\n", path);
     sqlite3* db = get_db_from_context();
     dynamic_obj_t fissi = get_fissi_from_context();
     dynamic_obj_t keywords = get_keywords_from_context();
@@ -291,7 +156,6 @@ int db_fuse_chmod(const char* path, mode_t mode) {
         }
         else // TODO: file remoto
             return -EROFS;  // per il momento non posso farlo
-    return -ENOENT;
 }
 
 /**
@@ -304,7 +168,7 @@ int db_fuse_chmod(const char* path, mode_t mode) {
     \sa fuse.h, musicmeshfs_open(), close()
 */
 int db_fuse_open(const char* virtual_path, struct fuse_file_info* ffi) {
-    errprintf("[OPEN] virtual_path = `%s'\t", virtual_path);
+    warn("[OPEN] virtual_path = `%s'\t", virtual_path);
     sqlite3* db = get_db_from_context();
     dynamic_obj_t fissi = get_fissi_from_context();
     dynamic_obj_t keywords = get_keywords_from_context();
@@ -337,7 +201,7 @@ int db_fuse_open(const char* virtual_path, struct fuse_file_info* ffi) {
     \sa fuse.h, musicmeshfs_open(), close()
 */
 int db_fuse_release(const char* virtual_path, struct fuse_file_info* ffi) {
-    errprintf("[RELEASE] path = `%s'\n", virtual_path);
+    warn("[RELEASE] path = `%s'\n", virtual_path);
     return close(ffi->fh);   // nella doc dice che non è usata
 }
 
@@ -355,7 +219,7 @@ int db_fuse_release(const char* virtual_path, struct fuse_file_info* ffi) {
 */
 int db_fuse_read(const char* virtual_path, char* buffer, size_t size,
             off_t offset, struct fuse_file_info* ffi) {
-    errprintf("[READ] path = `%s'\ti = %d\n", virtual_path, ffi->fh);
+    warn("[READ] path = `%s'\ti = %d\n", virtual_path, (int) ffi->fh);
     int res = pread(ffi->fh, buffer, size, offset);
     if (res == -1)
         res = -errno;

@@ -1,9 +1,9 @@
+#include <stdlib.h> /* exit(), EXIT_FAILURE */
+#include <err.h>    /* warn() */
 #include <argp.h>   /* argp_program_version argp_program_bug_address,
         struct argp_option, NULL, error_t, struct argp_state, struct argp,
         argp_parse(), printf() */
 #include "../common/sqlite.h"   /* path_is_a_db() */
-#include "../common/utils.h"    /* errprintf()  */
-#include <stdlib.h> /* exit(), EXIT_FAILURE */
 #include "parser.h" /* parse_schema() */
 
 /* TODO: integrare questo file in Fuse_DB / MusicMeshFS */
@@ -35,7 +35,7 @@ static error_t parser(int key, char* arg, struct argp_state* state) {
                     if (path_is_a_db(arg))
                         ((struct arguments*)state->input)->DATABASE = arg;
                     else {
-                        errprintf("ERROR: `%s' is not a valid db!\n", arg);
+                        warn("ERROR: `%s' is not a valid db!\n", arg);
                         exit(EXIT_FAILURE);
                     }
                     break;
@@ -43,7 +43,7 @@ static error_t parser(int key, char* arg, struct argp_state* state) {
                     if (stat(arg, &t) == 0 && S_ISDIR(t.st_mode))
                         ((struct arguments*)state->input)->PATH = arg;
                     else {
-                        errprintf("ERROR: `%s' is not a valid path!\n", arg);
+                        warn("ERROR: `%s' is not a valid path!\n", arg);
                         exit(EXIT_FAILURE);
                     }
                     break;
@@ -51,7 +51,7 @@ static error_t parser(int key, char* arg, struct argp_state* state) {
                     if (parse_schema(arg, NULL, NULL) == 0)
                         ((struct arguments*)state->input)->MOUNT_SCHEMA = arg;
                     else {
-                        errprintf("ERROR: `%s' is not a valid schema!\n", arg);
+                        warn("ERROR: `%s' is not a valid schema!\n", arg);
                         exit(EXIT_FAILURE);
                     }
                     break;

@@ -395,7 +395,7 @@ dynamic_str_t split(const char* string, const char separator) {
     \return stringa contenente tutti gli elementi di array uniti con separator
 */
 char* join(dynamic_str_t array, char separator) {
-    char* r = "";
+    char* r = NULL;
     if (array.size) {
         r = strdup(array.buf[0]);
         char s[] = { separator, '\0' };
@@ -415,9 +415,9 @@ char* join(dynamic_str_t array, char separator) {
     \param s stringa per informazioni aggiuntive
 */
 void dbgprint_str(dynamic_str_t a, char* s) {
-    errprintf("[DBG][dbgprint_str][%s.size = %d]\n", s, a.size);
+    warn("[DBG][dbgprint_str][%s.size = %d]\n", s, a.size);
     for (int i=0; i<a.size; i++)
-        errprintf( "[DBG][dbgprint_str][%s[%d] = `%s']\n", s, i, a.buf[i]);
+        warn( "[DBG][dbgprint_str][%s[%d] = `%s']\n", s, i, a.buf[i]);
 }
 
 /**
@@ -427,9 +427,9 @@ void dbgprint_str(dynamic_str_t a, char* s) {
     \param s stringa per informazioni aggiuntive
  */
 void dbgprint_int(dynamic_int_t a, char* s) {
-    errprintf("[DBG][dbgprint_int][%s.size = %d]\n", s, a.size);
+    warn("[DBG][dbgprint_int][%s.size = %d]\n", s, a.size);
     for (int i=0; i<a.size; i++)
-        errprintf("[DBG][dbgprint_int][%s[%d] = %d]\n", s, i, a.buf[i]);
+        warn("[DBG][dbgprint_int][%s[%d] = %d]\n", s, i, a.buf[i]);
 }
 
 /**
@@ -492,23 +492,6 @@ char* strmalloccat(char* str1, const char* str2) {
     str1 = strcat(realloc(str1, l+1), str2);
     str1[l] = '\0';
     return str1;
-}
-
-/**
-    `alias' per fprintf(stderr, fmt, ...);
-    \param fmt stringa di formattazione da passare a fprintf
-    \return il valore di ritorno di vfprintf
-    \sa fprintf(), vfprintf()
- */
-int errprintf(char* fmt, ...) {
-    int ret = fprintf(stderr, "ERROR: ");
-    if (ret<0)
-        return ret;
-    va_list ap;
-    va_start(ap, fmt);
-    ret += vfprintf(stderr, fmt, ap);
-    va_end(ap);
-    return ret;
 }
 
 /**

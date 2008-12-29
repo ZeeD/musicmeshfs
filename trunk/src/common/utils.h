@@ -26,6 +26,7 @@
 #include <sys/stat.h>    /* stat, S_ISREG, S_ISDIR, S_IROTH, S_IWOTH */
 #include <stdlib.h>      /* realloc, malloc, free */
 #include <stdarg.h>      /* va_list, va_start, va_end */
+#include <err.h>         /* warn() */
 
 /**
     vettore di interi a dimensione variabile
@@ -89,8 +90,6 @@ void dbgprint_str(dynamic_str_t, char*);
 void dbgprint_int(dynamic_int_t, char*);
 
 char* strmalloccat(char*, const char*);
-
-int errprintf(char*, ...);
 
 char* value_from_key(dynamic_str_t, dynamic_str_t, char*);
 

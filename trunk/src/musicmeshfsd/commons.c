@@ -66,10 +66,8 @@ void local_loop(sqlite3* db, inotify_t inotify,
     char queue[MAX_BUFFER_LEN];
     while (1) {
         ssize_t readed = read(inotify.instance, queue, MAX_BUFFER_LEN);
-        if (readed == -1) {
-            perror("read");
-            exit(EXIT_FAILURE);
-        }
+        if (readed == -1)
+            err(EXIT_FAILURE, "read");
         for (int i=0; i<readed;) {
             struct inotify_event* event = (struct inotify_event*) &queue[i];
             if (callback && callback(event, db, inotify) == -1)
@@ -77,7 +75,6 @@ void local_loop(sqlite3* db, inotify_t inotify,
             i += sizeof(struct inotify_event)+event->len;
         }
     }
-    rm_all_watches(inotify);
 }
 
 /**
@@ -105,7 +102,7 @@ int local_event_callback(struct inotify_event* event, sqlite3* db,
         else if (event->mask & (IN_DELETE | IN_MOVED_FROM)) // rimossa
             rem_watch(&inotify, file_name);
         else
-            errprintf("NON SO CHE FARE CON `%s'\n", file_name);
+            warn("NON SO CHE FARE CON `%s'\n", file_name);
     }
     else {  // se è un file
         if (event->mask & (IN_DELETE | IN_MOVED_FROM))
@@ -123,7 +120,7 @@ int local_event_callback(struct inotify_event* event, sqlite3* db,
         else if (event->mask & IN_IGNORED)
             ;   // erh, non ci faccio niente...
         else
-            errprintf("NON SO CHE FARE CON `%s'\n", file_name);
+            warn("NON SO CHE FARE CON `%s'\n", file_name);
     }
     return 0;
 }

@@ -18,7 +18,6 @@
 */
 
 #include "inotify.h"
-#include "../common/utils.h"    /* errprintf() */
 
 /**
     MAX_BUFFER_LEN rappresenta la massima dimensione usabile per la coda degli
@@ -26,7 +25,7 @@
     modifica di files con nomi di lunghezza superiore a
     MAX_BUFFER_LEN - sizeof(struct inotify_event)
 */
-const unsigned int MAX_BUFFER_LEN = 1024;
+static const unsigned int MAX_BUFFER_LEN = 1024;
 
 /**
     Genera e inizializza una nuova struttura di tipo inotify_t
@@ -34,7 +33,7 @@ const unsigned int MAX_BUFFER_LEN = 1024;
     \return da notare che, se ci sono stati errori, lo si potrà sapere
             analizzando il valore di new_inotify_t().instance == -1
 */
-inotify_t new_inotify_t() {
+inotify_t new_inotify_t(void) {
     inotify_t r;
     init_int(&r.watch_fds);
     init_str(&r.files);
@@ -49,24 +48,24 @@ inotify_t new_inotify_t() {
     \param inotify istanza di inotify_t di riferimento
 */
 void info_print(struct inotify_event* event, inotify_t inotify) {
-    errprintf("nome = `%s'\t", event_file_name(event, inotify));
-    if (event->mask & IN_ACCESS)        errprintf("ACCESS ");
-    if (event->mask & IN_ATTRIB)        errprintf("ATTRIB ");
-    if (event->mask & IN_CLOSE_WRITE)   errprintf("CLOSE_WRITE ");
-    if (event->mask & IN_CLOSE_NOWRITE) errprintf("CLOSE_NOWRITE ");
-    if (event->mask & IN_CREATE)        errprintf("CREATE ");
-    if (event->mask & IN_DELETE)        errprintf("DELETE ");
-    if (event->mask & IN_DELETE_SELF)   errprintf("DELETE_SELF ");
-    if (event->mask & IN_MODIFY)        errprintf("MODIFY ");
-    if (event->mask & IN_MOVE_SELF)     errprintf("MOVE_SELF ");
-    if (event->mask & IN_MOVED_FROM)    errprintf("MOVED_FROM ");
-    if (event->mask & IN_MOVED_TO)      errprintf("MOVED_TO ");
-    if (event->mask & IN_OPEN)          errprintf("OPEN ");
-    if (event->mask & IN_IGNORED)       errprintf("IGNORED ");
-    if (event->mask & IN_ISDIR)         errprintf("ISDIR ");
-    if (event->mask & IN_Q_OVERFLOW)    errprintf("Q_OVERFLOW ");
-    if (event->mask & IN_UNMOUNT)       errprintf("UNMOUNT ");
-    errprintf("\n");
+    warn("nome = `%s'\t", event_file_name(event, inotify));
+    if (event->mask & IN_ACCESS)        warn("ACCESS ");
+    if (event->mask & IN_ATTRIB)        warn("ATTRIB ");
+    if (event->mask & IN_CLOSE_WRITE)   warn("CLOSE_WRITE ");
+    if (event->mask & IN_CLOSE_NOWRITE) warn("CLOSE_NOWRITE ");
+    if (event->mask & IN_CREATE)        warn("CREATE ");
+    if (event->mask & IN_DELETE)        warn("DELETE ");
+    if (event->mask & IN_DELETE_SELF)   warn("DELETE_SELF ");
+    if (event->mask & IN_MODIFY)        warn("MODIFY ");
+    if (event->mask & IN_MOVE_SELF)     warn("MOVE_SELF ");
+    if (event->mask & IN_MOVED_FROM)    warn("MOVED_FROM ");
+    if (event->mask & IN_MOVED_TO)      warn("MOVED_TO ");
+    if (event->mask & IN_OPEN)          warn("OPEN ");
+    if (event->mask & IN_IGNORED)       warn("IGNORED ");
+    if (event->mask & IN_ISDIR)         warn("ISDIR ");
+    if (event->mask & IN_Q_OVERFLOW)    warn("Q_OVERFLOW ");
+    if (event->mask & IN_UNMOUNT)       warn("UNMOUNT ");
+    warn("\n");
 }
 
 /**
