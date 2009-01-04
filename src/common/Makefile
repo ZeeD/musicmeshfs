@@ -1,4 +1,5 @@
-CFLAGS = -std=c99 -pedantic -Wall -W -g -D_XOPEN_SOURCE=500 `pkg-config --cflags taglib`
+CFLAGS = $(DEBUGFLAGS) -std=c99 -pedantic -Wall -W -g -D_XOPEN_SOURCE=500 \
+    `pkg-config --cflags taglib`
 
 CFLAGS += -fno-common -Wall -Wextra -Wformat=2  \
     -Winit-self -Winline -Wpacked -Wp,-D_FORTIFY_SOURCE=2 -Wpointer-arith     \
@@ -14,10 +15,17 @@ CFLAGS += -Wbad-function-cast -Werror-implicit-function-declaration           \
 
 .PHONY : clean
 
-sqlite.c: sqlite.pre_c schema.sql
-	../../sostituisci.py sqlite.pre_c sqlite.c schema.sql
+schema.h: schema.sql
+	echo "/* Warning: this file is auto-generated (from \`$?')! */" > schema.h
+	xxd -i < schema.sql >> schema.h
+	echo ', 0' >> schema.h
+	echo "/* Warning: this file is auto-generated (from \`$?')! */" >> schema.h
 
-sqlite.o: sqlite.c utils.o
+sqlite.o: schema.h sqlite.c
+
+test_sqlite: utils.o
+	$(MAKE) "DEBUGFLAGS=-D__DEBUG_SQLITE_C__" sqlite.o
+	$(CC) $(CFLAGS) -lsqlite3 -ltag_c -o $@ $? sqlite.o
 
 clean:
-	rm -rf *.o *~ sqlite.c
+	rm -rf *.o *~ schema.h test_sqlite

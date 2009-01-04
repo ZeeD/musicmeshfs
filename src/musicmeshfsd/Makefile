@@ -19,8 +19,8 @@ LDFLAGS = -lsqlite3 -ltag_c
 musicmeshfsd: commons.o inotify.o ../common/sqlite.o ../common/utils.o
 	$(CC) $(CFLAGS) $(@:=.c) $? $(LDFLAGS) -o ../../bin/$@
 
-../common/sqlite.c: ../common/sqlite.pre_c ../common/schema.sql
-	../../sostituisci.py ../common/sqlite.pre_c ../common/sqlite.c ../common/schema.sql
+../common/sqlite.o:
+	$(MAKE) -C ../common sqlite.o
 
 clean:
 	$(MAKE) -C ../common clean
