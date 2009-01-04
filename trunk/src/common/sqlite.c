@@ -43,16 +43,19 @@ int get_columns(void* buf, int n_colonne, char** value, char** header) {
     \return database sqlite3
 */
 sqlite3* crea_db_vuoto(char* db_file) {
-    char* schema = "TRANSLATE_ME_PLEASE";   // sostituisci.py (anche "schema"!)
+    char schema[] = {
+        #include "schema.h"
+    };
     sqlite3* db;
     if (sqlite3_open(db_file, &db) != SQLITE_OK) {
         warn("sqlite3_open: `%s'\n", sqlite3_errmsg(db));
         sqlite3_close(db);
     }
     else
-        if (esegui_query(db, schema) != SQLITE_OK)
+        if (esegui_query(db, schema) != SQLITE_OK) {
+            warn("esegui_query: `%s'\n", sqlite3_errmsg(db));
             sqlite3_close(db);
-    free(schema);
+        }
     return db;
 }
 
@@ -240,4 +243,14 @@ int del_local_file_from_db(void* db, char* path) {
             path) == -1)
         return -1;
     return 0;
+}
+
+#ifdef __DEBUG_SQLITE_C__
+int main(int argc, char* argv[]) {
+#else
+void __DEBUG_SQLITE_C__main(int argc, char* argv[]);
+void __DEBUG_SQLITE_C__main(int argc, char* argv[]) {
+#endif
+    if (argc>1)
+        crea_db_vuoto(argv[1]);
 }
