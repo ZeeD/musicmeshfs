@@ -29,7 +29,8 @@ Il primo fs \ea stato dedicato ai file musicali. In particolare esso creava un f
 Le prestazioni non esaltati dei due filesystem ci hanno spinto a ``scendere'' nel kernel per implementare un nuovo filesystem (Hixosfs). Questo filesystem nasce dall'esigenza di migliorare la gestione di file con metadati (file musicali, di mail, di log, ebook, \dots). La caratteristica di tali file \ea la possibilit\aa di etichettarli a partire da alcuni dei metadati. Ad esempio, \ea possibile parlare di un file musicale conoscendo l'autore, il titolo e l'anno di incisione del brano stesso. L'idea \ea stata di inserire questi metadati all'interno della struct inode che \ea la struct usata dal kernel per gestire tutti i tipi di file. All'interno dell'inode vi sono tutte le informazione su un file (data di creazione, data di modifica, proprietario, link, \dots) tranne il suo contenuto. Noi abbiamo deciso di inserire in questa struct i metadati pi\ua rappresentativi del file stesso. Il filesystem per i file musicali conterr\aa i tag su titolo, autore, anno e disco del brano; mentre il filesystem per i log di un internet provider contiene ip sorgente, ip destinazione e data del pacchetto di cui stiamo tenendo un log.
 
 
-
+Linux su Arm.
+Le problematiche di installazione di linux su un'architettura differente sono relative principalmente al kernel, alla poca memoria a disposizione e ai driver dei dispositivi solitamente creati ad-hoc. In prima analisi abbiamo studiato le difficolt\aa della scrittura di un driver per embedded notando come la nostra natura di informatici non ci permetteva di avere il know-how adatto.
 
 
 
@@ -62,6 +63,7 @@ Le prestazioni non esaltati dei due filesystem ci hanno spinto a ``scendere'' ne
 \item Marco Argentieri
 \item Nicola Corriero
  \item Giuseppe Annese (Laurea triennale in Informatica) per lo sviluppo di una chat minimale sulla distribuzione Mvux;
+\item Vito De tullio
 \item Roberto Mari (Laurea Specialistica in Informatica) per lo sviluppo di un filesystem in spazio utente implementato tramite fuse \\(http://fuse.sourceforge.net) per la gestione della posta elettronica;
 \item Simone Bolognini (Laurea in Informatica  (v.o)) per lo sviluppo del filesystem hixosfs basato su ext2 per la gestione di file di log di un WISP (Wireless Internet Service Provider);
 \item Fabrizio Fattibene (Laurea Specialistica in Informatica) per lo sviluppo del filesystem hixosfs in kernel space per la gestione dei file musicali;
