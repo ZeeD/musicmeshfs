@@ -17,16 +17,23 @@
 \section*{Introduzione}
 Il gruppo di ricerca Hixos si occupa di Linux e delle sue applicazioni sui sistemi embedded.
 Inizialmente siamo partiti dallo studio del sistema operativo Linux e dal confronto di questo con gli altri sistemi operativi unix based; abbiamo iniziato ad approfondire lo studio di Minix, ma poi i nostri sforzi si sono concentrati su Linux, soprattutto per la possibilità di lavorare su pi\ua architetture, oltre che per un uso pi\ua vasto.
-Siamo riusciti a creare MVux, una distribuzione Linux live (eseguibile, cio\ea, direttamente da USB) da zero, compilando i vari componenti da sorgenti.
+Siamo riusciti a creare Mvux, una distribuzione Linux live (eseguibile, cio\ea, direttamente da USB) da zero, compilando i vari componenti da sorgenti.
 Inizialmente ci si \ea focalizzati soprattutto nel processo di boot, quindi dall'accensione del computer all'esecuzione del primo programma utente.
 Lo studio fatto in questa fase ci ha permesso di scrivere una piccola guida molto dettagliata che permetta a tutti di ripetere quanto da noi fatto in maniera autonoma; questa guida si focalizza sopratutto sulla fase di compilazione e installazione sulla penna USB del kernel e del bootloader, oltre che della shell dei comandi.
 Abbiamo proposto questo piccolo risultato all'interno del corso ``Metodi per il trattamento delle Informazioni'', del primo anno della Laurea Specialistica in Informatica, per dare la possibilit\aa a tutti i frequentati il corso di conoscere Linux e di utilizzare Bash come linguaggio di scripting che rappresentava tema di esame.
-All'interno del corso di principi di programmazione (secondo anno L.S.) agli studenti \ea stato chiesto sia di ripetere la creazione from source sia di ampliare questa piccola distribuzione minimale con alcuni dettagli. Sono cos\ia stati aggiunti il server X, l'initrd e\slash o l'initramfs, il riconoscimento del device ethernet, una chat minimale, il compilatore gcc ed infine \ea iniziato il porting di Mvux su Arm.
-
-In questo anno accademico ci siamo occupati di filesystem e di architettura Arm.
-Lo studio delle varie implementazioni di filesystem in ambiente Linux ha prodotto nella prima fase due tesi che sfruttando le librerie FUSE hanno implementato un filesystem in user space.
-Il primo fs \ea stato dedicato ai file musicali. In particolare esso creava un filesystem virtuale a partire dai metadati dei brani musicali e ordinava gli stessi sfruttando un db. La seconda tesi, sempre sfruttando le librerie fuse, implementava un filesystem per la gestione della posta elettronica organizzata a seconda del mittente, data, destinatario, \dots.
-Le prestazioni non esaltati dei due filesystem ci hanno spinto a ``scendere'' nel kernel per implementare un nuovo filesystem (Hixosfs). Questo filesystem nasce dall'esigenza di migliorare la gestione di file con metadati (file musicali, di mail, di log, ebook, \dots). La caratteristica di tali file \ea la possibilit\aa di etichettarli a partire da alcuni dei metadati. Ad esempio, \ea possibile parlare di un file musicale conoscendo l'autore, il titolo e l'anno di incisione del brano stesso. L'idea \ea stata di inserire questi metadati all'interno della struct inode che \ea la struct usata dal kernel per gestire tutti i tipi di file. All'interno dell'inode vi sono tutte le informazione su un file (data di creazione, data di modifica, proprietario, link, \dots) tranne il suo contenuto. Noi abbiamo deciso di inserire in questa struct i metadati pi\ua rappresentativi del file stesso. Il filesystem per i file musicali conterr\aa i tag su titolo, autore, anno e disco del brano; mentre il filesystem per i log di un internet provider contiene ip sorgente, ip destinazione e data del pacchetto di cui stiamo tenendo un log.
+All'interno del corso ``Principi di programmazione'', del secondo anno della Laura Specialistica in Informatica, agli studenti \ea stato chiesto sia di ripetere la creazione da soli, sia di ampliare questa piccola distribuzione, volutamente minimale, installando programmi aggiuntivi.
+Sono cos\ia stati aggiunti il server X, l'initrd e \slash o l'initramfs, il riconoscimento automatico del device di rete e programmi in userspace come una chat minimale e il compilatore gcc.
+Contemporaneamente \ea iniziato il porting di Mvux su ARM.
+In questo anno accademico ci siamo occupati di file system e dell'architettura ARM.
+Lo studio delle varie implementazioni dei file system in ambiente Linux è iniziato con due tesi in cui i laureandi, sfruttando FUSE, hanno implementato un file system la cui logica era implementata in user space.
+In particolare i due file system erano legati da un core comune, che poi veniva esteso per offrire le funzionalità necessarie ai due ambiti di specializzazione.
+Il primo file system \ea stato pensato per i file musicali.
+In particolare esso offre un file system virtuale analizzando i metadati presenti nei singoli brani di una collezione musicale.
+La peculiarità di questo file system è che, sfruttando un data base esterno, permette di accedere ai brani della collezione musicale non in modo casuale, ma ordinati in una struttura gerarchica.
+La seconda tesi implementava un file system pensato per semplificare la gestione della posta elettronica.
+Esso offriva una visione organizzata delle e-mail raggruppate per mittente, data, destinatario, \dots.
+Queste due tesi, tuttavia, essendo implementate in user space, soffrono di basse prestazioni rispetto ai file system tradizionali.
+Questo ci ha spinto a ``scendere'' nel kernel nell'implementazione del file system successivo (Hixosfs). Questo filesystem nasce dall'esigenza di migliorare la gestione di file con metadati (file musicali, di mail, di log, ebook, \dots). La caratteristica di tali file \ea la possibilit\aa di etichettarli a partire da alcuni dei metadati. Ad esempio, \ea possibile parlare di un file musicale conoscendo l'autore, il titolo e l'anno di incisione del brano stesso. L'idea \ea stata di inserire questi metadati all'interno della struct inode che \ea la struct usata dal kernel per gestire tutti i tipi di file. All'interno dell'inode vi sono tutte le informazione su un file (data di creazione, data di modifica, proprietario, link, \dots) tranne il suo contenuto. Noi abbiamo deciso di inserire in questa struct i metadati pi\ua rappresentativi del file stesso. Il filesystem per i file musicali conterr\aa i tag su titolo, autore, anno e disco del brano; mentre il filesystem per i log di un internet provider contiene ip sorgente, ip destinazione e data del pacchetto di cui stiamo tenendo un log.
 
 
 Linux su Arm.
@@ -34,6 +41,7 @@ Le problematiche di installazione di linux su un'architettura differente sono re
 Inizialmente \ea stata prodotta una tesi su come installare Linux su un Htc Blueangel. Abbiamo notato come per utilizzare palmari e schede arm \ea necessario che questi siano supportati dal kernel e dal boot loader, in quanto per evitare problemi hardware vi sono dei controlli nelle fasi inziali dell'avvio del kernel con codice scritto in assembly.
 A settembre 2008 una dottoranda del gruppo Vittoria Cozza, laureata in ingegneria informatica, ha sostenuto uno stage presso il prof. Rubini di Pavia, esperto di scrittura driver in ambiente linux embedded. La sua esperienza ha permesso all'intero gruppo di acquisire maggiori conoscenze verso tematiche di vita reale lavorativa. Il gruppo contemporaneamente tramite l'acquisto di un alcune schede Arm (lpc2148 e lpc2468 di  www.embeddedartists.com) e del cellulare FreeRunner di Openmoko, ha potuto testare quanto compreso in teoria. In particolare circa la fase di avvio del dispositivo tramite il boot loader e delle prime fasi di avvio del kernel. Anche in questa fase abbiamo prodotto un piccolo documento disponibile online per comprendere l'avvio di Linux su Arm.
 Openmoko \ea il primo progetto completamente open sia da un punto di vista hardware con specifiche rilasciata dai produttori, sia da un punto di vista software in quanto tutto \ea scritto secondo licenza gpl.
+
 
 \section*{Corsi}
 \begin{itemize}
@@ -54,9 +62,8 @@ Openmoko \ea il primo progetto completamente open sia da un punto di vista hardw
 \begin{itemize}
 \item Corriero, Cozza, De tullio, Zhupa, \textit{A configurable Linux file system for multimedia data}, SIGMAP 2008, International Conference on Signal Processing and Multimedia Appications, 978-989-8111-60-9, pag 380-383, \\http://www.sigmap.org/SIGMAP2008/;
 \item Corriero, Cozza, Pistillo, Zhupa, \textit{Wifi Mesh for HandHelds in Linux}, ICWN '08, The 2008 World Congress in Computer Science, Computer Engineering and Applied Computing, 1-60132-074-4, 1-60132-080-9 (1-60132-091-4), pag. 430-435, http://www.world-academy-of-science.org/worldcomp08/ws;
-\item Corriero, Cozza, De tullio, \textit{Hixosfs: linux metadata filesystem}, submitted.
+\item Corriero, Cozza, De tullio, \textit{Hixosfs: linux metadata filesystem}, submitted
 \end{itemize}
-
 
 \section*{Tesi}
 \begin{itemize}
@@ -70,6 +77,5 @@ Openmoko \ea il primo progetto completamente open sia da un punto di vista hardw
 \item Simone Bolognini (Laurea in Informatica  (v.o)) - Hixosfs: un filesystem basato su ext2 per la gestione di file di log di un WISP (Wireless Internet Service Provider);
 \item Fabrizio Fattibene (Laurea Specialistica in Informatica) - Hixosfs: un filesystem in kernel space basato su ext2 per la gestione dei file musicali;
 \end{itemize}
-
 
 \end{document}
