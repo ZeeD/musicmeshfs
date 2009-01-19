@@ -14,14 +14,13 @@
 
 \maketitle
 
-
-
 \section*{Introduzione}
 Il gruppo di ricerca Hixos si occupa di Linux e delle sue applicazioni sui sistemi embedded.
-Inizialmente siamo partiti dallo studio del sistema operativo Linux e dal confronto di questo con gli altri sistemi operativi unix based (Minix). Siamo riusciti a creare una piccola distribuzione Linux live da usb (MVux) direttamente compilando il tutto dai sorgenti. Lo studio fatto in questa fase ci ha permesso di scrivere una piccola guida molto dettagliata che permetta a tutti di ripetere quanto da noi fatto in maniera autonoma.
+Inizialmente siamo partiti dallo studio del sistema operativo Linux e dal confronto di questo con gli altri sistemi operativi unix based (Minix).
+Siamo riusciti a creare una piccola distribuzione Linux live da usb (MVux) direttamente compilando il tutto dai sorgenti.
+Lo studio fatto in questa fase ci ha permesso di scrivere una piccola guida molto dettagliata che permetta a tutti di ripetere quanto da noi fatto in maniera autonoma.
 Abbiamo proposto questo piccolo risultato all'interno del corso di Metodi per il trattamento delle Informazioni del primo anno della Laurea Specialistica in informatica per dare la possibilit\aa a tutti i frequentati il corso di conoscere Linux e di utilizzare Bash come linguaggio di scripting che rappresentava tema di esame.
 All'interno del corso di principi di programmazione (secondo anno L.S.) agli studenti \ea stato chiesto sia di ripetere la creazione from source sia di ampliare questa piccola distribuzione minimale con alcuni dettagli. Sono cos\ia stati aggiunti il server X, l'initrd e\slash o l'initramfs, il riconoscimento del device ethernet, una chat minimale, il compilatore gcc ed infine \ea iniziato il porting di Mvux su Arm.
-
 
 In questo anno accademico ci siamo occupati di filesystem e di architettura Arm.
 Lo studio delle varie implementazioni di filesystem in ambiente Linux ha prodotto nella prima fase due tesi che sfruttando le librerie FUSE hanno implementato un filesystem in user space.
@@ -31,8 +30,6 @@ Le prestazioni non esaltati dei due filesystem ci hanno spinto a ``scendere'' ne
 
 Linux su Arm.
 Le problematiche di installazione di linux su un'architettura differente sono relative principalmente al kernel, alla poca memoria a disposizione e ai driver dei dispositivi solitamente creati ad-hoc. In prima analisi abbiamo studiato le difficolt\aa della scrittura di un driver per embedded notando come la nostra natura di informatici non ci permetteva di avere il know-how adatto.
-
-
 
 \section*{Corsi}
 \begin{itemize}
@@ -62,11 +59,11 @@ Le problematiche di installazione di linux su un'architettura differente sono re
 \item Francesco Pistillo
 \item Marco Argentieri
 \item Nicola Corriero
- \item Giuseppe Annese (Laurea triennale in Informatica) per lo sviluppo di una chat minimale sulla distribuzione Mvux;
-\item Vito De tullio
-\item Roberto Mari (Laurea Specialistica in Informatica) per lo sviluppo di un filesystem in spazio utente implementato tramite fuse \\(http://fuse.sourceforge.net) per la gestione della posta elettronica;
-\item Simone Bolognini (Laurea in Informatica  (v.o)) per lo sviluppo del filesystem hixosfs basato su ext2 per la gestione di file di log di un WISP (Wireless Internet Service Provider);
-\item Fabrizio Fattibene (Laurea Specialistica in Informatica) per lo sviluppo del filesystem hixosfs in kernel space per la gestione dei file musicali;
+\item Giuseppe Annese (Laurea triennale in Informatica) per lo sviluppo di una chat minimale sulla distribuzione Mvux
+\item Vito De tullio (Laurea Specialistica in Informatica) per lo sviluppo di un file system in spazio utente implementato tramite FUSE \\(http://fuse.sourceforge.net) per la gestione dei file musicali
+\item Roberto Mari (Laurea Specialistica in Informatica) per lo sviluppo di un file system in spazio utente implementato tramite FUSE \\(http://fuse.sourceforge.net) per la gestione della posta elettronica
+\item Simone Bolognini (Laurea in Informatica Vecchio Ordinamento) per lo sviluppo di un file system per la gestione di file di log di un WISP (Wireless Internet Service Provider)
+\item Fabrizio Fattibene (Laurea Specialistica in Informatica) per lo sviluppo di un file system per la gestione dei file musicali;
 \end{itemize}
 
 
