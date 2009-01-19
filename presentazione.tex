@@ -1,0 +1,71 @@
+\documentclass[a4paper,12pt]{article}
+\newcommand{\ua }{\`{u} }
+\renewcommand{\aa }{\`{a} }
+\newcommand{\ea }{\`{e} }
+\newcommand{\ia }{\`{i} }
+\newcommand{\oa }{\`{o} }
+
+%opening
+\title{\textbf{Hixos} - Hacking Unix Operating System\\http://www.di.uniba.it/$\sim$hixos}
+
+\author{\textbf{Universit\aa degli studi di Bari}}
+\date{Dipartimento di Informatica}
+\begin{document}
+
+\maketitle
+
+
+
+\section*{Introduzione}
+Il gruppo di ricerca Hixos si occupa di Linux e delle sue applicazioni sui sistemi embedded.
+Inizialmente siamo partiti dallo studio del sistema operativo Linux e dal confronto di questo con gli altri sistemi operativi unix based (Minix). Siamo riusciti a creare una piccola distribuzione Linux live da usb (MVux) direttamente compilando il tutto dai sorgenti. Lo studio fatto in questa fase ci ha permesso di scrivere una piccola guida molto dettagliata che permetta a tutti di ripetere quanto da noi fatto in maniera autonoma.
+Abbiamo proposto questo piccolo risultato all'interno del corso di Metodi per il trattamento delle Informazioni del primo anno della Laurea Specialistica in informatica per dare la possibilit\aa a tutti i frequentati il corso di conoscere Linux e di utilizzare Bash come linguaggio di scripting che rappresentava tema di esame.
+All'interno del corso di principi di programmazione (secondo anno L.S.) agli studenti \ea stato chiesto sia di ripetere la creazione from source sia di ampliare questa piccola distribuzione minimale con alcuni dettagli. Sono cos\ia stati aggiunti il server X, l'initrd e\slash o l'initramfs, il riconoscimento del device ethernet, una chat minimale, il compilatore gcc ed infine \ea iniziato il porting di Mvux su Arm.
+
+
+In questo anno accademico ci siamo occupati di filesystem e di architettura Arm.
+Lo studio delle varie implementazioni di filesystem in ambiente Linux ha prodotto nella prima fase due tesi che sfruttando le librerie FUSE hanno implementato un filesystem in user space.
+Il primo fs \ea stato dedicato ai file musicali. In particolare esso creava un filesystem virtuale a partire dai metadati dei brani musicali e ordinava gli stessi sfruttando un db. La seconda tesi, sempre sfruttando le librerie fuse, implementava un filesystem per la gestione della posta elettronica organizzata a seconda del mittente, data, destinatario, \dots.
+Le prestazioni non esaltati dei due filesystem ci hanno spinto a ``scendere'' nel kernel per implementare un nuovo filesystem (Hixosfs). Questo filesystem nasce dall'esigenza di migliorare la gestione di file con metadati (file musicali, di mail, di log, ebook, \dots). La caratteristica di tali file \ea la possibilit\aa di etichettarli a partire da alcuni dei metadati. Ad esempio, \ea possibile parlare di un file musicale conoscendo l'autore, il titolo e l'anno di incisione del brano stesso. L'idea \ea stata di inserire questi metadati all'interno della struct inode che \ea la struct usata dal kernel per gestire tutti i tipi di file. All'interno dell'inode vi sono tutte le informazione su un file (data di creazione, data di modifica, proprietario, link, \dots) tranne il suo contenuto. Noi abbiamo deciso di inserire in questa struct i metadati pi\ua rappresentativi del file stesso. Il filesystem per i file musicali conterr\aa i tag su titolo, autore, anno e disco del brano; mentre il filesystem per i log di un internet provider contiene ip sorgente, ip destinazione e data del pacchetto di cui stiamo tenendo un log.
+
+
+
+
+
+
+\section*{Corsi}
+\begin{itemize}
+\item Anno Accademico 2007-2008 (Laurea Specialistica in informatica)
+\begin{itemize}
+ \item Metodi per il trattamento delle informazioni
+\item Principi di programmazione di sistema
+\end{itemize}
+\item Anno Accademico 2008-2009 (Laurea Magistrale in Informatica)
+\begin{itemize}
+\item Sistemi ad agenti
+\item Metodi formali dell'Informatica
+\end{itemize}
+
+\end{itemize}
+
+\section*{Articoli}
+\begin{itemize}
+\item Corriero, Cozza, De tullio, Zhupa, \textit{A configurable Linux file system for multimedia data}, SIGMAP 2008, International Conference on Signal Processing and Multimedia Appications, 978-989-8111-60-9, pag 380-383, \\http://www.sigmap.org/SIGMAP2008/;
+\item Corriero, Cozza, Pistillo, Zhupa, \textit{Wifi Mesh for HandHelds in Linux}, ICWN '08, The 2008 World Congress in Computer Science, Computer Engineering and Applied Computing, 1-60132-074-4, 1-60132-080-9 (1-60132-091-4), pag. 430-435, http://www.world-academy-of-science.org/worldcomp08/ws;
+\item Corriero, Cozza, De tullio, \textit{Hixosfs: linux metadata filesystem}, submitted
+\end{itemize}
+
+
+\section*{Tesi}
+\begin{itemize}
+\item Francesco Pistillo
+\item Marco Argentieri
+\item Nicola Corriero
+ \item Giuseppe Annese (Laurea triennale in Informatica) per lo sviluppo di una chat minimale sulla distribuzione Mvux;
+\item Roberto Mari (Laurea Specialistica in Informatica) per lo sviluppo di un filesystem in spazio utente implementato tramite fuse \\(http://fuse.sourceforge.net) per la gestione della posta elettronica;
+\item Simone Bolognini (Laurea in Informatica  (v.o)) per lo sviluppo del filesystem hixosfs basato su ext2 per la gestione di file di log di un WISP (Wireless Internet Service Provider);
+\item Fabrizio Fattibene (Laurea Specialistica in Informatica) per lo sviluppo del filesystem hixosfs in kernel space per la gestione dei file musicali;
+\end{itemize}
+
+
+\end{document}
