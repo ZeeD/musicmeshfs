@@ -2,8 +2,11 @@
 \newcommand{\ua }{\`{u} }
 \renewcommand{\aa }{\`{a} }
 \newcommand{\ea }{\`{e} }
+\newcommand{\egrave }{\'{e} }
 \newcommand{\ia }{\`{i} }
 \newcommand{\oa }{\`{o} }
+\newcommand{\strucinode}{\texttt{struct inode}}
+\newcommand{\structhixos}{\texttt{struct hixos}}
 
 %opening
 \title{\textbf{Hixos} - Hacking Unix Operating System\\http://www.di.uniba.it/$\sim$hixos}
@@ -20,11 +23,12 @@ Inizialmente siamo partiti dallo studio del sistema operativo Linux e dal confro
 Siamo riusciti a creare Mvux, una distribuzione Linux live (eseguibile, cio\ea, direttamente da USB) da zero, compilando i vari componenti da sorgenti.
 Inizialmente ci si \ea focalizzati soprattutto nel processo di boot, quindi dall'accensione del computer all'esecuzione del primo programma utente.
 Lo studio fatto in questa fase ci ha permesso di scrivere una piccola guida molto dettagliata che permetta a tutti di ripetere quanto da noi fatto in maniera autonoma; questa guida si focalizza sopratutto sulla fase di compilazione e installazione sulla penna USB del kernel e del bootloader, oltre che della shell dei comandi.
-Abbiamo proposto questo piccolo risultato all'interno del corso ``Metodi per il trattamento delle Informazioni'', del primo anno della Laurea Specialistica in Informatica, per dare la possibilit\aa a tutti i frequentati il corso di conoscere Linux e di utilizzare Bash come linguaggio di scripting che rappresentava tema di esame.
-All'interno del corso ``Principi di programmazione'', del secondo anno della Laura Specialistica in Informatica, agli studenti \ea stato chiesto sia di ripetere la creazione da soli, sia di ampliare questa piccola distribuzione, volutamente minimale, installando programmi aggiuntivi.
-Sono cos\ia stati aggiunti il server X, l'initrd e \slash o l'initramfs, il riconoscimento automatico del device di rete e programmi in userspace come una chat minimale e il compilatore gcc.
+Abbiamo proposto questo piccolo risultato all'interno del corso ``Metodi per il trattamento delle Informazioni'', del primo anno della Laurea Specialistica in Informatica, per dare la possibilit\aa a tutti i frequentati il corso di conoscere Linux e di utilizzare bash come linguaggio di scripting che rappresentava tema di esame.
+All'interno del corso ``Principi di programmazione'', del secondo anno della Laura Specialistica in Informatica, agli studenti \ea stato chiesto oltre che di ripetere la creazione da soli, anche di ampliare questa distribuzione, volutamente minimale, installando e configurando ad-hoc programmi aggiuntivi.
+Sono cos\ia stati aggiunti il server X, l'initrd e/o l'initramfs, il riconoscimento automatico del device di rete e programmi in userspace come una chat minimale e il compilatore gcc.
 Contemporaneamente \ea iniziato il porting di Mvux su ARM.
-In questo anno accademico ci siamo occupati di file system e dell'architettura ARM.
+
+In questo Anno Accademico ci siamo occupati di file system e dell'architettura ARM.
 Lo studio delle varie implementazioni dei file system in ambiente Linux è iniziato con due tesi in cui i laureandi, sfruttando FUSE, hanno implementato un file system la cui logica era implementata in user space.
 In particolare i due file system erano legati da un core comune, che poi veniva esteso per offrire le funzionalità necessarie ai due ambiti di specializzazione.
 Il primo file system \ea stato pensato per i file musicali.
@@ -33,8 +37,24 @@ La peculiarità di questo file system è che, sfruttando un data base esterno, p
 La seconda tesi implementava un file system pensato per semplificare la gestione della posta elettronica.
 Esso offriva una visione organizzata delle e-mail raggruppate per mittente, data, destinatario, \dots.
 Queste due tesi, tuttavia, essendo implementate in user space, soffrono di basse prestazioni rispetto ai file system tradizionali.
-Questo ci ha spinto a ``scendere'' nel kernel nell'implementazione del file system successivo (Hixosfs). Questo filesystem nasce dall'esigenza di migliorare la gestione di file con metadati (file musicali, di mail, di log, ebook, \dots). La caratteristica di tali file \ea la possibilit\aa di etichettarli a partire da alcuni dei metadati. Ad esempio, \ea possibile parlare di un file musicale conoscendo l'autore, il titolo e l'anno di incisione del brano stesso. L'idea \ea stata di inserire questi metadati all'interno della struct inode che \ea la struct usata dal kernel per gestire tutti i tipi di file. All'interno dell'inode vi sono tutte le informazione su un file (data di creazione, data di modifica, proprietario, link, \dots) tranne il suo contenuto. Noi abbiamo deciso di inserire in questa struct i metadati pi\ua rappresentativi del file stesso. Il filesystem per i file musicali conterr\aa i tag su titolo, autore, anno e disco del brano; mentre il filesystem per i log di un internet provider contiene ip sorgente, ip destinazione e data del pacchetto di cui stiamo tenendo un log.
+Questo ci ha spinto a ``scendere'' nel kernel nell'implementazione del file system successivo (hixosfs).
+Questo file system nasce dall'esigenza di migliorare la gestione di file con metadati (file musicali, di mail, di log, ebook, \dots).
+La caratteristica di tali file \ea che non solo il file, per s\egrave, ha dei dati (dimensione, proprietario, permessi, \dots), ma che anche il contenuto del file contiene informazioni sintetiche.
+Ad esempio, se parliamo di un file musicale, \ea possibile pensare di indicarlo non solo col suo nome (``foo.mp3''), ma, indicando l'autore del brano, il titolo, l'album in cui \ea presente, l'anno di incisione dell'album stesso, \dots.
+Queste informazioni sono indipendenti dal formato del file (``.mp3'', ``.ogg'', ``.wma'', \dots) e sono specifiche dei file musicali (non hanno senso, ad esempio, se parliamo di file di configurazione).
 
+I file system tradizionali, tuttavia, non consentono di trattare in modo particolare questi file: la ricerca di un particolare brano \ea affidata alla ``buona volont\aa'' dell'utente che cataloga i propri brani musicali da solo o, pi\ua spesso, usando programmi esterni come possono esserlo, nel caso particolare della musica, iTunes e similari.
+Questi ultimi hanno di certo molti meriti, ma sono limitati nella possibilit\aa d'esprimere le richieste pi\ua particolari, e ''vincolano`` l'utente stesso a usare sempre lo stesso programma per gestire la sua collezione (cosa poco pratica se, ad esempio, usa più computer e la collezione \ea sotto forma di hard disk di rete).
+
+La soluzione da noi adottata \ea stata di inserire questi metadati all'interno della di un particolare file system, che è capace di ''ordinare`` automaticamente i dati che contiene.
+Per fare questo \ea stato necessario modificare alcune strutture dati presenti nel kernel linux, in particolare al livello del Virtual File System.
+
+In questo livello vi \ea una struttura dati (la \strucinode) che \ea usata per contenere le varie informazioni necessarie per tutti i tipi di file.
+All'interno di questa \strucinode vi sono, ad esempio, la data di creazione del file, la data di modifica, il proprietario, i permessi, \dots, nonch\egrave alcuni puntatori per ottenerne il contenuto.
+Noi abbiamo deciso di estendere questa struttura, inserendo qui i metadati pi\ua rappresentativi del file stesso.
+Ogni file che vorremo supportare, quindi, avr\aa un set personalizzato di campi aggiuntivi.
+Volendo continuare con l'esempio del file system per i file musicali, la \strucinode che ne identificher\aa uno conterr\aa campi per contenerne il titolo, l'autore, il disco e l'anno d'incisione
+Nel file system per i log di un internet provider, invece, si troveranno campi per contenere l'IP sorgente, l'IP destinazione e la data del pacchetto di cui stiamo tenendo traccia.
 
 Linux su Arm.
 Le problematiche di installazione di linux su un'architettura differente sono relative principalmente al kernel, alla poca memoria a disposizione e ai driver dei dispositivi solitamente creati ad-hoc. In prima analisi abbiamo studiato le difficolt\aa della scrittura di un driver per embedded notando come la nostra natura di informatici non ci permetteva di avere il know-how adatto.
@@ -45,24 +65,23 @@ Openmoko \ea il primo progetto completamente open sia da un punto di vista hardw
 
 \section*{Corsi}
 \begin{itemize}
-\item Anno Accademico 2007-2008 (Laurea Specialistica in informatica)
-\begin{itemize}
- \item Metodi per il trattamento delle informazioni
-\item Principi di programmazione di sistema
-\end{itemize}
-\item Anno Accademico 2008-2009 (Laurea Magistrale in Informatica)
-\begin{itemize}
-\item Sistemi ad agenti
-\item Metodi formali dell'Informatica
-\end{itemize}
-
+	\item Laurea Specialistica in Informatica - Anno Accademico 2007-2008
+	\begin{itemize}
+		\item Metodi per il Trattamento delle Informazioni
+		\item Principi di Programmazione di Sistema
+	\end{itemize}
+	\item Laurea Magistrale in Informatica - Anno Accademico 2008-2009
+	\begin{itemize}
+		\item Metodi Formali dell'Informatica
+		\item Sistemi ad Agenti (modulo B)
+	\end{itemize}
 \end{itemize}
 
 \section*{Articoli}
 \begin{itemize}
-\item Corriero, Cozza, De tullio, Zhupa, \textit{A configurable Linux file system for multimedia data}, SIGMAP 2008, International Conference on Signal Processing and Multimedia Appications, 978-989-8111-60-9, pag 380-383, \\http://www.sigmap.org/SIGMAP2008/;
+\item Corriero, Cozza, De Tullio, Zhupa, \textit{A configurable Linux file system for multimedia data}, SIGMAP 2008, International Conference on Signal Processing and Multimedia Appications, 978-989-8111-60-9, pag 380-383, \\http://www.sigmap.org/SIGMAP2008;
 \item Corriero, Cozza, Pistillo, Zhupa, \textit{Wifi Mesh for HandHelds in Linux}, ICWN '08, The 2008 World Congress in Computer Science, Computer Engineering and Applied Computing, 1-60132-074-4, 1-60132-080-9 (1-60132-091-4), pag. 430-435, http://www.world-academy-of-science.org/worldcomp08/ws;
-\item Corriero, Cozza, De tullio, \textit{Hixosfs: linux metadata filesystem}, submitted
+\item Corriero, Cozza, De Tullio, \textit{Hixosfs: linux metadata filesystem}, submitted
 \end{itemize}
 
 \section*{Tesi}
@@ -71,7 +90,7 @@ Openmoko \ea il primo progetto completamente open sia da un punto di vista hardw
 \item Nicola Corriero (Laurea Specialistica in Informatica) - Mvux: una nuova distribuzione Linux su penna usb non invasiva del computer ospite;
 \item Francesco Pistillo (Laurea Specialistica in Informatica) - Installazione ed estensione di Linux su smartphone. Analisi delle problematiche con esempi applicativi sul dispositivo HTC Blueangel e il modulo AODV-UU per reti wifi mesh;
 \item Saverio Calvano (Laurea Specialistica in Informatica) - Voish: adattamento dell'architettura voip per reti senza fili ad-hoc in Linux;
- \item Giuseppe Annese (Laurea triennale in Informatica) - MVux: controlli di sicurezza da parte dell'ambiente ospite;
+\item Giuseppe Annese (Laurea triennale in Informatica) - MVux: controlli di sicurezza da parte dell'ambiente ospite;
 \item Vito De tullio (Laurea Specialistica in Informatica) - Principi per un filesystem configurabile e sua applicazione per i dati musicali;
 \item Roberto Mari (Laurea Specialistica in Informatica) - Principi per lo sviluppo di un filesystem in spazio utente implementato tramite fuse \\(http://fuse.sourceforge.net) per la gestione della posta elettronica;
 \item Simone Bolognini (Laurea in Informatica  (v.o)) - Hixosfs: un filesystem basato su ext2 per la gestione di file di log di un WISP (Wireless Internet Service Provider);
