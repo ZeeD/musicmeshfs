@@ -31,6 +31,9 @@ Le prestazioni non esaltati dei due filesystem ci hanno spinto a ``scendere'' ne
 
 Linux su Arm.
 Le problematiche di installazione di linux su un'architettura differente sono relative principalmente al kernel, alla poca memoria a disposizione e ai driver dei dispositivi solitamente creati ad-hoc. In prima analisi abbiamo studiato le difficolt\aa della scrittura di un driver per embedded notando come la nostra natura di informatici non ci permetteva di avere il know-how adatto.
+Inizialmente \ea stata prodotta una tesi su come installare Linux su un Htc Blueangel. Abbiamo notato come per utilizzare palmari e schede arm \ea necessario che questi siano supportati dal kernel e dal boot loader, in quanto per evitare problemi hardware vi sono dei controlli nelle fasi inziali dell'avvio del kernel con codice scritto in assembly.
+A settembre 2008 una dottoranda del gruppo Vittoria Cozza, laureata in ingegneria informatica, ha sostenuto uno stage presso il prof. Rubini di Pavia, esperto di scrittura driver in ambiente linux embedded. La sua esperienza ha permesso all'intero gruppo di acquisire maggiori conoscenze verso tematiche di vita reale lavorativa. Il gruppo contemporaneamente tramite l'acquisto di un alcune schede Arm (lpc2148 e lpc2468 di  www.embeddedartists.com) e del cellulare FreeRunner di Openmoko, ha potuto testare quanto compreso in teoria. In particolare circa la fase di avvio del dispositivo tramite il boot loader e delle prime fasi di avvio del kernel. Anche in questa fase abbiamo prodotto un piccolo documento disponibile online per comprendere l'avvio di Linux su Arm.
+Openmoko \ea il primo progetto completamente open sia da un punto di vista hardware con specifiche rilasciata dai produttori, sia da un punto di vista software in quanto tutto \ea scritto secondo licenza gpl.
 
 \section*{Corsi}
 \begin{itemize}
@@ -57,14 +60,15 @@ Le problematiche di installazione di linux su un'architettura differente sono re
 
 \section*{Tesi}
 \begin{itemize}
-\item Francesco Pistillo
-\item Marco Argentieri
-\item Nicola Corriero
-\item Giuseppe Annese (Laurea triennale in Informatica) per lo sviluppo di una chat minimale sulla distribuzione Mvux
-\item Vito De tullio (Laurea Specialistica in Informatica) per lo sviluppo di un file system in spazio utente implementato tramite FUSE \\(http://fuse.sourceforge.net) per la gestione dei file musicali
-\item Roberto Mari (Laurea Specialistica in Informatica) per lo sviluppo di un file system in spazio utente implementato tramite FUSE \\(http://fuse.sourceforge.net) per la gestione della posta elettronica
-\item Simone Bolognini (Laurea in Informatica Vecchio Ordinamento) per lo sviluppo di un file system per la gestione di file di log di un WISP (Wireless Internet Service Provider)
-\item Fabrizio Fattibene (Laurea Specialistica in Informatica) per lo sviluppo di un file system per la gestione dei file musicali;
+\item Marco Argentieri (Laurea Triennale in Informatica) - Validazione ed estensione ad alcune funzionalit\aa di rete di una nuova distribuzione linux su pendrive;
+\item Nicola Corriero (Laurea Specialistica in Informatica) - Mvux: una nuova distribuzione Linux su penna usb non invasiva del computer ospite;
+\item Francesco Pistillo (Laurea Specialistica in Informatica) - Installazione ed estensione di Linux su smartphone. Analisi delle problematiche con esempi applicativi sul dispositivo HTC Blueangel e il modulo AODV-UU per reti wifi mesh;
+\item Saverio Calvano (Laurea Specialistica in Informatica) - Voish: adattamento dell'architettura voip per reti senza fili ad-hoc in Linux;
+ \item Giuseppe Annese (Laurea triennale in Informatica) - MVux: controlli di sicurezza da parte dell'ambiente ospite;
+\item Vito De tullio (Laurea Specialistica in Informatica) - Principi per un filesystem configurabile e sua applicazione per i dati musicali;
+\item Roberto Mari (Laurea Specialistica in Informatica) - Principi per lo sviluppo di un filesystem in spazio utente implementato tramite fuse \\(http://fuse.sourceforge.net) per la gestione della posta elettronica;
+\item Simone Bolognini (Laurea in Informatica  (v.o)) - Hixosfs: un filesystem basato su ext2 per la gestione di file di log di un WISP (Wireless Internet Service Provider);
+\item Fabrizio Fattibene (Laurea Specialistica in Informatica) - Hixosfs: un filesystem in kernel space basato su ext2 per la gestione dei file musicali;
 \end{itemize}
 
 
